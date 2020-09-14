@@ -19,7 +19,7 @@ var router = express.Router();
 
 // 테스트
 router.get('/', function(req, res) {
-    res.json({ message: 'Hi' });
+    res.render("");
 });
 
 // 라우터 핸들러로 처리
