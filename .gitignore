@@ -1,0 +1,8 @@
+#node_modules git에서 제외
+node_modules
+
+#package.json git에서 제외
+package.json
+
+#package-lock.json git에서 제외
+package-lock.json
