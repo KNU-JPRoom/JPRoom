@@ -5,7 +5,7 @@ const app = express();
 // 2) bodyParser Module 불러오기
 const bodyParser = require('body-parser');
 // 3) MySQL Module 불러오기
-const mySQL  = require('./Module/db');
+const mySQL  = require('./module/db');
 // 4) EJS Module 불러오기
 const ejs = require('ejs');
 
