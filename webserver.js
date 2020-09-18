@@ -5,13 +5,13 @@ const app = express();
 // 2) bodyParser Module 불러오기
 const bodyParser = require('body-parser');
 // 3) MySQL Module 불러오기
-const mySQL  = require('./Module/db');
+const mySQL  = require('./module/db');
 // 4) EJS Module 불러오기
 const ejs = require('ejs');
 
 // 1. 설정
 // 1) View 경로 설정
-app.set('views',__dirname+'/Views');
+app.set('views',__dirname+'/views');
 // 2) 화면 Engine을 ejs로 설정
 app.set('view engine','ejs');
 app.engine('html',require('ejs').renderFile);
