@@ -4,9 +4,22 @@
     <%- include('head')  %>
   </head>
   <body class="index-page sidebar-collapse">
-     <%- include('nav') %>
+     <%- include('nav_Bar') %>
       <%
          var sess = session;
       %>
+      <div class="wrapper">
+        <div class="page-header clear-filter" filter-color="main_filter">
+          <div class="page-header-image" data-parallax="true" style="background-image:url('./Image/header.jpg');">
+          </div>
+          <div class="container">
+            <div class="content-center brand">
+              <img class="n-logo" src="./Image/autoin_image.png" alt="">
+              <h1 class="h1-seo">Autoinven.</h1>
+              <h3>Connect to the Global Automotive Industry.</h3>
+            </div>
+          </div>
+        </div>
+      </div>
   </body>
 </html>
