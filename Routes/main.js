@@ -13,8 +13,5 @@ module.exports = function(app,session,db){
     router.get('/About',function(req,res,next){
         res.render('main_About',{'app':app,'session':session,'db':db});
     });
-    router.get('/About2',function(req,res,next){
-        res.render('main_About2',{'app':app,'session':session,'db':db});
-    });
     return router;
 };
