@@ -5,30 +5,188 @@
     <%- include('../head') %>
   </head>
   <body>
-    <%- include('../nav') %>
+    <!-- <%- include('../nav_Bar') %> -->
 
     <div class="container mb-3">
 
-      <h3 class="contentBoxTop"><%= session.nickname %></h3>
-
-        <fieldset disabled>
-          <div class="form-group row">
-            <label for="name" class="col-sm-3 col-form-label">Name</label>
-            <div class="col-sm-9">
-              <input class="form-control" type="text" id="name" name="name" value= <%=session.name %>>
-            </div>
+      <h3 class="contentBoxTop mb-3">Sign up</h3>
+        <div class="-groformup row">
+          <label for="memberID" class="col-sm-3 col-form-label">ID</label>
+          <div class="col-sm-9">
+            <input type="text" id="memberID" name="memberID" value= "<%=session.memberID%>" disabled="disabled" class="form-control">
+            <input type ="button" class="btn btn-primary" id = "idCheckButton" name="idCheckButton" value ="id check">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+            <!-- <div class="form-group">
+              <button type="submit" class="btn btn-primary" id = "idCheckButton" name="idCheckButton">id check</button>
+            </div> -->
           </div>
-          <div class="form-group row">
-            <label for="email" class="col-sm-3 col-form-label">Email</label>
-            <div class="col-sm-9">
-              <input class="form-control" type="text" id="email" name="email" value= <%= session.email %>>
-            </div>
+        </div>
+        <div class="form-group row">
+          <label for="password" class="col-sm-3 col-form-label">password</label>
+          <div class="col-sm-9">
+            <input type="password" id="password" name="password" value="<%=session.password%>"disabled="disabled" class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
           </div>
-        </fieldset>
-      <div>
-          <a class="btn btn-primary" href="/User/Edit">Edit</a>
-      </div>
+        </div>
 
+        <div class="form-group row">
+          <label for="type" class="col-sm-3 col-form-label">type</label>
+          <div class="col-sm-9">
+            <input type="text" id="type" name="type" value="<%=session.type%>"disabled="disabled" class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="name" class="col-sm-3 col-form-label">name</label>
+          <div class="col-sm-9">
+            <input type="text" id="name" name="name" value="<%=session.username%>" disabled="disabled"class="form-control">
+             <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="national" class="col-sm-3 col-form-label">national</label>
+          <div class="col-sm-9">
+            <input type="text" id="national" name="national" value="<%=session.national%>" disabled="disabled"class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="email" class="col-sm-3 col-form-label">Email</label>
+          <div class="col-sm-9">
+            <input type="text" id="email" name="email" value="<%=session.email%>"disabled="disabled" class="form-control">
+            <input type ="button" class="btn btn-primary" id = "emailCheckButton" name="emailCheckButton" value ="email Check">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="RN" class="col-sm-3 col-form-label">resident-number</label>
+          <div class="col-sm-9">
+            <input type="text" id="RN" name="RN" value="<%=session.RN%>"disabled="disabled" class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <label for="contactNumber" class="col-sm-3 col-form-label">contact-number</label>
+          <div class="col-sm-9">
+            <input type="text" id="contactNumber" name="contactNumber" value="<%=session.contactNumber%>"disabled="disabled" class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="address" class="col-sm-3 col-form-label">address</label>
+          <div class="col-sm-9">
+            <input type="text" id="address" name="address" value="<%=session.address%>"disabled="disabled" class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <label for="CN" class="col-sm-3 col-form-label">company name</label>
+          <div class="col-sm-9">
+            <input type="text" id="CN" name="CN" value="<%=session.CN%>" disabled="disabled"class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="CA" class="col-sm-3 col-form-label">company-address</label>
+          <div class="col-sm-9">
+            <input type="text" id="CA" name="CA" value="<%=session.CA%>"disabled="disabled" class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="CCN" class="col-sm-3 col-form-label">company-contract-number</label>
+          <div class="col-sm-9">
+            <input type="text" id="CCN" name="CCN" value="<%=session.CCN%>" disabled="disabled"class="form-control">
+            <% if(locals.err){ %>
+              <span class="invalid-feedback"><%= locals.err %></span>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="form-group">
+            <form action="/User/Edit" method="get">
+              <button type="EDIT" class="btn btn-primary">Edit</button>
+            </form>
+            <form action="/" method="get">
+              <button type="BACK" class="btn btn-primary" onclick=location.href="/">BACK</button>
+            </form>
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('#idCheckButton').click(function(){
+          var memberID = $('#memberID').val();
+          if(memberID!=''){
+              $.ajax({
+              url: '/User/Register/MemberID',
+              type: 'POST',
+              data: {'memberID': memberID},
+                success: function(result){
+                  if(result == false) {
+                    alert('Overlapped ID ');
+                  }
+                  else{
+                    alert('You can use!');
+                  }
+              }
+              }); 
+          }
+        });
+        $('#emailCheckButton').click(function(){
+          var email =  $('#email').val();
+          console.log(email);
+          if(email!=''){
+              $.ajax({
+              url: '/User/Register/EmailIDF',
+              type: 'POST',
+              data: {'email': email},
+                success: function(result){
+                  if(result == false) {
+                    alert('send error');
+                  }
+                  else{
+                    alert('send email');
+                  }
+              }
+              }); 
+          }
+        });
+      })
+    </script>
   </body>
 </html>

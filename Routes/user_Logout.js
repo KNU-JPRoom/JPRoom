@@ -1,5 +1,3 @@
-exports.logout = function(req,res,app,session,db){
-   session.nickname=null;
+exports.logout = function(req,res,app,db){
    res.redirect('/');
-
 }
