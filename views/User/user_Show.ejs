@@ -14,7 +14,6 @@
           <label for="memberID" class="col-sm-3 col-form-label">ID</label>
           <div class="col-sm-9">
             <input type="text" id="memberID" name="memberID" value= "<%=session.memberID%>" disabled="disabled" class="form-control">
-            <input type ="button" class="btn btn-primary" id = "idCheckButton" name="idCheckButton" value ="id check">
             <% if(locals.err){ %>
               <span class="invalid-feedback"><%= locals.err %></span>
             <% } %>
@@ -67,7 +66,6 @@
           <label for="email" class="col-sm-3 col-form-label">Email</label>
           <div class="col-sm-9">
             <input type="text" id="email" name="email" value="<%=session.email%>"disabled="disabled" class="form-control">
-            <input type ="button" class="btn btn-primary" id = "emailCheckButton" name="emailCheckButton" value ="email Check">
             <% if(locals.err){ %>
               <span class="invalid-feedback"><%= locals.err %></span>
             <% } %>

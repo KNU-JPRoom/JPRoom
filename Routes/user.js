@@ -40,11 +40,17 @@ module.exports = function(app,db){
         res.render('User/user_Show',{'app':app,'session':req.session,'db':db});
     });
 
+    // router.get('/Delete',function(req,res,next){
+    //     res.render('User/user_Delete',{'app':app,'session':req.session,'db':db});
+    // });
     router.get('/Delete',function(req,res,next){
-        res.render('User/user_Delete',{'app':app,'session':req.session,'db':db});
-    });
-    router.post('/Delete',function(req,res,next){
+        require('../module/global').result = false; 
         del.del(req,res,app,db);
+        if( require('../module/global').result){
+            req.session.destroy();
+            res.redirect('/');
+        }
+        else res.send(false);
     });
     router.get('/Logout',function(req,res,next){
         req.session.destroy();

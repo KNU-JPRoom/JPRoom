@@ -2,8 +2,9 @@ const mysql = require('mysql');
 var db_info = {
     host : 'localhost',
     user : 'root',
-    password : '',
-    database : 'JPdatabase'
+    password : 'rkfaorl4!',
+    database : 'JPdatabase',
+    dateString : 'date'
 };
 
 module.exports = {
