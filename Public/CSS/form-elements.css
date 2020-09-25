@@ -1,6 +1,6 @@
 
-input[type="text"],
-textarea,
+input[type="text"], 
+textarea, 
 textarea.form-control {
 	height: 50px;
     margin: 0;
@@ -18,15 +18,15 @@ textarea.form-control {
     -o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;
 }
 
-textarea,
+textarea, 
 textarea.form-control {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	line-height: 30px;
 }
 
-input[type="text"]:focus,
-textarea:focus,
+input[type="text"]:focus, 
+textarea:focus, 
 textarea.form-control:focus {
 	outline: 0;
 	background: #fff;

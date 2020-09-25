@@ -1,3 +1,18 @@
+.form-group-rn {
+  float: left;
+  width: 50%;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+.form-group-cn {
+  float: left;
+  width: 33%;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+
 #content {
     width: 100%;
     min-height: 100vh;

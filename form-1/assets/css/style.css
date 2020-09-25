@@ -5,6 +5,13 @@
   margin-bottom: 15px;
 }
 
+.form-group-cn {
+  float: left;
+  width: 33%;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
