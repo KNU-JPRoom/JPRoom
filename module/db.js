@@ -2,7 +2,7 @@ const mysql = require('mysql');
 var db_info = {
     host : 'localhost',
     user : 'root',
-    password : '',
+    password : 'rkfaorl4!',
     database : 'JPdatabase'
 };
 

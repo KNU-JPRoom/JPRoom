@@ -1,52 +1,52 @@
-// 0. ëª¨ë“ˆ ë¶ˆëŸ¬ì˜¤ê¸°
-// 1) Express Module ë¶ˆëŸ¬ì˜¤ê¸°
+// 0. ¸ğµâ ºÒ·¯¿À±â
+// 1) Express Module ºÒ·¯¿À±â
 const express = require('express');
 const app = express();
-// 2) bodyParser Module ë¶ˆëŸ¬ì˜¤ê¸°
+// 2) bodyParser Module ºÒ·¯¿À±â
 const bodyParser = require('body-parser');
-// 3) MySQL Module ë¶ˆëŸ¬ì˜¤ê¸°
+// 3) MySQL Module ºÒ·¯¿À±â
 const mySQL  = require('./module/db');
-// 4) EJS Module ë¶ˆëŸ¬ì˜¤ê¸°
+// 4) EJS Module ºÒ·¯¿À±â
 const ejs = require('ejs');
 
-// 1. ì„¤ì •
-// 1) View ê²½ë¡œ ì„¤ì •
+// 1. ¼³Á¤
+// 1) View °æ·Î ¼³Á¤
 app.set('views',__dirname+'/views');
-// 2) í™”ë©´ Engineì„ ejsë¡œ ì„¤ì •
+// 2) È­¸é EngineÀ» ejs·Î ¼³Á¤
 app.set('view engine','ejs');
 app.engine('html',require('ejs').renderFile);
-// 3) Session ì„¤ì •(ìƒì„±)
+// 3) Session ¼³Á¤(»ı¼º)
 var session = require('express-session');
-// 4) ì¤‘ì²©ëœ ê°ì²´í—ˆìš© ì—¬ë¶€ ê²°ì •
+// 4) ÁßÃ¸µÈ °´Ã¼Çã¿ë ¿©ºÎ °áÁ¤
 app.use(bodyParser.urlencoded({extended: true}));
-// 5) JSON ë°©ì‹ì˜ Content-Type ë°ì´í„°ë¥¼ ë°›ê¸°
+// 5) JSON ¹æ½ÄÀÇ Content-Type µ¥ÀÌÅÍ¸¦ ¹Ş±â
 app.use(bodyParser.json());
-// 6) 'Public' Directoryì— ì •ì  íŒŒì¼(ì‚¬ì§„, ì´ë¯¸ì§€)ì„ ìœ„ì¹˜ì‹œí‚¤ê¸°
+// 6) 'Public' Directory¿¡ Á¤Àû ÆÄÀÏ(»çÁø, ÀÌ¹ÌÁö)À» À§Ä¡½ÃÅ°±â
 app.use(express.static('Public'));
-// 7) CORS í—ˆìš©
+// 7) CORS Çã¿ë
 app.use(function(req,res,next){
 	res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
 });
-// 8) ì„¸ì…˜ì„ ì ìš©
+// 8) ¼¼¼ÇÀ» Àû¿ë
 app.use(session({
-		// 8-1) ì„¸ì…˜ ì•”í˜¸í™”
+		// 8-1) ¼¼¼Ç ¾ÏÈ£È­
     secret: '@#@$SIGN#@$#$',
-		// 8-2) ìˆ˜ì •ì‚¬í•­ì´ ìƒê¸°ì§€ ì•Šì€ ì„¸ì…˜ ìš”ì²­ì´ ì™”ì„ ë•Œ ë‹¤ì‹œ ì €ì¥í• ì§€
+		// 8-2) ¼öÁ¤»çÇ×ÀÌ »ı±âÁö ¾ÊÀº ¼¼¼Ç ¿äÃ»ÀÌ ¿ÔÀ» ¶§ ´Ù½Ã ÀúÀåÇÒÁö
     resave: false,
-		// 8-3) ì„¸ì…˜ì— ì €ì¥í•  ë‚´ì—­ì´ ì—†ë”ë¼ë„, ì„¸ì…˜ ì €ì¥í• ì§€
+		// 8-3) ¼¼¼Ç¿¡ ÀúÀåÇÒ ³»¿ªÀÌ ¾ø´õ¶óµµ, ¼¼¼Ç ÀúÀåÇÒÁö
     saveUninitialized: true
 }));
-// 9) mySQL Connection ë³€ìˆ˜ë¥¼ ì €ì¥
+// 9) mySQL Connection º¯¼ö¸¦ ÀúÀå
 var dbConnection = mySQL.init();
-// 10) ê° ë¼ìš°í„°ì— ì¸ìê°’ì„ ë„˜ê²¨ì£¼ëŠ” ê²ƒ
-app.use('/',require('./Routes/main')(app,session,dbConnection));
-app.use('/User',require('./Routes/user')(app,session,dbConnection));
-app.use('/Admin',require('./Routes/ad')(app,session,dbConnection));
-app.use('/Provider',require('./Routes/pv')(app,session,dbConnection));
-app.use('/Buyer',require('./Routes/by')(app,session,dbConnection));
-// 11) ì„œë²„ë¥¼ ì—´ ë•Œ ì„¤ì • í•¨ìˆ˜
+// 10) °¢ ¶ó¿ìÅÍ¿¡ ÀÎÀÚ°ªÀ» ³Ñ°ÜÁÖ´Â °Í
+app.use('/',require('./Routes/main')(app,dbConnection));
+app.use('/User',require('./Routes/user')(app,dbConnection));
+app.use('/Admin',require('./Routes/ad')(app,dbConnection));
+app.use('/Provider',require('./Routes/pv')(app,dbConnection));
+app.use('/Buyer',require('./Routes/by')(app,dbConnection));
+// 11) ¼­¹ö¸¦ ¿­ ¶§ ¼³Á¤ ÇÔ¼ö
 app.listen(5000,function(req,res){
     console.log('connected!!');
 });
