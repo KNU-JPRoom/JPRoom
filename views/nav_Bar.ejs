@@ -19,7 +19,7 @@
           <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
         </li>
         <li>
-          <%if(session.nickname){%>
+          <%if(session.memberID){%>
             <%if(session.type == 'admin'){%>
               <a href="#">Subject to change</a>
             <%}else if(session.type == 'buyer'){%>
@@ -66,7 +66,7 @@
             </div>
         </li> -->
 
-        <% if(session.nickname) { %>
+        <% if(session.memberID) { %>
           <% if(session.type== 'admin') { %>
             <li class="nav-item"><a href="/Admin" class="nav-link">Management</a></li>
           <% } else if(session.type=='buyer') { %>
@@ -77,30 +77,30 @@
         <% } %>
 
         <ul class="navbar-nav">
-          <%# Navigation Bar ë¡œê·¸ì¸ ì•ˆë˜ì–´ìžˆë‹¤ë©´  %>
-          <% if(!session.nickname) { %>
+          <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©?  %>
+          <% if(!session.memberID) { %>
             <li class="nav-item"><a href="/User/Register" class="nav-link">Sign Up</a></li>
             <li class="nav-item"><a href="/User/Login" class="nav-link">Login</a></li>
-            <%# Navigation Bar ë¡œê·¸ì¸ ì•ˆë˜ì–´ìžˆë‹¤ë©´ íŠ¸ìœ„í„° ë¡œê·¸ì¸ ì—°ë™  %>
+            <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©? ?Š¸?œ„?„° ë¡œê·¸?¸ ?—°?™  %>
             <li class="nav-item">
               <a class="nav-link" rel="tooltip" title="Follow us on Twitter" data-placement="bottom" href="https://twitter.com/CreativeTim" target="_blank">
                 <i class="fab fa-twitter"></i><p class="d-lg-none d-xl-none">Twitter</p>
               </a>
             </li>
-            <%# Navigation Bar ë¡œê·¸ì¸ ì•ˆë˜ì–´ìžˆë‹¤ë©´ íŽ˜ì´ìŠ¤ë¶ ë¡œê·¸ì¸ ì—°ë™  %>
+            <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©? ?Ž˜?´?Š¤ë¶? ë¡œê·¸?¸ ?—°?™  %>
             <li class="nav-item">
               <a class="nav-link" rel="tooltip" title="Like us on Facebook" data-placement="bottom" href="https://www.facebook.com/CreativeTim" target="_blank">
                 <i class="fab fa-facebook-square"></i><p class="d-lg-none d-xl-none">Facebook</p>
               </a>
             </li>
-            <%# Navigation Bar ë¡œê·¸ì¸ ì•ˆë˜ì–´ìžˆë‹¤ë©´ ì¸ìŠ¤íƒ€ê·¸ëž¨ ë¡œê·¸ì¸ ì—°ë™  %>
+            <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©? ?¸?Š¤???ê·¸ëž¨ ë¡œê·¸?¸ ?—°?™  %>
             <li class="nav-item">
               <a class="nav-link" rel="tooltip" title="Follow us on Instagram" data-placement="bottom" href="https://www.instagram.com/CreativeTimOfficial" target="_blank">
                 <i class="fab fa-instagram"></i><p class="d-lg-none d-xl-none">Instagram</p>
               </a>
             </li>
           <% } else { %>
-          <%# Navigation Bar ë¡œê·¸ì¸ ë˜ì–´ìžˆê³ , Buyer ë˜ëŠ” Providerë¼ë©´  %>
+          <%# Navigation Bar ë¡œê·¸?¸ ?˜?–´?žˆê³?, Buyer ?˜?Š” Provider?¼ë©?  %>
           <% if(session.type== 'buyer'|| session.type== 'provider') { %>
             <% if(session.type== 'buyer') { %>
               <li class="nav-item"><a href="/Buyer/MyWarehouse" class="nav-link">MyWarehouse</a></li>
