@@ -32,12 +32,19 @@
                         		<div class="form-top-right"><i class="fa fa-pencil"></i></div>
                           </div>
 
-                        <div class="form-bottom">
-			                     <form role="form" action="/User/Register" method="post"class="registration-form">
-			                    	 <div class="form-group">
-                               <label class="sr-only" for="memberID">memberID</label>
-                               <input type="text" name="memberID" placeholder="ID" class="form-first-name form-control" id="memberID">
-			                       </div>
+                          <div class="form-bottom">
+  			                     <form role="form" action="/User/Register" method="post"class="registration-form">
+                               
+                               <form class="form-inline">
+                                 <div class="form-group">
+                                    <label class="sr-only" for="memberID">memberID</label>
+                                    <input type="text" name="memberID" placeholder="ID" class="form-first-name form-control" id="memberID">
+                                 </div>
+                                 <input type ="button" class="btn btn-primary" id = "idCheckButton" name="idCheckButton" value ="id check">
+                                 <% if(locals.err){ %>
+                                   <span class="invalid-feedback"><%= locals.err %></span>
+                                 <% } %>
+                               </form>
 
                              <div class="form-group">
                                 <label class="sr-only" for="name">Name</label>
@@ -54,35 +61,44 @@
                                <input type="text" name="passwordConfirmation" placeholder="Password Confirm" class="form-last-name form-control" id="passwordConfirmation">
                              </div>
 
-                             <div class="form-group-rn">
-                               <label class="sr-only" for="RN">Resident Number</label>
-                              <input type="text" name="RN"class="form-email form-control" id="RN">
-                             </div>
+                             <form class="form-inline">
+                               <div class="form-group">
+                                 <label class="sr-only" for="RN">Resident Number</label>
+                                <input type="text" name="RN"class="form-email form-control" id="RN">
+                               </div>
+                               <div class="form-group">
+                                 <label class="sr-only" for="RN">Resident Number</label>
+                                <input type="text" name="RN"class="form-email form-control" id="RN">
+                               </div>
+                             </form>
 
-                             <div class="form-group-rn">
-                               <label class="sr-only" for="RN">Resident Number</label>
-                               <input type="text" name="RN" class="form-email form-control" id="RN">
-                             </div>
+                             <form class="form-inline">
+                               <div class="form-group">
+   			                        	<label class="sr-only" for="email">Email</label>
+   			                        	<input type="text" name="email" placeholder="Email" class="form-email form-control" id="email">
+   			                        </div>
+                                <input type ="button" class="btn btn-primary" id = "idCheckButton" name="idCheckButton" value ="Email Check">
+                                <div class="form-group">
+    			                        <label class="sr-only" for="emailcheck">EmailCheck</label>
+    			                        <input type="text" name="emailcheck" placeholder="Email Check" class="form-email form-control" id="emailcheck">
+    			                       </div>
+                             </form>
 
-                              <div class="form-group">
-			                        	<label class="sr-only" for="email">Email</label>
-			                        	<input type="text" name="email" placeholder="Email" class="form-email form-control" id="email">
-			                        </div>
 
-                              <div class="form-group-cn">
-                                <label class="sr-only" for="contactNumber ">Contact Number</label>
-                               <input type="text" name="contactNumber "class="form-email form-control" id="contactNumber ">
-                              </div>
-
-                              <div class="form-group-cn">
-                                <label class="sr-only" for="contactNumber ">Contact Number</label>
-                                <input type="text" name="contactNumber " class="form-email form-control" id="contactNumber ">
-                              </div>
-
-                              <div class="form-group-cn">
-                                <label class="sr-only" for="contactNumber ">Contact Number</label>
-                                <input type="text" name="contactNumber " class="form-email form-control" id="contactNumber ">
-                              </div>
+                              <form class="form-inline">
+                                <div class="form-group">
+                                  <label class="sr-only" for="contactNumber ">Contact Number</label>
+                                  <input type="text" name="contactNumber "class="form-email form-control" id="contactNumber ">
+                                </div>
+                                <div class="form-group">
+                                  <label class="sr-only" for="contactNumber ">Contact Number</label>
+                                  <input type="text" name="contactNumber "class="form-email form-control" id="contactNumber ">
+                                </div>
+                                <div class="form-group">
+                                  <label class="sr-only" for="contactNumber ">Contact Number</label>
+                                  <input type="text" name="contactNumber "class="form-email form-control" id="contactNumber ">
+                                </div>
+                              </form>
 
                               <div class="form-group">
                                 <label class="sr-only" for="address">Address</label>
@@ -119,5 +135,47 @@
               </div>
             </div>
         <div class="overlay"></div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script>
+          $(document).ready(function(){
+            $('#idCheckButton').click(function(){
+              var memberID = $('#memberID').val();
+              if(memberID!=''){
+                  $.ajax({
+                  url: '/User/Register/MemberID',
+                  type: 'POST',
+                  data: {'memberID': memberID},
+                    success: function(result){
+                      if(result == false) {
+                        alert('Overlapped ID ');
+                      }
+                      else{
+                        alert('You can use!');
+                      }
+                  }
+                  });
+              }
+            });
+            $('#emailCheckButton').click(function(){
+              var email =  $('#email').val();
+              console.log(email);
+              if(email!=''){
+                  $.ajax({
+                  url: '/User/Register/EmailIDF',
+                  type: 'POST',
+                  data: {'email': email},
+                    success: function(result){
+                      if(result == false) {
+                        alert('send error');
+                      }
+                      else{
+                        alert('send email');
+                      }
+                  }
+                  });
+              }
+            });
+          })
+        </script>
     </body>
 </html>

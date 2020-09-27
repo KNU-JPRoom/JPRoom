@@ -1,17 +1,8 @@
-.form-group-rn {
-  float: left;
-  width: 50%;
-  padding-right: 10px;
-  margin-bottom: 15px;
+.form-inline .form-group{
+    margin-left: 0;
+    margin-right: 0;
+    width: auto;
 }
-
-.form-group-cn {
-  float: left;
-  width: 33%;
-  padding-right: 10px;
-  margin-bottom: 15px;
-}
-
 
 #content {
     width: 100%;
