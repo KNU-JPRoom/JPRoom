@@ -6,22 +6,17 @@
       <div id="dismiss"><i class="fas fa-arrow-left"></i></div>
       <div class="sidebar-header"><h2>Menu</h2></div>
       <ul class="list-unstyled components">
-        <li class="active">
+        <li>
           <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
             <!-- <ul class="collapse list-unstyled" id="homeSubmenu">
               <li><a href="#">Home 1</a></li>
               <li><a href="#">Home 2</a></li>
               <li><a href="#">Home 3</a></li>
             </ul> -->
-        </li>
-        <li>
-          <a href="#">About</a>
-          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-        </li>
-        <li>
           <%if(session.memberID){%>
             <%if(session.type == 'admin'){%>
-              <a href="#">Subject to change</a>
+              <a href="/Admin/Question">Question</a>
+              <a href="/Admin/Request">Request</a>
             <%}else if(session.type == 'buyer'){%>
               <a href="/Buyer/Description">Description</a>
               <a href="/Buyer/FindWH">Find</a>
@@ -50,10 +45,10 @@
           <a class="nav-link" href="/"><i class="now-ui-icons shopping_shop"></i><p>Home</p></a>
         </li>
 
-        <%# NavBar About Button %>
         <li class="nav-item">
           <a class="nav-link" href="/About"><i class="now-ui-icons shopping_shop"></i><p>About</p></a>
         </li>
+
 
         <!-- <%# NavBar Board Button %>
         <li class="nav-item dropdown">
@@ -77,36 +72,36 @@
         <% } %>
 
         <ul class="navbar-nav">
-          <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©?  %>
+          <%# Navigation Bar ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½?  %>
           <% if(!session.memberID) { %>
             <li class="nav-item"><a href="/User/Register" class="nav-link">Sign Up</a></li>
             <li class="nav-item"><a href="/User/Login" class="nav-link">Login</a></li>
-            <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©? ?Š¸?œ„?„° ë¡œê·¸?¸ ?—°?™  %>
+            <%# Navigation Bar ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½  %>
             <li class="nav-item">
               <a class="nav-link" rel="tooltip" title="Follow us on Twitter" data-placement="bottom" href="https://twitter.com/CreativeTim" target="_blank">
                 <i class="fab fa-twitter"></i><p class="d-lg-none d-xl-none">Twitter</p>
               </a>
             </li>
-            <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©? ?Ž˜?´?Š¤ë¶? ë¡œê·¸?¸ ?—°?™  %>
+            <%# Navigation Bar ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½? ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½  %>
             <li class="nav-item">
               <a class="nav-link" rel="tooltip" title="Like us on Facebook" data-placement="bottom" href="https://www.facebook.com/CreativeTim" target="_blank">
                 <i class="fab fa-facebook-square"></i><p class="d-lg-none d-xl-none">Facebook</p>
               </a>
             </li>
-            <%# Navigation Bar ë¡œê·¸?¸ ?•ˆ?˜?–´?žˆ?‹¤ë©? ?¸?Š¤???ê·¸ëž¨ ë¡œê·¸?¸ ?—°?™  %>
+            <%# Navigation Bar ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½???ê·¸ëž¨ ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½  %>
             <li class="nav-item">
               <a class="nav-link" rel="tooltip" title="Follow us on Instagram" data-placement="bottom" href="https://www.instagram.com/CreativeTimOfficial" target="_blank">
                 <i class="fab fa-instagram"></i><p class="d-lg-none d-xl-none">Instagram</p>
               </a>
             </li>
           <% } else { %>
-          <%# Navigation Bar ë¡œê·¸?¸ ?˜?–´?žˆê³?, Buyer ?˜?Š” Provider?¼ë©?  %>
+          <%# Navigation Bar ë¡œê·¸?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½?, Buyer ?ï¿½ï¿½?ï¿½ï¿½ Provider?ï¿½ï¿½ï¿½ï¿½?  %>
           <% if(session.type== 'buyer'|| session.type== 'provider') { %>
             <% if(session.type== 'buyer') { %>
               <li class="nav-item"><a href="/Buyer/MyWarehouse" class="nav-link">MyWarehouse</a></li>
             <% } %>
             <% if(session.type== 'provider') { %>
-              <li class="nav-item"><a href="/Provider/MyWarehouse" class="nav-link">MyWarehouse</a></li>
+              <li class="nav-item"><a href="/Provider/MyWarehouse" class="nav-link">My Warehouse</a></li>
             <% } %>
               <li class="nav-item"><a href="/User/Show" class="nav-link">MyInfo</a></li>
           <% } %>
