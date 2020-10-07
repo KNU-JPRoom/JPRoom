@@ -11,7 +11,7 @@ const ejs = require('ejs');
 
 // 1. 설정
 // 1) View 경로 설정
-app.set('views',__dirname+'/views');
+app.set('Views',__dirname+'/Views');
 // 2) 화면 Engine을 ejs로 설정
 app.set('view engine','ejs');
 app.engine('html',require('ejs').renderFile);
@@ -41,11 +41,11 @@ app.use(session({
 // 9) mySQL Connection 변수를 저장
 var dbConnection = mySQL.init();
 // 10) 각 라우터에 인자값을 넘겨주는 것
-app.use('/',require('./Routes/main')(app,session,dbConnection));
-app.use('/User',require('./Routes/user')(app,session,dbConnection));
-app.use('/Admin',require('./Routes/ad')(app,session,dbConnection));
-app.use('/Provider',require('./Routes/pv')(app,session,dbConnection));
-app.use('/Buyer',require('./Routes/by')(app,session,dbConnection));
+app.use('/',require('./Routes/main')(app,dbConnection));
+app.use('/User',require('./Routes/user')(app,dbConnection));
+app.use('/Admin',require('./Routes/ad')(app,dbConnection));
+app.use('/Provider',require('./Routes/pv')(app,dbConnection));
+app.use('/Buyer',require('./Routes/by')(app,dbConnection));
 // 11) 서버를 열 때 설정 함수
 app.listen(5000,function(req,res){
     console.log('connected!!');

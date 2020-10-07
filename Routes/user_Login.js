@@ -1,12 +1,9 @@
 exports.login = function (req,res,app,db) {
     var memberID = req.body.memberID;
     var password = req.body.password;
-    db.query('SELECT * FROM Member WHERE memberID = ?', [memberID],
-    function( error, results, fields) {
-        if (error) {
-            console.log("error ocurred", error);
-            res.redirect('/User/Login');
-        } else {
+    console.log(memberID);
+	console.log(password);
+	let results = db.query('SELECT * FROM Member WHERE memberID = ?', [memberID]);
             if(results.length > 0) {
                 if(results[0].password == password) {
                     req.session['memberID'] = results[0].memberID;
@@ -29,5 +26,3 @@ exports.login = function (req,res,app,db) {
                 res.redirect('/User/Login');
             }
         }
-    })
-}
