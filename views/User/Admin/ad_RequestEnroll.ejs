@@ -1,5 +1,7 @@
 <html>
-  <head><%- include('../../head') %></head>
+  <head>
+    <%- include('../../head') %>
+  </head>
   <body>
     <div id="content">
       <%- include('../../nav_Bar') %>
@@ -13,7 +15,7 @@
       </div>
       <div class="container">
         <table border="1">
-          <% data.forEach(function (item, index) { %>
+          <% result.forEach(function (item, index) { %>
           <tr>
             <td><%= item.reqID %></td>
             <td><%= item.reqType %></td>

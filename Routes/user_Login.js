@@ -1,4 +1,4 @@
-exports.login = function (req, res,app,db) {
+exports.login = function (req,res,app,db) {
     var memberID = req.body.memberID;
     var password = req.body.password;
     db.query('SELECT * FROM Member WHERE memberID = ?', [memberID],
