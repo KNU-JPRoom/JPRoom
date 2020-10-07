@@ -1,20 +1,162 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
     <%- include('../../head')  %>
+    <title></title>
   </head>
   <body>
+    <div id="content">
       <%- include('../../nav_Bar') %>
+      <p id= "itemSize" style="display: none" ><%=items.length%></p>
+        <% items.forEach(function (item, index) { %>
+          <p id= "<%='warehouseID_'+index%>" style="display: none" ><%=item['warehouseID']%></p>
+          <p id= "<%='warehouseName_'+index%>" style="display: none" ><%=item['warehouseName']%></p>
+          <p id= "<%='enrolledDate_'+index%>" style="display: none" ><%=item['enrolledDate']%></p>
+          <p id= "<%='address_'+index%>" style="display: none" ><%=item['address']%></p>
+          <p id= "<%='latitude_'+index%>" style="display: none" ><%=item['latitude']%></p>
+          <p id= "<%='longitude_'+index%>" style="display: none" ><%=item['longitude']%></p>
+          <p id= "<%='landArea_'+index%>" style="display: none" ><%=item['landArea']%></p>
+          <p id= "<%='floorArea_'+index%>" style="display: none" ><%=item['floorArea']%></p>
+          <p id= "<%='useableArea_'+index%>" style="display: none" ><%=item['useableArea']%></p>
+          <p id= "<%='infoComment_'+index%>" style="display: none" ><%=item['infoComment']%></p>
+          <p id= "<%='etcComment_'+index%>" style="display: none" ><%=item['etcComment']%></p>
+          <p></p>
+        <%});%>
       <div class="page-header page-header-small">
-        <div class="page-header-image" data-parallax="true" style="background-image: url('./Image/about_WH.jpg');"></div>
+        <div class="page-header-image" data-parallax="true" style="background-image: url('../../../Image/about_WH.jpg');"></div>
         <div class="content-center">
           <div class="container">
             <h1 class="title">This is our great company.</h1>
           </div>
         </div>
-        </div>
-        <div class="container">
-        <h1>TEST</h1>
       </div>
+        <div class="container pt-3 mb-3">
+          <div class="container pt-3 mb-3" style= "width : 50%; float: left;">
+            <div id="map" style="width:100%; height: 70vh;"></div>
+          </div>
+          <div class="container pt-3 mb-3" style= "width : 50%; float:right;">
+            <h2 class="mb-3">-Find Warehouse-</h2>
+            <table class="table table-hover table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th style="text-align: center">marker</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div style="overflow:auto;height:150px; padding:10px;">
+
+                        <%items.forEach(function (item, index) {%>
+                         <button type="button" id= "<%='button_'+index%>"class="btn btn-outline-success btn-block"><%=item['warehouseName']%></button>
+                        <%});%>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class = "table table-bordered">
+              <div class="jumbotron text-center">
+                <h2>Warehouse details</h2>
+              </div>
+              <tbody>
+                <tr>
+                  <th style = "width : 20%">Name</th>
+                  <td id ="whName"></td>
+                </tr>
+                <tr>
+                  <th>Address</th>
+                  <td id = "whAddress"></td>
+                </tr>
+                <tr>
+                  <th>Floor area</th>
+                  <td id = "whFloorArea"> m<sup>2</sup></td>
+                </tr>
+                <tr>
+                  <th>Useable area</th>
+                  <td id = whUseableArea> m<sup>2</sup></td>
+                </tr>
+                <tr>
+                  <th>Comment</th>
+                  <td id = whInfoComment></td>
+                </tr>
+              </tbody>
+            </table>
+            <button type="button" class="btn btn-warning btn-lg btn-block">Inquire</button>
+          </div>
+        </div>
+        <script>
+          function WHinfoPrint(){
+            WHinfo = {name : 'chang go', address :'daegu 1street 27', floorArea: 100, useableArea: 53, infoComment: 'refrigerator ready'};
+            $("#whName").html(WHinfo.name);
+            $("#whAddress").html(WHinfo.address);
+            $("#whFloorArea").html(WHinfo.floorArea);
+            $("#whUseableArea").html(WHinfo.useableArea);
+            $("#whInfoComment").html(WHinfo.infoComment);
+          }
+        </script>
+
+        <script>
+          function whload_click(){
+            $.ajax({
+              url: '/load',
+              type: 'GET',
+              success: function(data){
+                alert('data');
+
+              }
+            });
+          }
+      </script>
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCZcDJ6hvLaTFGso4BqnNoKl_m_ot7-4g&callback=initMap&region=kr"></script>
+
+      <script>
+        var itemSize = Number(document.getElementById("itemSize").innerText);
+          function initMap() {
+            var seoul = { lat: 37.5642135 ,lng: 127.0016985 };
+            var daegu = { lat: 35.87222  ,lng: 128.60250 };
+            map = new google.maps.Map(
+              document.getElementById('map'), {
+                zoom: 7,
+                center: seoul
+              });
+              var step;
+              for(step=0;step<itemSize;step++){
+                 var warehouseID = Number(document.getElementById(`warehouseID_${step}`).innerText);
+                 var warehouseName = document.getElementById(`warehouseName_${step}`).innerText;
+                 var enrolledDate = document.getElementById(`enrolledDate_${step}`).innerText;
+                 var address = document.getElementById(`address_${step}`).innerText;
+                 var latitude = parseFloat(document.getElementById(`latitude_${step}`).innerText);
+                 var longitude = parseFloat(document.getElementById(`longitude_${step}`).innerText);
+                 var landArea = Number(document.getElementById(`landArea_${step}`).innerText);
+                 var floorArea = Number(document.getElementById(`floorArea_${step}`).innerText);
+                 var useableArea = Number(document.getElementById(`useableArea_${step}`).innerText);
+                 var infoComment = document.getElementById(`infoComment_${step}`).innerText;
+                 var etcComment = document.getElementById(`etcComment_${step}`).innerText;
+
+                 var marker = new google.maps.Marker({
+                    position: {lat:latitude,lng:longitude},
+                    map: map,
+                    label: warehouseName});
+
+                    document.getElementById(`button_${step}`).onclick=
+                      function(){
+                        WHinfo = {
+                        'name' : warehouseName,
+                        'address' :address,
+                        'floorArea': floorArea,
+                        'useableArea': useableArea,
+                        'infoComment': infoComment};
+                        $("#whName").html(WHinfo.name);
+                        $("#whAddress").html(WHinfo.address);
+                        $("#whFloorArea").html(WHinfo.floorArea);
+                        $("#whUseableArea").html(WHinfo.useableArea);
+                        $("#whInfoComment").html(WHinfo.infoComment);
+                    };
+
+              }
+          }
+      </script>
     </div>
     <div class="overlay"></div>
   </body>
