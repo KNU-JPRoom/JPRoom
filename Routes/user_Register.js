@@ -1,19 +1,24 @@
+
+// 회원가입 핸들러
 exports.register = function (req, res,app,db) {
+    var mysql = require('mysql');
+    var connection = mysql.createConnection(require('../Module/db').info);
+    connection.connect();
     var user = {
         "memberID": req.body.memberID,
         "type": req.body.type,
         "name": req.body.name,
         "password": req.body.password,
-        "RN": req.body.RN,
+        "RN": req.body.RN1+'-'+req.body.RN2,
         "email": req.body.email,
-        "contactNumber": req.body.contactNumber,
+        "contactNumber": req.body.contactNumber1+'-'+req.body.contactNumber2+'-'+req.body.contactNumber3,
         "address": req.body.address,
         "national":req.body.national,
         "CN": req.body.CN,
         "CA" :req.body.CA,
         "CCN": req.body.CCN
     }
-    db.query('INSERT INTO Member SET ?' , user, function (error, results, fields) {
+    connection.query('INSERT INTO Member SET ?' , user, function (error, results, fields) {
         if (error) {
             console.log("error ocurred", error);
             res.redirect('/User/Register');
@@ -32,6 +37,7 @@ exports.register = function (req, res,app,db) {
             req.session['CA'] = user.CA;
             res.redirect('/');
         }
+        connection.end()
     });
 }
 
@@ -40,15 +46,7 @@ exports.checkID = function(req,res,app,db){
     var memberID = req.body.memberID;
     console.log(memberID);
     var b = false;
-    db.query(`SELECT * FROM Member WHERE memberID='${memberID}'`,function(error,results,fields){
-        if(error){
-            console.log("error ocurred",error);
-            res.send(false);
-        }
-        else{
-            console.log(results.length);
-            if(!results.length)res.send(true);
-            else res.send(false);
-        }
-    })
+    var results = db.query(`SELECT * FROM Member WHERE memberID='${memberID}'`);
+    if(!results.length)res.send(true);
+    else res.send(false);
 }
