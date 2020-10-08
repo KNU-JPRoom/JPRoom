@@ -10,6 +10,7 @@ module.exports = function(app,db){
     const emailIDF = require('./user_EmailIDF');
 
     router.post('/Register/MemberID',function(req,res,next){
+        console.log('reqIDCheck');
         register.checkID(req,res,app,db);
     })
 

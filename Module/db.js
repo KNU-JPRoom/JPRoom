@@ -2,7 +2,7 @@ const mysql = require('sync-mysql');
 var db_info = {
     host : 'localhost',
     user : 'root',
-    password : '',
+    password : 'password',
     database : 'JPdatabase',
 };
 

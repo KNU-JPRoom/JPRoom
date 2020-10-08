@@ -32,7 +32,7 @@
 
               <div class="form-group">
                 <label class="sr-only" for="memberID">memberID</label>
-                <input type="text" name="memberID" placeholder="ID" class="form-first-name form-control" id="memberID">
+                ID:<input type="text" name="memberID" placeholder="ID" class="form-first-name form-control" id="memberID">
 
                 <input type ="button" class="btn btn-primary" id ="idCheckButton" name="idCheckButton" value ="ID Check">
                 <% if(locals.err){ %>
@@ -40,37 +40,41 @@
                   <% } %>
                 </div>
 
+                  <div class="form-group col-md-6">
+                    <label class="sr-only" for="type">type</label>
+                    Type:<select name = "type" class="form-email form-control" id="type">
+                        <option value = "provider">provider</option>
+                        <option value = "provider">buyer</option>
+                    </select>
+                  </div>
+
                  <div class="form-group">
                    <label class="sr-only" for="name">Name</label>
-                   <input type="text" name="name" placeholder="Name" class="form-first-name form-control" id="name">
+                   Name:<input type="text" name="name" placeholder="Name" class="form-first-name form-control" id="name">
                  </div>
 
                  <div class="form-group">
                    <label class="sr-only" for="password">password</label>
-                   <input type="text" name="password" placeholder="Password" class="form-last-name form-control" id="password">
+                   Password:<input type="password" name="password" placeholder="Password" class="form-last-name form-control" id="password">
                  </div>
-
                  <div class="form-group">
                    <label class="sr-only" for="passwordConfirmation">password Confirm</label>
-                   <input type="text" name="passwordConfirmation" placeholder="Password Confirm" class="form-last-name form-control" id="passwordConfirmation">
-                 </div>
+                   Password Confirmation:<input type="password" name="passwordConfirmation" placeholder="Password Confirm" class="form-last-name form-control" id="passwordConfirmation">
+                  </div>
+                <input type ="button" class="btn btn-primary" id ="passwordCheckButton" name="passwordCheckButton" value ="Paassword Check">
 
-                 <div class="form-row">
+                 <div class="form-group">
                    <div class="form-group col-md-6">
                      <label class="sr-only" for="RN">Resident Number</label>
-                     <input type="text" name="RN1" class="form-email form-control" id="RN1">
-                   </div>
-
-                  <div class="form-group col-md-6">
-                     <label class="sr-only" for="RN">Resident Number</label>
-                     <input type="text" name="RN2" class="form-email form-control" id="RN2">
+                     Resident Number:<input type="text" name="RN1" class="form-email form-control" id="RN1">-<input type="password" name="RN2" class="form-email form-control" id="RN2">
                    </div>
                  </div>
+              </div>
 
                  <div class="form-row">
                    <div class="form-group col-md-6">
                      <label class="sr-only" for="email">Email</label>
-                     <input type="text" name="email" placeholder="Email" class="form-email form-control" id="email">
+                     Email:<input type="text" name="email" placeholder="Email" class="form-email form-control" id="email">
                    </div>
 
                    <div class="form-group col-md-6">
@@ -80,23 +84,26 @@
 
                  <div class="form-group">
                    <label class="sr-only" for="emailcheck">EmailCheck</label>
-                   <input type="text" name="emailcheck" placeholder="Email Check" class="form-email form-control" id="emailcheck">
+                   <input type="text" name="emailcheck" placeholder="Email Check" class="form-email form-control" id="emailcheck" readonly>
                 </div>
-
+                <div class="form-group">
+                  <label class="sr-only" for="emailcheck">national</label>
+                  National:<input type="text" name="national" placeholder="national" class="form-email form-control" id="national">
+               </div>
                 <div class="form-row">
                   <div class="col-md-4 my-1">
                     <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
-                    <select class="custom-select mr-sm-2" name="contactNumber1">
+                    Phone:<select class="custom-select mr-sm-2" name="contactNumber1">
                       <option selected>Number</option>
                       <option value="010">010</option>
                       <option value="011">011</option>
                       <option value="016">016</option>
                     </select>
-                  </div>
+                  </div>-
                   <div class="col-md-4">
                     <label class="sr-only" for="contactNumber ">Contact Number</label>
                     <input type="text" name="contactNumber2" class="form-email form-control" id="contactNumber2 ">
-                  </div>
+                  </div>-
                   <div class="col-md-4">
                     <label class="sr-only" for="contactNumber ">Contact Number</label>
                     <input type="text" name="contactNumber3" class="form-email form-control" id="contactNumber3 ">
@@ -105,27 +112,22 @@
 
                 <div class="form-group">
                   <label class="sr-only" for="address">Address</label>
-                  <input type="text" name="address" placeholder="Address" class="form-email form-control" id="address">
-                </div>
-
-                <div class="form-group">
-                  <label class="sr-only" for="national">National</label>
-                  <input type="text" name="national" placeholder="Nickname" class="form-email form-control" id="national">
+                  Address:<input type="text" name="address" placeholder="Address" class="form-email form-control" id="address">
                 </div>
 
                 <div class="form-group">
                   <label class="sr-only" for="CN">Company Name</label>
-                  <input type="text" name="CN" placeholder="Company Name" class="form-email form-control" id="CN">
+                  Company Name:<input type="text" name="CN" placeholder="Company Name" class="form-email form-control" id="CN">
                 </div>
 
                 <div class="form-group">
                   <label class="sr-only" for="CA">Company Address</label>
-                  <input type="text" name="CA" placeholder="Company Address" class="form-email form-control" id="CA">
+                  Company Address:<input type="text" name="CA" placeholder="Company Address" class="form-email form-control" id="CA">
                 </div>
 
                 <div class="form-group">
                   <label class="sr-only" for="CCN">Company Contact Number</label>
-                  <input type="text" name="CCN" placeholder="Company Contact Number" class="form-email form-control" id="CCN">
+                  Company Contact:<input type="text" name="CCN" placeholder="Company Contact Number" class="form-email form-control" id="CCN">
                 </div>
 
                 <button type="submit" class="btn">Sign Up</button>
@@ -138,6 +140,7 @@
   </div>
 </div>
 <div class="overlay"></div>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script>
           $(document).ready(function(){
             $('#idCheckButton').click(function(){
@@ -158,9 +161,17 @@
                   });
               }
             });
+            $('#passwordCheckButton').click(function(){
+              var password = $('#password').val();
+              var passwordConfirm = $('#passwordConfirmation').val();
+              if(password==passwordConfirm){
+                alert('Match!');
+              }
+              else
+              alert('Not Match!');
+            });
             $('#emailCheckButton').click(function(){
               var email =  $('#email').val();
-              console.log(email);
               if(email!=''){
                   $.ajax({
                   url: '/User/Register/EmailIDF',
