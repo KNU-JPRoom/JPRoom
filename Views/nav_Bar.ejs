@@ -16,12 +16,11 @@
           <%if(session.memberID){%>
             <%if(session.type == 'admin'){%>
               <a href="/Admin/Question">Question</a>
-              <a href="/Admin/Request">Request</a>
+              <a href="/Admin/RequestEnroll">RequestEnroll</a>
+              <a href="/Admin/RequestBuy">RequestBuy</a>
             <%}else if(session.type == 'buyer'){%>
-              <a href="/Buyer/Description">Description</a>
-              <a href="/Buyer/FindWH">Find</a>
+              <a href="/Buyer/FindWH">FindWH</a>
             <%}else if(session.type == 'provider'){%>
-              <a href="/Provider/Description" class="side-link">Description</a>
               <a href="/Provider/EnrollWH" class="side-link">EnrollWH</a>
             <%}%>
           <%}%>

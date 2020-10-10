@@ -50,36 +50,30 @@
             <button type="button" class="btn btn-warning btn-lg btn-block">Inquire</button>
           </div>
         </div>
-
+      <p id = "items" style="display: none"><%=items%></p>
       <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCZcDJ6hvLaTFGso4BqnNoKl_m_ot7-4g&callback=initMap&region=kr"></script>
       <script>
         var map;
         var i = 0;
         var markers = [];
-        var items = { item0: {name: 'Center wh', address :'daegu 1street 27', floorArea: 100, useableArea: 53, lat: 35.87222, lng: 128.60250},
-                      item1: {name: 'Banwol wh', address :'bw 83street 7', floorArea: 200, useableArea: 200, lat: 35.865514, lng: 128.593458},
-                      item2: {name: 'Duryu wh', address :'dr 343street 222', floorArea: 150, useableArea: 30, lat: 35.849752, lng: 128.561702},
-                      item3: {name: 'Bisan wh', address :'bs 1street 222', floorArea: 1000, useableArea: 700, lat: 35.887560, lng: 128.551989},
-                      item4: {name: 'Gold wh', address :'GG 123street 222', floorArea: 1000, useableArea: 500, lat: 35.841477, lng: 128.624990},
-                      item5: {name: 'Outside wh', address :'bc 1street 217', floorArea: 500, useableArea: 450, lat: 35.859203, lng: 128.389916}};
-
         function initMap() {
           var daegu = { lat: 35.87222 ,lng: 128.60250 };
+          var items = JSON.parse(document.getElementById("items").innerText);
           map = new google.maps.Map(
             document.getElementById('map'), {
               zoom: 12,
               center: daegu
           });
           for(key in items){
-            markers[i] = new google.maps.Marker({
-              position: {lat : items[key].lat, lng: items[key].lng},
+              markers[i] = new google.maps.Marker({
+              position: {lat : items[key].latitude, lng: items[key].longitude},
               map: map,
             });
             markers[i].addListener('click', function(){
               map.setCenter(this.getPosition());
-
               var k = 'item'+markers.indexOf(this);
-              $("#whName").html(items[k]['name']);
+              console.log(k);
+              $("#whName").html(items[k]['warehouseName']);
               $("#whAddress").html(items[k]['address']);
               $("#whFloorArea").html(items[k]['floorArea']);
               $("#whUseableArea").html(items[k]['useableArea']);

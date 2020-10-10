@@ -1,40 +1,29 @@
 exports.findWH = function (req, res,app,db) {
-    var items=[];
+    var items="{";
     let results = db.query('SELECT * from Warehouse where warehouseID IN (SELECT warehouseID from EnrolledWarehouse)');
+    console.log(results.length);
     if(results.length > 0) {
         var step;
         for(step =0;step<results.length;step++){
-            var obj={};
-            obj['warehouseID']=results[step].warehouseID;
-            obj['warehouseName']=results[step].warehouseName;
-            obj['enrolledDate']=results[step].enrolledDate;
-            obj['address'] = results[step].address;
-            obj['latitude'] = results[step].latitude;
-            obj['longitude'] = results[step].longitude;
-            obj['landArea'] = results[step].landArea;
-            obj['floorArea'] = results[step].floorArea;
-            obj['useableArea'] = results[step].useableArea;
-            obj['infoComment'] = results[step].infoComment;
-            obj['etcComment'] = results[step].etcComment;
-            items.push(obj);
+            items+= ("\"item"+step+"\":");
+            var obj="{"+
+                "\"warehouseID\" :"+ results[step].warehouseID+","+
+                "\"warehouseName\" :\""+ results[step].warehouseName+"\","+
+                "\"enrolledDate\" :\"" + results[step].enrolledDate+"\","+
+                "\"address\" :\""+ results[step].address+"\","+
+                "\"latitude\" :"+ results[step].latitude+","+
+                "\"longitude\" :"+ results[step].longitude+","+
+                "\"landArea\" :"+ results[step].landArea +","+
+                "\"floorArea\" :"+ results[step].floorArea +","+
+                "\"useableArea\" :"+ results[step].useableArea +","+
+                "\"infoComment\" :\""+ results[step].infoComment+"\","+
+               "\"etcComment\" :\""+ results[step].etcComment+"\""+
+            "}";
+            items+=obj;
+            if(step+1!=results.length)items+=","
         }
     }
+    items +="}";
     return items;
 }
 
-exports.checkID = function(req,res,app,db){
-    var memberID = req.body.memberID;
-    console.log(memberID);
-    var b = false;
-    db.query(`SELECT * FROM Member WHERE memberID='${memberID}'`,function(error,results,fields){
-        if(error){
-            console.log("error ocurred",error);
-            res.send(false);
-        }
-        else{
-            console.log(results.length);
-            if(!results.length)res.send(true);
-            else res.send(false);
-        }
-    })
-}
