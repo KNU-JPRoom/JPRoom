@@ -1,7 +1,7 @@
 module.exports = function(app,db){
     var express = require('express');
     var router = express.Router();
-    var findWH = require('./by_Find');
+    var findWH = require('./by_FindWH');
 
     router.get('/',function(req,res,next){
         res.render('User/Buyer/by_FindWH',{'app':app,'session':req.session,'db':db});
