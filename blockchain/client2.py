@@ -6,6 +6,7 @@ from blockchain import *
 
 HOST = 'localhost'
 PORT = 7777
+state = '0'
 #q = queue.Queue()
 
 blockchain = Blockchain()
@@ -15,6 +16,14 @@ def rcvMsg(sock):
     while True:
         try:
             data = sock.recv(1024)
+            if data.decode() == 'send':
+                try:
+                    m = sock.recv(1024)
+                    print(json.loads(m))
+                    if not data:
+                        print(empty)
+                except:
+                    pass
             print(data.decode())
             if not data:
                 break
@@ -34,15 +43,6 @@ def runChat():
             if msg == '/quit':
                 sock.send(msg.encode())
                 break
-            if msg == 'transaction':
-                sender = input("보내는 사람")
-                receiver   = input("받는 사람")
-                amount = input("보내는 양")
-                blockchain.new_transaction(sender,receiver,amount)
-                transactions = blockchain.current_transaction
-                data = pickle.dumps(transactions)
-                sock.send(data)
-                continue
             if msg == 'chain':
                 print(blockchain)       #blockchain객체의 주소를 출력함.
                 # queue 로 동기화(;)
@@ -55,7 +55,7 @@ def runChat():
                 data = pickle.dumps(chain)
                 sock.send(data)
                 continue
-            if msg == 'mine':
+            if msg == 'mine':                       #추후 입력을 받지않아도 일정 수의 contarct data가 쌓이면 mining하게끔 해주어야함.
                 last_block = blockchain.last_block
                 last_proof = last_block['proof']    #block 에 저장되어있는 json내부의 proof property를 저장. proof property에는 magic number(최초 3개의 해쉬값 000을 만족시키기 위해 산출된 숫자)
                 previous_hash = blockchain.hash(last_block)
@@ -79,7 +79,12 @@ def runChat():
                 data = 'ready'
                 data = pickle.dumps(data)
                 sock.send(data)
+
                 continue
+#            if(state == '1'):        #준비가 된 상태이면
+#                date = pickle.dumps(state)
+#                sock.send(data)
+#                continue
 
             sock.send(msg.encode())
 
