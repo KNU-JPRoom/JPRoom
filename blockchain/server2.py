@@ -2,11 +2,17 @@ import socketserver
 import threading
 import pickle
 import sys
-
+import json
 import blockchain
+from json import loads
 
 HOST = '127.0.0.1'
 PORT = 7777
+#q = queue.Queue()                #연속적으로 들어올 condata를 저정하기위한 큐
+contractData = {}
+
+contractData['1'] = '{"transaction": "sena->russian", "amount": 30}'
+
 lock = threading.Lock() # syncronized 동기화 진행하는 스레드 생성
 
 class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는 클래스
@@ -17,7 +23,7 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
 
    def __init__(self):
        self.users = {} # 사용자의 등록 정보를 담을 사전 {사용자 이름:(소켓,주소),...}
-       self.readyState = {}
+       self.readyState = {} #각 client의 준비상태를 저장하는 dictionnary {사용자이름:(state)}
 
    def addUser(self, username, conn, addr): # 사용자 ID를 self.users에 추가하는 함수
       if username in self.users: # 이미 등록된 사용자라면
@@ -54,16 +60,17 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
       print('--- 노드 참여자 수 [%d]' %len(self.users))
 
 
-   def messageHandler(self, username, msg): # 전송한 msg를 처리하는 부분
-      if msg == '/quit': # 보낸 메세지가 'quit'이면
+   def messageHandler(self, username, msg):     # 전송한 msg를 처리하는 부분
+      if msg == '/quit':                        # 보낸 메세지가 'quit'이면
          self.removeUser(username)
          return -1
-      elif msg == 'ready':
-         self.setReadyState(username, msg)
+      elif msg == 'ready':                          #client측에서 준비완료된 상태라면.
+         self.setUserState(username, 1)
          if self.isReady() == 0:
-            self.sendMessageToAll('send contract data')
+            self.sendMessageToAll('send')
+            self.sendConDataToAll(contractData['1'])
       else:
-         self.sendMessageToAll('[%s] %s' %(username,msg))    #input이 'quit'가 아니라면 broadcast
+         self.sendMessageToAll('[%s] %s' %(username, msg))    #input이 'quit'가 아니라면 broadcast
          return
 
       return
@@ -89,9 +96,9 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
       for conn, addr in self.users.values():
              conn.send(msg.encode())
 
-   def sendConDataToAll(self, username, msg):
+   def sendConDataToAll(self, msg):
       for conn, addr in self.users.values():
-             conn.send(json.dumps(msg))
+             conn.send(json.dumps(msg).encode())       #json 형태의 string을 encode해서 각 client에게 전송.
 
 #   def sendDataToClient(self, msg):
 #           self.sendMessageToAll(self, 'John -> Jenny : 15')
@@ -101,8 +108,8 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
 class MyTcpHandler(socketserver.BaseRequestHandler):
    userman = UserManager()
 
-   def handle(self):
-      print('[%s] 연결됨' %self.client_address[0])   # 클라이언트가 접속시 클라이언트 주소 출력
+   def handle(self):                                    #클라이언트에서 요청이 들어오면 handle이 호출됨.
+      print('[%s] 연결됨' %self.client_address[0])       # 클라이언트가 접속시 클라이언트 주소 출력
       try:
           username = self.registerUsername()
           self.userman.setUserState(username, 0)
@@ -139,7 +146,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 
    def registerUsername(self):
       while True:
-         self.request.send('ID:'.encode())
+         self.request.send(json.dumps('ID :').encode())
          username = self.request.recv(1024) #유저가 ID입력시 receive
          username = username.decode().strip()   #decoding input data
          if self.userman.addUser(username, self.request, self.client_address):  #self.request -> conn
