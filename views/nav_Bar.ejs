@@ -16,7 +16,8 @@
           <%if(session.memberID){%>
             <%if(session.type == 'admin'){%>
               <a href="/Admin/Question">Question</a>
-              <a href="/Admin/Request">Request</a>
+              <a href="/Admin/RequestEnroll">Request Enroll</a>
+              <a href="/Admin/RequestBuy">Request Buy</a>
             <%}else if(session.type == 'buyer'){%>
               <a href="/Buyer/Description">Description</a>
               <a href="/Buyer/FindWH">Find</a>
@@ -48,7 +49,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/About"><i class="now-ui-icons shopping_shop"></i><p>About</p></a>
         </li>
-
 
         <!-- <%# NavBar Board Button %>
         <li class="nav-item dropdown">

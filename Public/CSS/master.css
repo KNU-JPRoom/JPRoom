@@ -4,6 +4,12 @@
     width: auto;
 }
 
+.Enroll_Field {
+  margin:15px;
+  padding:15px;
+  border:groove;
+}
+
 #content {
     width: 100%;
     min-height: 100vh;
@@ -278,20 +284,6 @@ a.article:hover {
 }
 
 .bootstrap-switch input[type='radio'],
-.bootstrap-switch input[type='checkbox'] {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  filter: alpha(opacity=0);
-  z-index: -1;
-}
-
-.bootstrap-switch input[type='radio'].form-control,
-.bootstrap-switch input[type='checkbox'].form-control {
-  height: auto;
-}
-
 .bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-handle-on,
 .bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-handle-off,
 .bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-label {
@@ -878,12 +870,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .btn[disabled].focus,
 .btn[disabled]:active,
 .btn[disabled].active,
-fieldset[disabled] .btn,
-fieldset[disabled] .btn:hover,
-fieldset[disabled] .btn:focus,
-fieldset[disabled] .btn.focus,
-fieldset[disabled] .btn:active,
-fieldset[disabled] .btn.active,
 .navbar .navbar-nav>a.btn.disabled,
 .navbar .navbar-nav>a.btn.disabled:hover,
 .navbar .navbar-nav>a.btn.disabled:focus,
@@ -902,15 +888,6 @@ fieldset[disabled] .btn.active,
 .navbar .navbar-nav>a.btn[disabled].focus,
 .navbar .navbar-nav>a.btn[disabled]:active,
 .navbar .navbar-nav>a.btn[disabled].active,
-fieldset[disabled] .navbar .navbar-nav>a.btn,
-fieldset[disabled] .navbar .navbar-nav>a.btn:hover,
-fieldset[disabled] .navbar .navbar-nav>a.btn:focus,
-fieldset[disabled] .navbar .navbar-nav>a.btn.focus,
-fieldset[disabled] .navbar .navbar-nav>a.btn:active,
-fieldset[disabled] .navbar .navbar-nav>a.btn.active {
-  background-color: #888888;
-  border-color: #888888;
-}
 
 .btn.btn-simple,
 .navbar .navbar-nav>a.btn.btn-simple {
@@ -1105,15 +1082,6 @@ fieldset[disabled] .navbar .navbar-nav>a.btn.active {
 .btn-primary[disabled].focus,
 .btn-primary[disabled]:active,
 .btn-primary[disabled].active,
-fieldset[disabled] .btn-primary,
-fieldset[disabled] .btn-primary:hover,
-fieldset[disabled] .btn-primary:focus,
-fieldset[disabled] .btn-primary.focus,
-fieldset[disabled] .btn-primary:active,
-fieldset[disabled] .btn-primary.active {
-  background-color: #f96332;
-  border-color: #f96332;
-}
 
 .btn-primary.btn-simple {
   color: #f96332;
@@ -1201,15 +1169,6 @@ fieldset[disabled] .btn-primary.active {
 .btn-success[disabled].focus,
 .btn-success[disabled]:active,
 .btn-success[disabled].active,
-fieldset[disabled] .btn-success,
-fieldset[disabled] .btn-success:hover,
-fieldset[disabled] .btn-success:focus,
-fieldset[disabled] .btn-success.focus,
-fieldset[disabled] .btn-success:active,
-fieldset[disabled] .btn-success.active {
-  background-color: #18ce0f;
-  border-color: #18ce0f;
-}
 
 .btn-success.btn-simple {
   color: #18ce0f;
@@ -1297,15 +1256,6 @@ fieldset[disabled] .btn-success.active {
 .btn-info[disabled].focus,
 .btn-info[disabled]:active,
 .btn-info[disabled].active,
-fieldset[disabled] .btn-info,
-fieldset[disabled] .btn-info:hover,
-fieldset[disabled] .btn-info:focus,
-fieldset[disabled] .btn-info.focus,
-fieldset[disabled] .btn-info:active,
-fieldset[disabled] .btn-info.active {
-  background-color: #2CA8FF;
-  border-color: #2CA8FF;
-}
 
 .btn-info.btn-simple {
   color: #2CA8FF;
@@ -1393,15 +1343,6 @@ fieldset[disabled] .btn-info.active {
 .btn-warning[disabled].focus,
 .btn-warning[disabled]:active,
 .btn-warning[disabled].active,
-fieldset[disabled] .btn-warning,
-fieldset[disabled] .btn-warning:hover,
-fieldset[disabled] .btn-warning:focus,
-fieldset[disabled] .btn-warning.focus,
-fieldset[disabled] .btn-warning:active,
-fieldset[disabled] .btn-warning.active {
-  background-color: #FFB236;
-  border-color: #FFB236;
-}
 
 .btn-warning.btn-simple {
   color: #FFB236;
@@ -1489,16 +1430,6 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger[disabled].focus,
 .btn-danger[disabled]:active,
 .btn-danger[disabled].active,
-fieldset[disabled] .btn-danger,
-fieldset[disabled] .btn-danger:hover,
-fieldset[disabled] .btn-danger:focus,
-fieldset[disabled] .btn-danger.focus,
-fieldset[disabled] .btn-danger:active,
-fieldset[disabled] .btn-danger.active {
-  background-color: #FF3636;
-  border-color: #FF3636;
-}
-
 .btn-danger.btn-simple {
   color: #FF3636;
   border-color: #FF3636;
@@ -1585,15 +1516,6 @@ fieldset[disabled] .btn-danger.active {
 .btn-neutral[disabled].focus,
 .btn-neutral[disabled]:active,
 .btn-neutral[disabled].active,
-fieldset[disabled] .btn-neutral,
-fieldset[disabled] .btn-neutral:hover,
-fieldset[disabled] .btn-neutral:focus,
-fieldset[disabled] .btn-neutral.focus,
-fieldset[disabled] .btn-neutral:active,
-fieldset[disabled] .btn-neutral.active {
-  background-color: #FFFFFF;
-  border-color: #FFFFFF;
-}
 
 .btn-neutral.btn-danger {
   color: #FF3636;
@@ -1890,12 +1812,6 @@ fieldset[disabled] .btn-neutral.active {
 [class*="btn-outline-"][disabled].focus,
 [class*="btn-outline-"][disabled]:active,
 [class*="btn-outline-"][disabled].active,
-fieldset[disabled] [class*="btn-outline-"],
-fieldset[disabled] [class*="btn-outline-"]:hover,
-fieldset[disabled] [class*="btn-outline-"]:focus,
-fieldset[disabled] [class*="btn-outline-"].focus,
-fieldset[disabled] [class*="btn-outline-"]:active,
-fieldset[disabled] [class*="btn-outline-"].active,
 .btn-link.disabled,
 .btn-link.disabled:hover,
 .btn-link.disabled:focus,
@@ -1914,14 +1830,6 @@ fieldset[disabled] [class*="btn-outline-"].active,
 .btn-link[disabled].focus,
 .btn-link[disabled]:active,
 .btn-link[disabled].active,
-fieldset[disabled] .btn-link,
-fieldset[disabled] .btn-link:hover,
-fieldset[disabled] .btn-link:focus,
-fieldset[disabled] .btn-link.focus,
-fieldset[disabled] .btn-link:active,
-fieldset[disabled] .btn-link.active {
-  background-color: transparent;
-}
 
 .btn-lg {
   font-size: 1em;
@@ -2355,11 +2263,6 @@ fieldset[disabled] .btn-link.active {
 
 .form-control[disabled],
 .form-control[readonly],
-fieldset[disabled] .form-control {
-  background-color: #E3E3E3;
-  color: #888888;
-  cursor: not-allowed;
-}
 
 .input-group-btn .btn {
   border-width: 1px;
@@ -2410,37 +2313,6 @@ textarea.form-control:active {
   padding: 0 12px;
 }
 
-.form-group input[type=file] {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-}
-
-.form-check {
-  margin-top: .65rem;
-  padding-left: 0;
-}
-
-.form-check .form-check-label {
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-  padding-left: 35px;
-  line-height: 26px;
-  margin-bottom: 0;
-  -webkit-transition: color 0.3s linear;
-  -moz-transition: color 0.3s linear;
-  -o-transition: color 0.3s linear;
-  -ms-transition: color 0.3s linear;
-  transition: color 0.3s linear;
-}
-
 .radio .form-check-sign {
   padding-left: 28px;
 }
@@ -2475,34 +2347,6 @@ textarea.form-control:active {
   color: #555555;
   border: 0;
   background-color: inherit;
-}
-
-.form-check.disabled .form-check-label,
-.form-check.disabled .form-check-label {
-  color: #9A9A9A;
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-.form-check input[type="checkbox"],
-.radio input[type="radio"] {
-  opacity: 0;
-  position: absolute;
-  visibility: hidden;
-}
-
-.form-check input[type="checkbox"]:checked+.form-check-sign::after {
-  opacity: 1;
-}
-
-.form-control input[type="checkbox"]:disabled+.form-check-sign::before,
-.checkbox input[type="checkbox"]:disabled+.form-check-sign::after {
-  cursor: not-allowed;
-}
-
-.form-check input[type="checkbox"]:disabled+.form-check-sign,
-.form-check input[type="radio"]:disabled+.form-check-sign {
-  pointer-events: none;
 }
 
 .form-check-radio .form-check-sign::before,
@@ -5698,24 +5542,6 @@ img {
 
 [data-background-color]:not([data-background-color="gray"]) p.blockquote {
   border-color: rgba(255, 255, 255, 0.2);
-}
-
-[data-background-color]:not([data-background-color="gray"]) .checkbox label::before,
-[data-background-color]:not([data-background-color="gray"]) .checkbox label::after,
-[data-background-color]:not([data-background-color="gray"]) .radio label::before,
-[data-background-color]:not([data-background-color="gray"]) .radio label::after {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-[data-background-color]:not([data-background-color="gray"]) .checkbox label::after,
-[data-background-color]:not([data-background-color="gray"]) .checkbox label,
-[data-background-color]:not([data-background-color="gray"]) .radio label {
-  color: #FFFFFF;
-}
-
-[data-background-color]:not([data-background-color="gray"]) .checkbox input[type="checkbox"]:disabled+label,
-[data-background-color]:not([data-background-color="gray"]) .radio input[type="radio"]:disabled+label {
-  color: #FFFFFF;
 }
 
 [data-background-color]:not([data-background-color="gray"]) .radio input[type="radio"]:not(:disabled):hover+label::after,

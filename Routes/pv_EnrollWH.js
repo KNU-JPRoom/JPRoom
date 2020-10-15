@@ -1,4 +1,4 @@
-exports.requestWH = function(req,res,app,db){
+exports.enrollWH = function(req,res,app,db){
     db.query('SELECT * FROM RequestForBuy', function(error,results,fields){
         if(error) throw error;
         else {
