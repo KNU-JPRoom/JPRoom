@@ -1,4 +1,3 @@
-
 exports.RequestForBuy = function (req, res,app,db) {
   var items="{";
   let results = db.query('SELECT * from RequestForBuy');

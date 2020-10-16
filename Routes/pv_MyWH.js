@@ -1,4 +1,3 @@
-
 exports.RequestForEnroll = function (req, res,app,db) {
   var items="{";
   let results = db.query('SELECT * from RequestForEnroll where providerID =?',[req.session.memberID]);

@@ -32,25 +32,28 @@
             <% result.forEach(function (item, index) { %>
               <div class="card mb-1">
                   <div class="card-header">
-                    <a class="card-link" data-toggle="collapse" href="#collapseOne">
                         <table border="1">
+                            <form  method="post" id="loginForm">
                             <tr>
                                 <td><%= item.reqID %></td>
                                 <td><%= item.reqDate %></td>
+                                <td><%= item.provideServiceID %></td>
                                 <td><%= item.buyerID %></td>
-                                <td><%= item.warehouseID %></td>
-                                <td><%= item.warehouseName %></td>
+                                <%if(item.reqType=="RequestBuy"){%>
                                 <td>
                                     <div class="btn-group">
-                                        <%if(item.reqType=="requestBuy"){%>
-                                            <button type="button" class="btn btn-primary">ok</button>
-                                                <button type="button" class="btn btn-danger">reject</button>
-                                        <%}%>
+                                          <button type="submit" class="btn btn-primary" onclick="javascript: form.action='/Admin/RequestBuy/OK';">ok</button>
+                                          <button type="submit" class="btn btn-danger" onclick="javascript: form.action='/Admin//RequestBuy/NO';">reject</button>
                                     </div>
                                 </td>
+                                <%}%>
                             </tr>
+                            <input type="hidden" name="reqID" value="<%= item.reqID %>"></input>
+                            <input type="hidden" name="reqDate" value="<%= item.reqDate %>"></input>
+                            <input type="hidden" name="provideServiceID" value="<%= item.provideServiceID %>"></input>
+                            <input type="hidden" name="buyerID" value="<%= item.buyerID %>"></input>
+                          </form>
                         </table>
-                    </a>
                 </div>
             <% }); %>
         <div>

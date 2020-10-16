@@ -16,8 +16,13 @@
           <%if(session.memberID){%>
             <%if(session.type == 'admin'){%>
               <a href="/Admin/Question">Question</a>
+<<<<<<< HEAD:Views/nav_Bar.ejs
               <a href="/Admin/RequestEnroll">RequestEnroll</a>
               <a href="/Admin/RequestBuy">RequestBuy</a>
+=======
+              <a href="/Admin/RequestEnroll">Request Enroll</a>
+              <a href="/Admin/RequestBuy">Request Buy</a>
+>>>>>>> 0013a406a4957a1953e1314005b06f6a59b9ca07:views/nav_Bar.ejs
             <%}else if(session.type == 'buyer'){%>
               <a href="/Buyer/FindWH">FindWH</a>
             <%}else if(session.type == 'provider'){%>
@@ -47,7 +52,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/About"><i class="now-ui-icons shopping_shop"></i><p>About</p></a>
         </li>
-
 
         <!-- <%# NavBar Board Button %>
         <li class="nav-item dropdown">

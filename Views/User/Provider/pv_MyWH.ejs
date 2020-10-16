@@ -16,7 +16,49 @@
         </div>
       </div>
       <div class="container">
-        <h1>pv_myWH</h1>
+        <div id="accordion" style = "height : 50vh">
+            <% result.forEach(function (item, index) { %>
+              <div class="card mb-1">
+                  <div class="card-header">
+                        <table border="1">
+                            <tr>
+                              <form method="post" id="loginForm">
+                                <td><%= item.reqID %></td>
+                                <td><%= item.reqDate %></td>
+                                <td><%= item.reqType %></td>
+                                <td><%= item.provideServiceID %></td>
+                                <td><%= item.buyerID %></td>
+                                <%if(item.reqType=="requestEnroll"){%>
+                                <td>
+                                    <div class="btn-group">
+                                            <button type="submit" class="btn btn-primary" onclick="javascript: form.action='/Admin/MyWarehouse/OK';">ok</button>
+                                            <button type="submit" class="btn btn-danger" onclick="javascript: form.action='/Admin/MyWarehouse/NO';">reject</button>
+                                    </div>
+                                </td>
+                                <%}%>
+                                <input type="hidden" name="reqID" value="<%= item.reqID %>"></input>
+                                <input type="hidden" name="reqDate" value="<%= item.reqDate %>"></input>
+                                <input type="hidden" name="providerID" value="<%= item.providerID %>"></input>
+                                <input type="hidden" name="warehouseID" value="<%= item.warehouseID %>"></input>
+                                <input type="hidden" name="warehouseName" value="<%= item.warehouseName %>"></input>
+                              </form>
+                            </tr>
+                        </table>
+
+                </div>
+            <% }); %>
+        <div>
+          <ul class="pagination" >
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
       </div>
     </div>
     <div class="overlay"></div>

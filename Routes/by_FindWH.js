@@ -72,4 +72,3 @@ exports.RequestWH = function(req,res,app,db){
       });
     connection.end()
 }
-
