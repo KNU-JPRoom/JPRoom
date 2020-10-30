@@ -26,6 +26,25 @@ exports.findWH = function (req, res,app,db) {
     return items;
 }
 
+exports.findImage =function (req, res,app,db) {
+    var items="{";
+    let results = db.query(`SELECT * from FileInfo where warehouseID=${req.body.warehouseID}`);
+    if(results.length > 0) {
+        var step;
+        for(step =0;step<results.length;step++){
+            items+= ("\"image"+step+"\":");
+            var obj="{"+
+                "\"title\" : \""+ results[step].filename+"\","+
+                "\"url\" :\"../../Public/Upload/"+results[step].filename+"\""+
+            "}";
+            items+=obj;
+            if(step+1<results.length)items+=","
+        }
+    }
+    items +="}";
+    return items;
+}
+
 exports.RequestWH = function(req,res,app,db){
     var mysql = require('mysql');
     var connection = mysql.createConnection(require('../Module/db').info);
