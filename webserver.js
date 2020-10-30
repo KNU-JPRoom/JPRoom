@@ -70,3 +70,44 @@ app.listen(5000,function(req,res){
 });
 
 
+
+const http = require('http');
+const socketIO = require('socket.io');
+const BLOCK_CHAIN_PORT = 7000;
+const RFID_PORT = 8000;
+
+let BLOCK_CHAIN_SERVER = http.createServer(app);
+let RFID_SERVER = http.createServer(app);
+
+let BLOCK_CHAIN_IO = socketIO(BLOCK_CHAIN_SERVER);
+let RFID_IO = socketIO(RFID_SERVER);
+
+
+RFID_IO.on('connection',(socket)=>{
+  console.log("RFID connected");
+  socket.emit('newMessage',{
+    Info: "Infomation"    
+  })
+  socket.on('disconnect',()=>{
+    console.log("RFID disconnected");
+  })
+})
+
+BLOCK_CHAIN_IO.on('connection',(socket)=>{
+  console.log("BLOCK_CHAIN connected");
+  socket.emit('newMessage',{
+    Info: "Infomation"    
+  })
+  socket.on('disconnect',()=>{
+    console.log("RFID disconnected");
+  })
+})
+
+BLOCK_CHAIN_SERVER.listen(BLOCK_CHAIN_PORT,()=>{
+  console.log(`BLOCK_CHAIN_SERVER is up on PORT ${BLOCK_CHAIN_PORT}`);
+})
+
+
+BLOCK_CHAIN_SERVER.listen(RFID_PORT,()=>{
+  console.log(`RFID_SERVER is up on PORT ${RFID_PORT}`);
+})

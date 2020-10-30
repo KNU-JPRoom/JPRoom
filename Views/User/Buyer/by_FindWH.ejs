@@ -46,10 +46,17 @@
                 <tr>
                   <th>Comment</th>
                   <td id = whInfoComment></td>
+                  <td id = whID></td>
                 </tr>
               </tbody>
             </table>
-            <button type="button" class="btn btn-warning btn-lg btn-block">Inquire</button>
+            <button class="btn btn-warning btn-lg btn-block" data-toggle="collapse" data-target="#inquire">Inquire</button>
+
+            <div id="inquire" class="collapse">
+              사용할 면적 <input type ="text" id="area"/>
+              <button  type="submit" class="btn btn-primary" id="bu">submit</button>
+            </div>
+
           </div>
         </div>
       <p id = "items" style="display: none"><%=items%></p>
@@ -62,7 +69,6 @@
         function createImage(objImageInfo){
           var strDOM = "";
          for( image in objImageInfo){
-            console.log(objImageInfo[image]["title"]);
             strDOM+=`<div class  = "image_panel">`;
             strDOM+=`<img src="${objImageInfo[image]["url"]}">`;
             strDOM+=`<p class="title">${objImageInfo[image]["title"]}</p>`;
@@ -82,19 +88,19 @@
               markers[i] = new google.maps.Marker({
               position: {lat : items[key].latitude, lng: items[key].longitude},
               map: map,
-            });
+            }); 
             markers[i].addListener('click', function(){
+              var k = 'item'+markers.indexOf(this);
               $.ajax({
                   url: '/Buyer/FindWH/FindImage',
                   type: 'POST',
-                  data:{'warehouseID':items[key].warehouseID},
+                  data:{'warehouseID':items[k].warehouseID},
                   dataType : 'json',
                   success : function(data){
                       createImage(data)
                   }
               })
               map.setCenter(this.getPosition());
-              var k = 'item'+markers.indexOf(this);
               $("#whName").html(items[k]['warehouseName']);
               $("#whAddress").html(items[k]['address']);
               $("#whFloorArea").html(items[k]['floorArea']);
@@ -105,6 +111,20 @@
           }
         }
 
+        $('#bu').click(function() {
+            $.ajax({
+                  url: '/Buyer/FindWH/Inquire',
+                  dataType: 'json',
+                  type: 'POST',
+                  data: {
+                    warehouseID:   
+                    area: $('#area').val()
+                  },
+                  success: function(data) {
+                    alert('good');
+                 }
+              });
+        });
       </script>
     </div>
     <div class="overlay"></div>

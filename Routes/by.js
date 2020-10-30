@@ -7,14 +7,14 @@ module.exports = function(app,db){
         res.render('User/Buyer/by_FindWH',{'app':app,'session':req.session,'db':db});
     });
     router.post('/FindWH/FindImage',function(req,res,next){
-        console.log('here!!');
         var items = findWH.findImage(req,res,app,db);
-        console.log(items);
         res.send(JSON.parse(items));
+    });
+    router.post('/FindWH/Inquire',function(req,res,next){
+        findWH.inquireWH(req,res,app,db);
     });
     router.get('/FindWH',function(req,res,next){
         var items = findWH.findWH(req,res,app,db);
-        console.log(items);
         res.render('User/Buyer/by_FindWH',{'app':app,'session':req.session,'db':db,'items':items});
     });
 

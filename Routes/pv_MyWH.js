@@ -74,56 +74,40 @@ exports.Mywarehouse = function(req,res,app,db){
   return items;
 }
 
-exports.withAnswer = function(req,res,app,db){
+exports.ReqEnrollAns = function(req,res,app,db){
+  var providerID = req.body.providerID;
   var reqID = req.body.reqID;
   var reqType = req.body.reqType;
   var answer = req.body.answer;
-  var group = req.body.group;
   var mysql = require('mysql');
+  console.log(reqID);
+  console.log(reqType);
+  console.log(answer);
   var connection = mysql.createConnection(require('../Module/db').info);
   connection.connect();
-  if(answer=="Delete"){
-    connection.query(`DELETE FROM ${group} WHERE reqID =?`,[reqID],function (error, results, fields) {
-        if(error){
-          res.send(false);
-        }
-        else
-          res.send(true);
-    });
-  }
-  else if(answer="Accept"){
-    if(reqType=="RequestBuy_byBuyer"){
-      connection.query(`UPDATE RequestForBuy SET reqType='RequestBuy_Accepted_byProvider' WHERE reqID =?`,[reqID],function (error, results, fields) {
-        if(error){
-          res.send(false);
-        }
-        else
-          res.send(true);
-      });
-    }
-    else if(reqType=="RequestPay_Accepted"){
-      connection.query('DELETE FROM RequestForBuy WHERE reqID =?',[reqID],function (error, results, fields) {
-        if(error){
-          res.send(false);
-        }
-        else
-          res.send(true);
-      });
-    }
-  }
-  else if(answer="Reject"){
-    connection.query(`UPDATE RequestForBuy SET reqType='RequestRejected_byProvider' WHERE reqID =?`,[reqID],function (error, results, fields) {
-      if(error){
-        res.send(false);
+  if(answer="Approve"){
+      if(reqType=="ReqRejectPV"){
+        connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
+          if(error){connection.end();}
+          else{
+            res.redirect('/Provider/pv_EnrollWH');
+            connection.end();
+          }
+        });
       }
-      else
-        res.send(true);
-    });
+    }
+    else if(answer="Cancel"){
+      connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
+        if(error){connection.end();}
+        else{
+          res.redirect('/Provider/pv_EnrollWH');
+          connection.end();
+        }
+      });
   }
-  connection.end();
 }
 
-exports.withInfo = function(req,res,app,db){
+exports.ReqBuyAns = function(req,res,app,db){
   var warehouseID = req.body.warehouseID;
     let results = db.query('SELECT * from Warehouse where warehouseID =?',[warehouseID]);
     var obj ="";

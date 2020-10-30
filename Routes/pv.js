@@ -28,7 +28,15 @@ module.exports = function(app,db){
         )
     });
 
-    router.get('/MyWarehouse',function(req,res,next){
+    router.post('/MyWarehouse/MyWHAns',function(req,res,next){
+        pv_myWH.requestWH(req,res,app,req.session,db);
+    });
+
+    router.post('/MyWarehouse/ReqEnrollPV',function(req,res,next){
+        pv_myWH.requestWH(req,res,app,req.session,db);
+    });
+
+    router.post('/MyWarehouse/ReqBuyPV',function(req,res,next){
         pv_myWH.requestWH(req,res,app,req.session,db);
     });
 
