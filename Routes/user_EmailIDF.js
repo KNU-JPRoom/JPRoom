@@ -1,4 +1,5 @@
 exports.emailIDF = function(req,res,app,db){
+    console.log('!!!')
     let authNum = Math.random().toString().substr(2,6);
     
     const ejs = require('ejs');

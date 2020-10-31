@@ -41,12 +41,12 @@
                 </tr>
                 <tr>
                   <th>Useable area</th>
-                  <td id = whUseableArea> m<sup>2</sup></td>
+                  <td id = "whUseableArea"> m<sup>2</sup></td>
                 </tr>
                 <tr>
                   <th>Comment</th>
                   <td id = whInfoComment></td>
-                  <td id = whID></td>
+                  <td id = "whID" style="display: none"></td>
                 </tr>
               </tbody>
             </table>
@@ -101,6 +101,7 @@
                   }
               })
               map.setCenter(this.getPosition());
+              $("#whID").html(items[k]['warehouseID']);
               $("#whName").html(items[k]['warehouseName']);
               $("#whAddress").html(items[k]['address']);
               $("#whFloorArea").html(items[k]['floorArea']);
@@ -112,16 +113,20 @@
         }
 
         $('#bu').click(function() {
+            console.log(document.getElementById("whID").innerText);
             $.ajax({
                   url: '/Buyer/FindWH/Inquire',
                   dataType: 'json',
                   type: 'POST',
                   data: {
-                    warehouseID:   
+                    warehouseID: document.getElementById("whID").innerText,
                     area: $('#area').val()
                   },
                   success: function(data) {
-                    alert('good');
+                    if(data==true)
+                      alert('good');
+                    else
+                      alert('false');
                  }
               });
         });

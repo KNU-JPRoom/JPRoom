@@ -28,20 +28,22 @@ module.exports = function(app,db){
         )
     });
 
-    router.post('/MyWarehouse/MyWHAns',function(req,res,next){
-        pv_myWH.requestWH(req,res,app,req.session,db);
+    router.post('/MyWarehouse/Buy/Ans',function(req,res,next){
+        console.log('kkkkkk');
+        pv_myWH.ReqBuyAns(req,res,app,db);
     });
 
-    router.post('/MyWarehouse/ReqEnrollPV',function(req,res,next){
-        pv_myWH.requestWH(req,res,app,req.session,db);
+    router.post('/MyWarehouse/Enroll/Ans',function(req,res,next){
+        console.log('.................');
+        pv_myWH.ReqEnrollAns(req,res,app,db);
     });
-
-    router.post('/MyWarehouse/ReqBuyPV',function(req,res,next){
-        pv_myWH.requestWH(req,res,app,req.session,db);
-    });
-
     router.get('/MyWarehouse',function(req,res,next){
-        res.render('User/Provider/pv_MyWH',{'app':app,'session':req.session,'db':db});
+        var enrollItems = pv_myWH.RequestForEnroll(req,res,app,db);
+        var requestItems = pv_myWH.RequestForBuy(req,res,app,db);
+        enrollItems = JSON.parse(enrollItems);
+        requestItems = JSON.parse(requestItems);
+        console.log(requestItems);
+        res.render('User/Provider/pv_MyWH',{'app':app,'session':req.session,'db':db,'enrollItems':enrollItems,'requestItems':requestItems});
     });
 
     return router;

@@ -1,6 +1,7 @@
 exports.RequestForEnroll = function (req, res,app,db) {
   var items="{";
-  let results = db.query('SELECT * from RequestForEnroll where providerID =?',[req.session.memberID]);
+  var sql = "SELECT * from RequestForEnroll where providerID ='"+req.session['memberID']+"'";
+  let results = db.query(sql);
   if(results.length > 0) {
       var step;
       for(step =0;step<results.length;step++){
@@ -10,11 +11,10 @@ exports.RequestForEnroll = function (req, res,app,db) {
               "\"reqDate\" :\""+ results[step].reqDate+"\","+
               "\"reqType\" :\"" + results[step].reqType+"\","+
               "\"warehouseID\" :"+ results[step].warehouseID+","+
-              "\"providerID\" :\""+ results[step].providerID  +"\","+
-              "\"logID\" :"+ results[step].logID+","+
+              "\"providerID\" :\""+ results[step].providerID  +"\""+
           "}";
           items+=obj;
-          if(step+1!=results.length)items+=","
+          if(step+1<results.length)items+=","
       }
   }
   items +="}";
@@ -23,7 +23,8 @@ exports.RequestForEnroll = function (req, res,app,db) {
 
 exports.RequestForBuy = function (req, res,app,db) {
   var items="{";
-  let results = db.query('SELECT * from RequestForBuy where warehouseID IN (SELECT warehouseID from Provider where memberID = ?)',[req.session['memberID']]);
+  var sql = "select * from RequestForBuy where warehouseID in (SELECT warehouseID from Provider where memberID='"+req.session['memberID']+"')";
+  let results = db.query(sql);
   if(results.length > 0) {
       var step;
       for(step =0;step<results.length;step++){
@@ -33,14 +34,14 @@ exports.RequestForBuy = function (req, res,app,db) {
               "\"reqDate\" :\""+ results[step].reqDate+"\","+
               "\"reqType\" :\"" + results[step].reqType+"\","+
               "\"warehouseID\" :"+ results[step].warehouseID+","+
-              "\"buyerID\" :\""+ results[step].buyerID+"\","+
-              "\"logID\" :"+ results[step].logID+","+
+              "\"buyerID\" :\""+ results[step].buyerID+"\""+
           "}";
           items+=obj;
-          if(step+1!=results.length)items+=","
+          if(step+1<results.length)items+=","
       }
   }
   items +="}";
+  console.log(items);
   return items;
 }
 
@@ -48,7 +49,8 @@ exports.RequestForBuy = function (req, res,app,db) {
 
 exports.Mywarehouse = function(req,res,app,db){
   var items="{";
-  let results = db.query('SELECT * from Warehouse where warehouseID IN (SELECT warehouseID from Provider where memberID = ?)',[req.session['memberID']]);
+  var sql = "select * from Warehouse where warehouseID in (SELECT warehouseID from Provider where memberID = '"+req.session['memberID']+"'";
+  let results = db.query(sql);
   if(results.length > 0) {
       var step;
       for(step =0;step<results.length;step++){
@@ -67,7 +69,7 @@ exports.Mywarehouse = function(req,res,app,db){
               "\"etcComment\" :\""+ results[step].etcComment+"\""+
           "}";
           items+=obj;
-          if(step+1!=results.length)items+=","
+          if(step+1<results.length)items+=","
       }
   }
   items +="}";
@@ -75,56 +77,75 @@ exports.Mywarehouse = function(req,res,app,db){
 }
 
 exports.ReqEnrollAns = function(req,res,app,db){
-  var providerID = req.body.providerID;
+  var warehouseID = req.body.whID;
   var reqID = req.body.reqID;
-  var reqType = req.body.reqType;
   var answer = req.body.answer;
   var mysql = require('mysql');
-  console.log(reqID);
-  console.log(reqType);
-  console.log(answer);
   var connection = mysql.createConnection(require('../Module/db').info);
   connection.connect();
-  if(answer="Approve"){
-      if(reqType=="ReqRejectPV"){
-        connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
-          if(error){connection.end();}
-          else{
-            res.redirect('/Provider/pv_EnrollWH');
-            connection.end();
-          }
-        });
+  if(answer="Confirm"){
+    connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
+      if(error){
+        console.log(error);
+        connection.end();
       }
-    }
+      else{
+        res.redirect('/Provider/MyWarehouse');
+        connection.end();
+      }
+    });    
+  }
     else if(answer="Cancel"){
       connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
-        if(error){connection.end();}
-        else{
-          res.redirect('/Provider/pv_EnrollWH');
+        if(error){
+          console.log(error);
           connection.end();
+        }
+        else{
+          connection.query(`DELETE FROM Warehouse WHERE warehouseID =${warehouseID}`,function (error, results, fields) {
+            if(error){
+              console.log(error);
+              connection.end();
+            }
+            else{
+              res.redirect('/Provider/MyWarehouse');
+              connection.end();
+            }
+          });
         }
       });
   }
 }
 
 exports.ReqBuyAns = function(req,res,app,db){
-  var warehouseID = req.body.warehouseID;
-    let results = db.query('SELECT * from Warehouse where warehouseID =?',[warehouseID]);
-    var obj ="";
-    if(results.length > 0) {
-      obj="{"+
-      "\"warehouseID\" :"+ results[step].warehouseID+","+
-      "\"warehouseName\" :\""+ results[step].warehouseName+"\","+
-      "\"enrolledDate\" :\"" + results[step].enrolledDate+"\","+
-      "\"address\" :\""+ results[step].address+"\","+
-      "\"latitude\" :"+ results[step].latitude+","+
-      "\"longitude\" :"+ results[step].longitude+","+
-      "\"landArea\" :"+ results[step].landArea +","+
-      "\"floorArea\" :"+ results[step].floorArea +","+
-      "\"useableArea\" :"+ results[step].useableArea +","+
-      "\"infoComment\" :\""+ results[step].infoComment+"\","+
-     "\"etcComment\" :\""+ results[step].etcComment+"\""+
-    "}";
+  var reqID = req.body.reqID;
+  var reqType = req.body.reqType;
+  var answer = req.body.answer;
+  console.log(answer);
+  var mysql = require('mysql');
+  var connection = mysql.createConnection(require('../Module/db').info);
+  connection.connect();
+  if(answer=="Approve"){
+      if(reqType=="ReqByAdmin"){
+        connection.query(`UPDATE RequestForBuy SET reqType='ReqPayByBuyer' WHERE reqID =${reqID}`,function (error, results, fields){
+          res.redirect('/Provider/MyWarehouse');
+          connection.end();
+        });
+      }
     }
-    return obj;
+  else if(answer=="Cancel"){
+    connection.query(`UPDATE RequestForBuy SET reqType='RejByPv' WHERE reqID =${reqID}`,function (error, results, fields){
+      res.redirect('/Provider/MyWarehouse');
+      connection.end();
+    });
+  }
+  else if(answer=="Confirm"){
+    console.log('!!!!#$$$');
+    if(reqType=="ReqPayAcpt"||reqType=="RejByBuyer"){
+        connection.query(`DELETE FROM RequestForBuy WHERE reqID =${reqID}`,function (error, results, fields) {
+        res.redirect('/Provider/MyWarehouse');
+        connection.end();
+        });
+    }
+  }
 }

@@ -16,50 +16,167 @@
         </div>
       </div>
       <div class="container">
-        <div id="accordion" style = "height : 50vh">
-            <% result.forEach(function (item, index) { %>
-              <div class="card mb-1">
-                  <div class="card-header">
-                        <table border="1">
-                            <tr>
-                              <form method="post" id="loginForm">
-                                <td><%= item.reqID %></td>
-                                <td><%= item.reqDate %></td>
-                                <td><%= item.provideServiceID %></td>
-                                <td><%= item.buyerID %></td>
-                                <%if(item.reqType=="RequestBuy"){%>
-                                <td>
-                                    <div class="btn-group">
-                                            <button type="submit" class="btn btn-primary" onclick="javascript: form.action='MyWarehouse/OK';">ok</button>
-                                            <button type="submit" class="btn btn-danger" onclick="javascript: form.action='MyWarehouse/NO';">reject</button>
-                                    </div>
-                                </td>
-                                <%}%>
-                                <input type="hidden" name="reqID" value="<%= item.reqID %>"></input>
-                                <input type="hidden" name="reqDate" value="<%= item.reqDate %>"></input>
-                                <input type="hidden" name="providerID" value="<%= item.provideServiceID %>"></input>
-                                <input type="hidden" name="buyerID" value="<%= item.buyerID %>"></input>
-
-                              </form>
-                            </tr>
-                        </table>
-
-                </div>
-            <% }); %>
-        <div>
-          <ul class="pagination" >
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
+        <div class="container mb-3">
+          <h2 class="mb-3">Warehouse Enroll lists</h2>
+          <% for(var i=0; i < Object.keys(enrollItems).length; i++) { %>
+            <p id = "whID0<%=i%>" style="display: none"><%= enrollItems['item'+i].warehouseID %></p>
+            <p id = "reqID0<%=i%>" style="display: none"><%= enrollItems['item'+i].reqID%></p>
+            <p id = "reqType0<%=i%>" style="display: none"><%= enrollItems['item'+i].reqType%></p>
+            <p id = "memberID0<%=i%>" style="display: none"><%= enrollItems['item'+i].providerID%></p>
+          <%}%>
+          <table class="board-table table ">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < Object.keys(enrollItems).length; i++) { %>
+                 <% if(enrollItems['item'+i].reqType == "ReqEnrollPV"){ %>
+                   <tr class="table-warning">
+                     <td><%= enrollItems['item'+i].warehouseID %></td>
+                     <td>Pending approval</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(0, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(enrollItems['item'+i].reqType == "ReqEnrollRejected"){ %>
+                   <tr class="table-danger">
+                     <td><%= enrollItems['item'+i].warehouseID %></td>
+                     <td>Rejected</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(0, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+              <% } %>
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="container mb-3">
+          <h2 class="mb-3">Buy Request lists</h2>
+          <% for(var i=0; i < Object.keys(requestItems).length; i++) { %>
+            <p id = "whID1<%=i%>" style="display: none"><%= requestItems['item'+i].warehouseID %></p>
+            <p id = "reqID1<%=i%>" style="display: none"><%= requestItems['item'+i].reqID%></p>
+            <p id = "reqType1<%=i%>" style="display: none"><%= requestItems['item'+i].reqType%></p>
+            <p id = "memberID1<%=i%>" style="display: none"><%= requestItems['item'+i].buyerID%></p>
+            <p id = "area1<%=i%>" style="display: none"><%= requestItems['item'+i].area%></p>
+          <%}%>
+          <table class="board-table table ">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < Object.keys(requestItems).length; i++) { %>
+                 <% if(requestItems['item'+i].reqType == "ReqByAdmin"){ %>
+                   <tr class="table-warning">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Pending approval</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 1)">Approve</button>
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(requestItems['item'+i].reqType == "ReqPayByBuyer"){ %>
+                   <tr class="table-primary">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Waiting for payment</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(requestItems['item'+i].reqType == "ReqPayAcpt"){ %>
+                   <tr class="table-success">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Approved</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(requestItems['item'+i].reqType == "Rejected"){ %>
+                   <tr class="table-danger">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Rejected</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="overlay"></div>
   </body>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    function pvClick(where, i, flag) {
+      var URL = '/Provider/MyWarehouse/Enroll/Ans';
+      var Area = null;
+      if(where){
+        URL = '/Provider/MyWarehouse/Buy/Ans';
+        Area = document.getElementById('area'+where+i).innerText
+      }
+      alert(flag);
+      switch (flag) {
+        case 0: // Cancel
+          $.ajax({
+            url: URL,
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Cancel",
+                  reqID: document.getElementById('reqID'+where+i).innerText,
+                  whID: document.getElementById('whID'+where+i).innerText,
+                  reqType: document.getElementById('reqType'+where+i).innerText,
+                  memberID: document.getElementById('memberID'+where+i).innerText,
+                  area: Area
+                  //other things will be here
+                }
+          });
+          break;
+        case 1: // Approve
+          $.ajax({
+            url: URL,
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Approve",
+                  reqID: document.getElementById('reqID'+where+i).innerText,
+                  whID: document.getElementById('whID'+where+i).innerText,
+                  reqType: document.getElementById('reqType'+where+i).innerText,
+                  memberID: document.getElementById('memberID'+where+i).innerText,
+                  area: Area
+                  //other things will be here
+                }
+          });
+          break;
+        case 2: // Confirm
+          $.ajax({
+            url: URL,
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Confirm",
+                  reqID: document.getElementById('reqID'+where+i).innerText,
+                  whID: document.getElementById('whID'+where+i).innerText,
+                  reqType: document.getElementById('reqType'+where+i).innerText,
+                  memberID: document.getElementById('memberID'+where+i).innerText,
+                  area: Area
+                  //other things will be here
+                }
+          });
+          break;
+      }
+    }
+  </script>
 </html>

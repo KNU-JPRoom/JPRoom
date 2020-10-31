@@ -23,6 +23,7 @@ exports.findWH = function (req, res,app,db) {
         }
     }
     items +="}";
+    console.log(items);
     return items;
 }
 
@@ -46,22 +47,31 @@ exports.findImage =function (req, res,app,db) {
 }
 
 exports.inquireWH =function (req, res,app,db) {
-    var items="{";
-    let results = db.query(`SELECT * from FileInfo where warehouseID=${req.body.warehouseID}`);
-    if(results.length > 0) {
-        var step;
-        for(step =0;step<results.length;step++){
-            items+= ("\"image"+step+"\":");
-            var obj="{"+
-                "\"title\" : \""+ results[step].filename+"\","+
-                "\"url\" :\"../../Public/Upload/"+results[step].filename+"\""+
-            "}";
-            items+=obj;
-            if(step+1<results.length)items+=","
+    var mysql = require('mysql');
+    var connection = mysql.createConnection(require('../Module/db').info);
+    connection.connect();
+    let result = db.query('select * from RequestForBuy');
+    var reqno = result.length+1;
+    var reqItem ={
+        "reqID":reqno,
+        "reqDate":new Date(),
+        "reqType":"ReqByBuyer",
+        "buyerID":req.session['memberID'],
+        "warehouseID":parseInt(req.body.warehouseID),
+        "area":parseInt(req.body.area),
+        "logID":1
+    };
+    connection.query('INSERT INTO RequestForBuy SET ?' , reqItem, function (error, results, fields) {
+        if(error){
+            console.log(error);
+            res.send(false);
+            connection.end();
         }
-    }
-    items +="}";
-    return items;
+        else{
+            res.redirect('/Provider/MyWarehouse');
+            connection.end();
+        }
+    })
 }
 
 exports.RequestWH = function(req,res,app,db){

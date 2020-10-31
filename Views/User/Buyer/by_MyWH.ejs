@@ -16,9 +16,120 @@
         </div>
       </div>
       <div class="container">
-        <h1>MyWH</h1>
+        <div class="container mb-3">
+          <h2 class="mb-3">Submit lists</h2>
+          <% for(var i=0; i < Object.keys(items).length; i++) { %>
+            <p id = "whID<%=i%>" style="display: none"><%= items['item'+i].warehouseID %></p>
+            <p id = "reqID<%=i%>" style="display: none"><%= items['item'+i].reqID%></p>
+            <p id = "reqType<%=i%>" style="display: none"><%= items['item'+i].reqType%></p>
+            <p id = "buyerID<%=i%>" style="display: none"><%= items['item'+i].buyerID%></p>
+            <p id = "area<%=i%>" style="display: none"><%= items['item'+i].area%></p>
+          <%}%>
+          <table class="board-table table ">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < Object.keys(items).length; i++) { %>
+                 <% if(items['item'+i].reqType == "ReqByBuyer" || items['item'+i].reqType == "ReqByAdmin"){ %>
+                   <tr class="table-warning">
+                     <td><%= items['item'+i].warehouseID %></td>
+                     <td>Pending approval</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(items['item'+i].reqType == "ReqPayByBuyer"){ %>
+                   <tr class="table-primary">
+                     <td><%= items['item'+i].warehouseID %></td>
+                     <td>Waiting for payment</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 1)">Pay</button>
+                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(items['item'+i].reqType == "ReqPayAcpt"){ %>
+                   <tr class="table-success">
+                     <td><%= items['item'+i].warehouseID %></td>
+                     <td>Approved</td>
+                     <td></td>
+                   </tr>
+                 <% } %>
+                 <% if(items['item'+i].reqType == "Rejected"){ %>
+                   <tr class="table-danger">
+                     <td><%= items['item'+i].warehouseID %></td>
+                     <td>Rejected</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+              <% } %>
+            </tbody>
+
+          </table>
+
+        </div>
       </div>
     </div>
     <div class="overlay"></div>
   </body>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    function byClick(i, flag) {
+      switch (flag) {
+        case 0: // Cancel
+          $.ajax({
+            url: '/MyWarehouse/Buy/Ans',
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Cancel",
+                  reqID: document.getElementById('reqID'+i).innerText,
+                  whID: document.getElementById('whID'+i).innerText,
+                  reqType: document.getElementById('reqType'+i).innerText,
+                  buyerID: document.getElementById('buyerID'+i).innerText,
+                  area: document.getElementById('area'+i).innerText
+                  //other things will be here
+                }
+          });
+          break;
+        case 1: // Pay
+          $.ajax({
+            url: '/Buyer/MyWarehouse/Buy/Ans',
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Accept",
+                  reqID: document.getElementById('reqID'+i).innerText,
+                  whID: document.getElementById('whID'+i).innerText,
+                  reqType: document.getElementById('reqType'+i).innerText,
+                  buyerID: document.getElementById('buyerID'+i).innerText,
+                  area: document.getElementById('area'+i).innerText
+                  //other things will be here
+                }
+          });
+          break;
+        case 2: // Confrim
+          $.ajax({
+            url: '/Buyer/MyWarehouse/Buy/Ans',
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Confirm",
+                  reqID: document.getElementById('reqID'+i).innerText,
+                  whID: document.getElementById('whID'+i).innerText,
+                  reqType: document.getElementById('reqType'+i).innerText,
+                  buyerID: document.getElementById('buyerID'+i).innerText,
+                  area: document.getElementById('area'+i).innerText
+                  //other things will be here
+                }
+          });
+          break;
+      }
+    }
+  </script>
 </html>

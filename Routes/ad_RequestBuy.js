@@ -1,6 +1,8 @@
 exports.RequestForBuy = function (req, res,app,db) {
   var items="{";
-  let results = db.query('SELECT * from RequestForBuy');
+  var sql = `select * from RequestForBuy`;
+  console.log(sql);
+  let results = db.query(sql);
   if(results.length > 0) {
       var step;
       for(step =0;step<results.length;step++){
@@ -9,12 +11,12 @@ exports.RequestForBuy = function (req, res,app,db) {
               "\"reqID\" :"+ results[step].reqID+","+
               "\"reqDate\" :\""+ results[step].reqDate+"\","+
               "\"reqType\" :\"" + results[step].reqType+"\","+
-              "\"warehouseID\" :"+ results[step].warehouseID+","+
+              "\"warehouseID\" :"+ results[step].warehouseID +","+
               "\"buyerID\" :\""+ results[step].buyerID+"\","+
-              "\"logID\" :"+ results[step].logID+","+
+              "\"area\" :"+ results[step].area+
           "}";
           items+=obj;
-          if(step+1!=results.length)items+=","
+          if(step+1<results.length)items+=","
       }
   }
   items +="}";
@@ -25,26 +27,21 @@ exports.withAnswer = function(req,res,app,db){
   var reqID = req.body.reqID;
   var reqType = req.body.reqType;
   var answer = req.body.answer;
-  var group = req.body.group;
   var mysql = require('mysql');
   var connection = mysql.createConnection(require('../Module/db').info);
   connection.connect();
-  if(answer="Accept"){
-    if(reqType=="RequestBuy_byBuyer"){
-      
-    }
-    else if(reqType="RequestPay_Accepted"){
-      
+  if(answer=="Approve"){
+    if(reqType=="ReqByBuyer"){
+      connection.query(`UPDATE RequestForBuy SET reqType='ReqByAdmin' WHERE reqID=?`,[reqID],function (error, results, fields) {
+        res.redirect('/Admin/RequestBuy');
+        connection.end();
+      });
     }
   }
-  else if(answer="Reject"){
-    connection.query(`UPDATE RequestForBuy SET reqType='RequestRejected_byAdmin' WHERE reqID =?`,[reqID],function (error, results, fields) {
-      if(error){
-        res.send(false);
-      }
-      else
-        res.send(true);
+  else if(answer=="Reject"){
+    connection.query(`UPDATE RequestForBuy SET reqType='RejByAdmin' WHERE reqID =?`,[reqID],function (error, results, fields) {
+        res.redirect('/Admin/RequestBuy');
+    connection.end();
     });
   }
-  connection.end();
 }

@@ -77,7 +77,7 @@
                    </div>
 
                    <div class="form-group col-md-6">
-                     <input type ="button" class="btn btn-primary" id = "idCheckButton" name="idCheckButton" value ="Email Check">
+                     <input type ="button" class="btn btn-primary" id = "emailCheckButton" name="emailCheckButton" value ="Email Check">
                    </div>
                  </div>
 
@@ -171,6 +171,7 @@
             });
             $('#emailCheckButton').click(function(){
               var email =  $('#email').val();
+              console.log(email);
               if(email!=''){
                   $.ajax({
                   url: '/User/Register/EmailIDF',

@@ -15,6 +15,7 @@ module.exports = function(app,db){
     })
 
     router.post('/Register/EmailIDF',function(req,res,next){
+        console.log('A')
         emailIDF.emailIDF(req,res,app,db);
     });
 

@@ -23,10 +23,9 @@
             </div>
           </div>
         </div>
-
         <div class="container">
           <div class="jumbotron" style = "text-align : center">
-            <h1>request list</h1>
+            <h1>RequestEnroll list</h1>
           </div>
           <div class="container mb-3">
 
@@ -38,7 +37,6 @@
               <p id = "providerID<%=i%>" style="display: none"><%= items['item'+i].providerID%></p>
             <%}%>
             <table class="board-table table ">
-
               <thead class="thead-dark">
                 <tr>
                   <th>Title</th>
@@ -48,23 +46,19 @@
               </thead>
               <tbody>
                 <% for(var i=0; i < Object.keys(items).length; i++) { %>
-
                    <% if(items['item'+i].reqType == "ReqEnrollPV"){ %>
                      <tr class="table-warning">
                        <td><%= items['item'+i].warehouseID %></td>
                        <td>Pending approval</td>
                        <td style="float:right; padding:0px 10px 0px 0px;">
-                         <button type="button" class="btn btn-sm" onclick="ApproveClick(<%=i%>)">Approval</button>
-                         <button type="button" class="btn btn-sm">Cancel</button>
+                         <button type="button" class="btn btn-sm" onclick="adClick(<%=i%>, 1)">Approval</button>
+                         <button type="button" class="btn btn-sm" onclick="adClick(<%=i%>, 0)">Cancel</button>
                        </td>
                      </tr>
                    <% } %>
-
                 <% } %>
               </tbody>
-
             </table>
-
           </div>
         </div>
     </div>
@@ -72,26 +66,28 @@
   </body>
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
   <script>
-
-    function ApproveClick(i) {
-      alert(i);
-      var whID = 'whID'+i;
-      var reqID = 'reqID'+i;      
-      $.ajax({
-            url: '/Admin/RequestEnroll',
-            dataType: 'json',
-            type: 'POST',
-            data: {
-              answer: "Approve",
-              providerID: document.getElementById('providerID'+i).innerText,
-              reqType: document.getElementById('reqType'+i).innerText,
-              warehouseID: parseInt(document.getElementById('whID'+i).innerText),
-              reqID: parseInt(document.getElementById("reqID"+i).innerText)
-            },
-            success: function(data) {
-              alert('good');
-           }
-        });
+    function adClick(i, flag) {
+      if(flag){ // flag == 1 -> Approve
+        $.ajax({
+              url: '/Admin/RequestEnroll',
+              dataType: 'json',
+              type: 'POST',
+              data: {
+                answer: "Approve",
+                providerID: document.getElementById('providerID'+i).innerText,
+                reqType: document.getElementById('reqType'+i).innerText,
+                warehouseID: parseInt(document.getElementById('whID'+i).innerText),
+                reqID: parseInt(document.getElementById("reqID"+i).innerText)
+              }
+          });
+      }else { // flag == 0 -> Reject
+        $.ajax({
+              url: '/Admin/RequestEnroll',
+              dataType: 'json',
+              type: 'POST',
+              data: {answer: "Reject", reqID: document.getElementById('whID'+i).innerText}
+          });
+      }
     }
   </script>
 </html>

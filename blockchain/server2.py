@@ -5,7 +5,8 @@ import sys
 import json
 import blockchain
 from json import loads
-
+storage = []
+["provider_id and buyer_id are contracted eachother ",]
 HOST = '127.0.0.1'
 PORT = 7777
 #q = queue.Queue()                #연속적으로 들어올 condata를 저정하기위한 큐

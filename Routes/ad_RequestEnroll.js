@@ -27,29 +27,23 @@ exports.withAnswer = function(req,res,app,db){
   var reqType = req.body.reqType;
   var answer = req.body.answer;
   var mysql = require('mysql');
-  console.log(reqID);
-  console.log(reqType);
-  console.log(answer);
   var connection = mysql.createConnection(require('../Module/db').info);
   connection.connect();
-  if(answer="Approve"){
+  if(answer=="Approve"){
       if(reqType=="ReqEnrollPV"){
-        let reqResult = db.query('SELECT * from Provider ORDER BY provideServiceID DESC');
-        var psID = 1;
-        if(reqResult.length>0) psID = reqResult[0].provideServiceID+1;
+        let reqResult = db.query('SELECT * from Provider');
+        var psID = reqResult.length+1;
         var info={
           "memberID": providerID,
           "warehouseID": req.body.warehouseID,
-          "provideServiceID": psID
         };
-        console.log(info);
         connection.query('INSERT INTO Provider SET ?',info,function (error, results, fields) {
           if(error){
             console.log(error);
             connection.end();
           }
           else{
-            connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
+            connection.query("DELETE FROM RequestForEnroll WHERE reqID ="+reqID,function (error, results, fields) {
               if(error){connection.end();}
               else{
                 connection.query('INSERT INTO EnrolledWarehouse SET ?',{'warehouseID':info["warehouseID"],'logID':11111111},function (error, results, fields) {
@@ -65,12 +59,20 @@ exports.withAnswer = function(req,res,app,db){
         });
       }
     }
-    else if(answer="Reject"){
+    else if(answer=="Reject"){
       connection.query(`UPDATE RequestForEnroll SET reqType='ReqRejectPV' WHERE reqID =?`,[reqID],function (error, results, fields) {
       if(error){connection.end();}
       else{
-        res.redirect('/Admin/ad_RequestEnroll');
-        connection.end();
+        connection.query(`DELETE FROM Warehouse WHERE warehouseID =${warehouseID}`,function (error, results, fields) {
+          if(error){
+            console.log(error);
+            connection.end();
+          }
+          else{
+            res.redirect('/Provider/MyWarehouse');
+            connection.end();
+          }
+        });
       }
     });
   }

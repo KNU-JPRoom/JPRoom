@@ -69,6 +69,8 @@ app.listen(5000,function(req,res){
     console.log('connected!!');
 });
 
+
+
 // var net = require('net');
 // function getConnection(connName){
 //   var client = net.connect({port:7777,host:'localhost'},function(){

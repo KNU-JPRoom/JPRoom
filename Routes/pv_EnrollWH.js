@@ -50,7 +50,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
                   res.send(false);
                 }
                 else{
-                 res.send(true);
+                  res.redirect('/Provider/MyWarehouse');
                 }
               });
             }
