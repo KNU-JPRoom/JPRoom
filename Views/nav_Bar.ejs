@@ -8,11 +8,6 @@
       <ul class="list-unstyled components">
         <li>
           <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
-            <!-- <ul class="collapse list-unstyled" id="homeSubmenu">
-              <li><a href="#">Home 1</a></li>
-              <li><a href="#">Home 2</a></li>
-              <li><a href="#">Home 3</a></li>
-            </ul> -->
           <%if(session.memberID){%>
             <%if(session.type == 'admin'){%>
               <a href="/Admin/Question">Question</a>
@@ -25,10 +20,6 @@
             <%}%>
           <%}%>
         </li>
-      </ul>
-      <ul class="list-unstyled CTAs">
-        <li><a class="download">Download source</a></li>
-        <li><a class="article">Back to article</a></li>
       </ul>
     </nav>
 
@@ -47,17 +38,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/About"><i class="now-ui-icons shopping_shop"></i><p>About</p></a>
         </li>
-
-        <!-- <%# NavBar Board Button %>
-        <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink1" data-toggle="dropdown"><i class="now-ui-icons design_app"></i><p>Board</p></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink1">
-
-              <%# NavBar Board Dropdown Menu %>
-              <a class="dropdown-item" href="./index.html"><i class="now-ui-icons business_chart-pie-36"></i> All components</a>
-              <a class="dropdown-item" target="_blank"><i class="now-ui-icons design_bullet-list-67"></i> Documentation</a>
-            </div>
-        </li> -->
 
         <% if(session.memberID) { %>
           <% if(session.type== 'admin') { %>

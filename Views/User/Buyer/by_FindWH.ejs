@@ -21,11 +21,9 @@
           </div>
           <div class="container pt-3 mb-3" style= "width : 50%; height: 80vh;float:right;">
             <table class = "table table-bordered">
-              <div  id = "image_container">
-              </div>
-              <!-- <div class="jumbotron text-center">
+              <div class="jumbotron text-center">
                 <h2>Warehouse details</h2>
-              </div> -->
+              </div>
               <tbody>
                 <tr>
                   <th style = "width : 20%">Name</th>
@@ -49,27 +47,22 @@
                 </tr>
               </tbody>
             </table>
-            <button type="button" class="btn btn-warning btn-lg btn-block">Inquire</button>
+
+            <button class="btn btn-warning btn-lg btn-block" data-toggle="collapse" data-target="#inquire">Inquire</button>
+
+            <div id="inquire" class="collapse">
+              사용할 면적 <input type ="text" id="area"/>
+              <button  type="submit" class="btn btn-primary" id="bu">submit</button>
+            </div>
+
           </div>
         </div>
       <p id = "items" style="display: none"><%=items%></p>
       <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCZcDJ6hvLaTFGso4BqnNoKl_m_ot7-4g&callback=initMap&region=kr"></script>
-      <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
       <script>
         var map;
         var i = 0;
         var markers = [];
-        function createImage(objImageInfo){
-          var strDOM = "";
-         for( image in objImageInfo){
-            console.log(objImageInfo[image]["title"]);
-            strDOM+=`<div class  = "image_panel">`;
-            strDOM+=`<img src="${objImageInfo[image]["url"]}">`;
-            strDOM+=`<p class="title">${objImageInfo[image]["title"]}</p>`;
-            strDOM+=`</div>`
-          }
-          document.getElementById("image_container").innerHTML = strDOM;
-        }
         function initMap() {
           var daegu = { lat: 35.87222 ,lng: 128.60250 };
           var items = JSON.parse(document.getElementById("items").innerText);
@@ -84,17 +77,9 @@
               map: map,
             });
             markers[i].addListener('click', function(){
-              $.ajax({
-                  url: '/Buyer/FindWH/FindImage',
-                  type: 'POST',
-                  data:{'warehouseID':items[key].warehouseID},
-                  dataType : 'json',
-                  success : function(data){
-                      createImage(data)
-                  }
-              })
               map.setCenter(this.getPosition());
               var k = 'item'+markers.indexOf(this);
+              console.log(k);
               $("#whName").html(items[k]['warehouseName']);
               $("#whAddress").html(items[k]['address']);
               $("#whFloorArea").html(items[k]['floorArea']);
@@ -104,8 +89,23 @@
             i++;
           }
         }
-
       </script>
+      <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+      <script>
+
+        $('#bu').click(function() {
+            $.ajax({
+                  url: '/inquire',
+                  dataType: 'json',
+                  type: 'POST',
+                  data: {val: $('#area').val()},
+                  success: function(data) {
+                    alert('good');
+                 }
+              });
+        });
+      </script>
+
     </div>
     <div class="overlay"></div>
   </body>

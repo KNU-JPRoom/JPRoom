@@ -1,26 +1,36 @@
 exports.RequestForBuy = function (req, res,app,db) {
-  var items="{";
-  let results = db.query('SELECT * from RequestForBuy where buyerID =?',[req.session.memberID]);
-  if(results.length > 0) {
-      var step;
-      for(step =0;step<results.length;step++){
-          items+= ("\"item"+step+"\":");
-          var obj="{"+
-              "\"reqID\" :"+ results[step].reqID+","+
-              "\"reqDate\" :\""+ results[step].reqDate+"\","+
-              "\"reqType\" :\"" + results[step].reqType+"\","+
-              "\"warehouseID\" :"+ results[step].warehouseID+","+
-              "\"buyerID\" :\""+ results[step].buyerID+"\","+
-              "\"logID\" :"+ results[step].logID+","+
-          "}";
-          items+=obj;
-          if(step+1!=results.length)items+=","
-      }
-  }
-  items +="}";
+  // var items="{";
+  // let results = db.query('SELECT * from RequestForBuy where buyerID =?',[req.session.memberID]);
+  // if(results.length > 0) {
+  //     var step;
+  //     for(step =0;step<results.length;step++){
+  //         items+= ("\"item"+step+"\":");
+  //         var obj="{"+
+  //             "\"reqID\" :"+ results[step].reqID+","+
+  //             "\"reqDate\" :\""+ results[step].reqDate+"\","+
+  //             "\"reqType\" :\"" + results[step].reqType+"\","+
+  //             "\"warehouseID\" :"+ results[step].warehouseID+","+
+  //             "\"buyerID\" :\""+ results[step].buyerID+"\","+
+  //             "\"logID\" :"+ results[step].logID+","+
+  //         "}";
+  //         items+=obj;
+  //         if(step+1!=results.length)items+=","
+  //     }
+  // }
+  // items +="}";
+  items = { "item0": { "reqID":'id_v' , "reqDate":'2000-02-02', "reqType":'rbb',
+              "warehouseID":'whid_v', "buyerID":'buyerid_v', "logID":'logid_v' },
+            "item1": { "reqID":'id_vv' , "reqDate":'2000-02-02', "reqType":'rba',
+              "warehouseID":'whid_vv', "buyerID":'buyerid_vv', "logID":'logid_vv' },
+            "item2": { "reqID":'id_vv' , "reqDate":'2000-02-02', "reqType":'rpbb',
+              "warehouseID":'whid_vv', "buyerID":'buyerid_vv', "logID":'logid_vv' },
+            "item3": { "reqID":'id_vv' , "reqDate":'2000-02-02', "reqType":'rpa',
+              "warehouseID":'whid_vv', "buyerID":'buyerid_vv', "logID":'logid_vv' },
+            "item4": { "reqID":'id_vv' , "reqDate":'2000-02-02', "reqType":'rejected',
+              "warehouseID":'whid_vv', "buyerID":'buyerid_vv', "logID":'logid_vv' }
+              };
   return items;
 }
-
 
 exports.Mywarehouse = function(req,res,app,db){
   var items="{";

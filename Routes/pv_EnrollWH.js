@@ -1,27 +1,17 @@
-exports.EnrollWH = function(req,res,app,db,fileName){
+exports.EnrollWH = function(req,res,app,db){
   var mysql = require('mysql');
   var connection = mysql.createConnection(require('../Module/db').info);
   connection.connect();
-  var fileInfo = {
-    "warehouseID":req.body.warehouseID,
-    "filename": fileName
-  };
-  connection.query('INSERT INTO FileInfo SET ?' , fileInfo, function (error, results, fields) {
-      if (error) {
-          console.log("error ocurred", error);
-          res.send(false);
-      } 
-  });
   var item = {
       "warehouseID": req.body.warehouseID,
       "warehouseName": req.body.warehouseName,
-      "enrolledDate": new Date(),
+      "enrolledDate": CURRENT_TIMESTAMP(),
       "address": req.body.address,
       "latitude": req.body.latitude,
       "longitude": req.body.longitude,
       "landArea": req.body.landArea,
       "floorArea": req.body.floorArea,
-      "useableArea": 0,
+      "useableArea":req.body.useableArea,
       "infoComment": req.body.infoComment,
       "etcComment" :req.body.etcComment
   }
@@ -40,7 +30,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
       } else {
           var reqItem ={
             "reqID":reqno,
-            "reqDate":new Date(),
+            "reqDate":CURRENT_TIMESTAMP(),
             "reqType":"RequestEnroll_byProvider",
             "providerID":req.body.providerID,
             "warehouseID":req.body.warehouseID,
@@ -55,7 +45,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
               var logitem={
                 "logID":logno,
                 "logType":"RequestEnroll_byProvider",
-                "logDate":new Date(),
+                "logDate":CURRENT_TIMESTAMP(),
                 "logComment":`${req.body.providerID}가${req.body.warehouseID}를 창고등록요청함`
               }
               connection.query('INSERT INTO Log SET ?' , logitem, function (error, results, fields) {
@@ -64,12 +54,12 @@ exports.EnrollWH = function(req,res,app,db,fileName){
                   res.send(false);
                 }
                 else{
-                  res.redirect('/');
-                  connection.end();
+                  res.send(true);
                 }
               });
             }
           });
         }
     });
+  connection.end()
 }

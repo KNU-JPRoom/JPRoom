@@ -16,50 +16,155 @@
         </div>
       </div>
       <div class="container">
-        <div id="accordion" style = "height : 50vh">
-            <% result.forEach(function (item, index) { %>
-              <div class="card mb-1">
-                  <div class="card-header">
-                        <table border="1">
-                            <tr>
-                              <form method="post" id="loginForm">
-                                <td><%= item.reqID %></td>
-                                <td><%= item.reqDate %></td>
-                                <td><%= item.provideServiceID %></td>
-                                <td><%= item.buyerID %></td>
-                                <%if(item.reqType=="RequestBuy"){%>
-                                <td>
-                                    <div class="btn-group">
-                                            <button type="submit" class="btn btn-primary" onclick="javascript: form.action='MyWarehouse/OK';">ok</button>
-                                            <button type="submit" class="btn btn-danger" onclick="javascript: form.action='MyWarehouse/NO';">reject</button>
-                                    </div>
-                                </td>
-                                <%}%>
-                                <input type="hidden" name="reqID" value="<%= item.reqID %>"></input>
-                                <input type="hidden" name="reqDate" value="<%= item.reqDate %>"></input>
-                                <input type="hidden" name="providerID" value="<%= item.provideServiceID %>"></input>
-                                <input type="hidden" name="buyerID" value="<%= item.buyerID %>"></input>
+        <div class="container mb-3">
+          <h2 class="mb-3">Warehouse Enroll lists</h2>
+          <% for(var i=0; i < Object.keys(items).length; i++) { %>
+            <p id = "whID0<%=i%>" style="display: none"><%= items['item'+i].warehouseID %></p>
+            <p id = "reqID0<%=i%>" style="display: none"><%= items['item'+i].reqID%></p>
+            <p id = "reqType0<%=i%>" style="display: none"><%= items['item'+i].reqType%></p>
+            <p id = "providerID0<%=i%>" style="display: none"><%= items['item'+i].providerID%></p>
+          <%}%>
+          <table class="board-table table ">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < Object.keys(enrollItems).length; i++) { %>
 
-                              </form>
-                            </tr>
-                        </table>
+                 <% if(enrollItems['item'+i].reqType == "ReqEnrollPV"){ %>
+                   <tr class="table-warning">
+                     <td><%= enrollItems['item'+i].warehouseID %></td>
+                     <td>Pending approval</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(0, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
 
-                </div>
-            <% }); %>
-        <div>
-          <ul class="pagination" >
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
+                 <% if(enrollItems['item'+i].reqType == "ReqEnrollRejected"){ %>
+                   <tr class="table-danger">
+                     <td><%= enrollItems['item'+i].warehouseID %></td>
+                     <td>Rejected</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(0, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+
+              <% } %>
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="container mb-3">
+          <h2 class="mb-3">Buy Request lists</h2>
+          <% for(var i=0; i < Object.keys(items).length; i++) { %>
+            <p id = "whID1<%=i%>" style="display: none"><%= items['item'+i].warehouseID %></p>
+            <p id = "reqID1<%=i%>" style="display: none"><%= items['item'+i].reqID%></p>
+            <p id = "reqType1<%=i%>" style="display: none"><%= items['item'+i].reqType%></p>
+            <p id = "providerID1<%=i%>" style="display: none"><%= items['item'+i].providerID%></p>
+          <%}%>
+          <table class="board-table table ">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < Object.keys(requestItems).length; i++) { %>
+
+                 <% if(requestItems['item'+i].reqType == "rba"){ %>
+                   <tr class="table-warning">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Pending approval</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 1)">Approve</button>
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+
+                 <% if(requestItems['item'+i].reqType == "rpbb"){ %>
+                   <tr class="table-primary">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Waiting for payment</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+
+                 <% if(requestItems['item'+i].reqType == "rpa"){ %>
+                   <tr class="table-success">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Approved</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+
+                 <% if(requestItems['item'+i].reqType == "rejected"){ %>
+                   <tr class="table-danger">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Rejected</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+
+              <% } %>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="overlay"></div>
   </body>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    function pvClick(where, i, flag) {
+      switch (flag) {
+        case 0: // Cancel
+          $.ajax({
+            url: '/',
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Cancel",
+                  reqID: document.getElementById('whID'+where+i).innerText,
+                  //other things will be here
+                }
+          });
+          break;
+        case 1: // Approve
+          $.ajax({
+            url: '/',
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Accept",
+                  reqID: document.getElementById('whID'+where+i).innerText,
+                  //other things will be here
+                }
+          });
+          break;
+        case 2: // confrim
+          $.ajax({
+            url: '/',
+            dataType: 'json',
+            type: 'POST',
+            data: {answer: "Confirm",
+                  reqID: document.getElementById('whID'+where+i).innerText,
+                  //other things will be here
+                }
+          });
+          break;
+      }
+    }
+  </script>
 </html>

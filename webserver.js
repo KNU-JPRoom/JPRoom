@@ -8,9 +8,6 @@ const bodyParser = require('body-parser');
 const mySQL  = require('./Module/db');
 // 4) EJS Module 불러오기
 const ejs = require('ejs');
-const fileUpload = require('express-fileupload');
-const fs = require('fs');
-
 
 // 1. 설정
 // 1) View 경로 설정
@@ -32,11 +29,6 @@ app.use(function(req,res,next){
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
 });
-
-app.use(fileUpload({
-  limits:{fileSize:50*1024*1024}
-}));
-
 // 8) 세션을 적용
 app.use(session({
 		// 8-1) 세션 암호화
@@ -54,19 +46,7 @@ app.use('/User',require('./Routes/user')(app,dbConnection));
 app.use('/Admin',require('./Routes/ad')(app,dbConnection));
 app.use('/Provider',require('./Routes/pv')(app,dbConnection));
 app.use('/Buyer',require('./Routes/by')(app,dbConnection));
-
-app.get('/Public/Upload/:filename',function(req,res){
-  console.log(req);
-  console.log(req.params.filename);
-  fs.readFile(__dirname+`/Public/Upload/${req.params.filename}`,function(err,data){
-    if (err) throw err;
-    res.write(data);
-  })
-});
-
 // 11) 서버를 열 때 설정 함수
 app.listen(5000,function(req,res){
     console.log('connected!!');
 });
-
-

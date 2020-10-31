@@ -4,7 +4,8 @@ module.exports = function(app,db){
 
 
     router.get('/',function(req,res,next){
-
+      req.session['memberID'] = '123'; //테스트
+      req.session['type'] = 'buyer'; //테스트
 	    res.render('main_Home',{'app':app,'session':req.session,'db':db});
     });
 

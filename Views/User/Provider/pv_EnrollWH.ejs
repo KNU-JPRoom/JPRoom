@@ -17,45 +17,65 @@
       </div>
 
       <div class="container">
-        <form action="/Provider/EnrollWH" method="post" enctype="multipart/form-data" >
+        <form action="/Provider/Enroll/Submit" method="post" encType='multipart/form-data'>
           <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Warehouse ID</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="warehouseID" name="warehouseID"value="warehouseID"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Warehouse Name</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="warehouseName"  name="warehouseName"value="warehouseName"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Warehouse Address</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="address" name="address" value="Address"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">latitude</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="latitude" name="latitude" value="latitude"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">longitude</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="longitude" name="longitude"value="longitude"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">landArea</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="landArea" name="landArea" value="landArea"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">floorArea</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="floorArea" name="floorArea" value="floorArea"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">infoComment</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="infoComment" name="infoComment" value="infoComment"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">etcComment</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="etcComment" name="etcComment" value="etcComment"></div>
+            <label class="col-sm-2 col-form-label">Company Name</label>
+            <div class="col-sm-10"><input type="text" class="form-control" name="company_name" value="Company Name"></div>
           </div>
 
-          <!-- <div class="form-row">
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Company Register Number</label>
+            <div class="col-sm-10"><input type="password" class="form-control" placeholder="Company Register Number"></div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Company Kind</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">eeeee</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">2
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Representative</label>
+            <div class="col-sm-10"><input type="password" class="form-control" placeholder="Representative"></div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Homepage Address</label>
+            <div class="col-sm-10"><input type="password" class="form-control" placeholder="Homepage Address"></div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Number of employees</label>
+            <div class="col-sm-10"><input type="password" class="form-control" placeholder="Number of employees"></div>
+          </div>
+
+          <div class="form-row">
+            <label class="col-sm-2 col-form-label">Number of employees</label>
+            <div class="col-md-2 my-1">
+              <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+              <select class="custom-select mr-sm-2" name="contactNumber1">
+                <option selected>Number</option>
+                <option value="010">010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <input type="text" name="contactNumber2" class="form-email form-control" id="contactNumber2 ">
+            </div>
+            <div class="col-md-2">
+              <input type="text" name="contactNumber3" class="form-email form-control" id="contactNumber3 ">
+            </div>
+          </div>
+
+          <div class="form-row">
             <label class="col-sm-2 col-form-label">Fax Number</label>
             <div class="col-md-2 my-1">
               <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
@@ -72,14 +92,14 @@
             <div class="col-md-2">
               <input type="text" name="contactNumber3" class="form-email form-control" id="contactNumber3 ">
             </div>
-          </div> -->
+          </div>
 
           <div class="form-group row">
-            <input type='file' id='profile_img' name='profile_img' accept='image/jpg, image/png, image/jpeg' />
+            <input type='file' name='profile_img' accept='image/jpg, image/png, image/jpeg' />
           </div>
 
           <div class="button">
-            <input type="submit" value = "Submit">
+            <button type="submit">Submit</button>
           </div>
         </form>
       </div>
