@@ -5,7 +5,6 @@ module.exports = function(app,db){
     const ad_ReqBuy = require('./ad_RequestBuy');
     router.get('/RequestEnroll',function(req,res,next){
         var items = ad_ReqEnroll.RequestForEnroll(req,res,app,db);
-        console.log(items);
         res.render('User/Admin/ad_RequestEnroll',{'app':app,'session':req.session,'db':db,'items':JSON.parse(items)});
     });
     router.post('/RequestEnroll',function(req,res,next){

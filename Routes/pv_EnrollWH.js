@@ -9,7 +9,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
   connection.query('INSERT INTO FileInfo SET ?' , fileInfo, function (error, results, fields) {
       if (error) {
           console.log("error ocurred", error);
-          res.send(false);
+          res.redirect('/Provider/EnrollWH');
       }
       else{
         var item = {
@@ -34,7 +34,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
        connection.query('INSERT INTO Warehouse SET ?' , item, function (error, results, fields) {
           if (error) {
               console.log("error ocurred", error);
-              res.send(false);
+              res.redirect('/Provider/EnrollWH');
           } else {
               var reqItem ={
                 "reqID":reqno,
@@ -48,7 +48,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
               connection.query('INSERT INTO RequestForEnroll SET ?' , reqItem, function (error, results, fields) {
                 if (error) {
                   console.log("error ocurred", error);
-                  res.send(false);
+                  res.redirect('/Provider/EnrollWH');
                 }
                 else{
                   res.redirect('/Provider/MyWarehouse');

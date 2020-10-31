@@ -29,12 +29,10 @@ module.exports = function(app,db){
     });
 
     router.post('/MyWarehouse/Buy/Ans',function(req,res,next){
-        console.log('kkkkkk');
         pv_myWH.ReqBuyAns(req,res,app,db);
     });
 
     router.post('/MyWarehouse/Enroll/Ans',function(req,res,next){
-        console.log('.................');
         pv_myWH.ReqEnrollAns(req,res,app,db);
     });
     router.get('/MyWarehouse',function(req,res,next){
@@ -42,7 +40,6 @@ module.exports = function(app,db){
         var requestItems = pv_myWH.RequestForBuy(req,res,app,db);
         enrollItems = JSON.parse(enrollItems);
         requestItems = JSON.parse(requestItems);
-        console.log(requestItems);
         res.render('User/Provider/pv_MyWH',{'app':app,'session':req.session,'db':db,'enrollItems':enrollItems,'requestItems':requestItems});
     });
 

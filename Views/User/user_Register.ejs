@@ -2,95 +2,116 @@
 <head>
   <%- include('../head') %>
 </head>
-<body>
+<body class="login-page">
   <div id="content">
-    <%- include('../nav_Bar') %>
-    <div class="top-content">
-      <div class="inner-bg">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-7 text">
-            <h1><strong>Bootstrap</strong> Registration Form</h1>
-            <div class="description">
-            <p>This is a free responsive registration form made with Bootstrap.
-            Download it on <a href="http://azmind.com"><strong>AZMIND</strong></a>, customize and use it as you like!</p>
-            </div>
-          <div class="top-big-link">
-            <a class="btn btn-link-1" href="#">Button 1</a>
-            <a class="btn btn-link-2" href="#">Button 2</a>
-          </div>
-        </div>
+    <div class="page-header clear-filter" filter-color="orange">
+      <div class="page-header-image" style="background-image:url(../Image/register_pic5.jpg)"></div>
+    <div class="JP_Nav">
+      <%- include('../nav_Bar') %>
+    </div>
+      <div class="top-content">
+        <div class="inner-bg">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-7 text">
+                <h1><strong>AUTOINVEN</strong> Registration</h1>
+
+                <div class="form-bottom">
+                  <form role="form" action="/User/Register" method="post" class="registration-form">
+                    <div class="form-group col-lg-12">
+                      <div class="form-row">
+                        <div class="col-lg-8">
+                          <label class="sr-only" for="memberID">memberID</label>
+                          ID:<input type="text" name="memberID" placeholder="ID" class="form-first-name form-control" id="memberID">
+                        </div>
+                        <div class="col-md-4">
+                          <input type ="button" class="btn btn-primary" id ="idCheckButton" name="idCheckButton" value ="ID Check">
+                          <% if(locals.err){ %>
+                            <span class="invalid-feedback"><%= locals.err %></span>
+                            <% } %>
+                      </div>
+                      </div>
+                    </div>
+
+                        <div class="form-group col-lg-11">
+                          <label class="sr-only" for="type">type</label>
+                          Type:<select name = "type" class="form-email form-control" id="type">
+                              <option value = "provider">provider</option>
+                              <option value = "provider">buyer</option>
+                          </select>
+                        </div>
+
+                       <div class="form-group col-lg-11">
+                         <label class="sr-only" for="name">Name</label>
+                         Name:<input type="text" name="name" placeholder="Name" class="form-first-name form-control" id="name">
+                       </div>
+
+                       <div class="form-group col-lg-11">
+                         <label class="sr-only" for="password">password</label>
+                         Password:<input type="password" name="password" placeholder="Password" class="form-last-name form-control" id="password">
+                       </div>
+
+                       <div class="form-group col-lg-12">
+                         <label class="sr-only" for="passwordConfirmation">password Confirm</label>
+                          <div class="form-row">
+                            <div class="col-md-8">
+                             Password Confirmation:<input type="password" name="passwordConfirmation" placeholder="Password Confirm" class="form-last-name form-control" id="passwordConfirmation">
+                           </div>
+                            <div class="col-md-3">
+                              <input type ="button" class="btn btn-primary" id ="passwordCheckButton" name="passwordCheckButton" value ="Paassword Check">
+                            </div>
+                        </div>
+                      </div>
+
+                         <div class="form-group col-lg-12" >
+                           <label class="sr-only" for="RN">Resident Number</label>
+                              Resident Number:
+                              <div class="form-row">
+                                <div class="col-md-5">
+                                  <input type="text" name="RN1" class="form-email form-control" id="RN1">
+                                </div>
+                                <div class="col-md-1">
+                                  -
+                                </div>
+                                <div class="col-md-5">
+                                  <input type="password" name="RN2" class="form-email form-control" id="RN2">
+                              </div>
+                         </div>
+                       </div>
+                  </div>
+
+                       <div class="form-row col-lg-12">
+                         <div class="form-group col-lg-6">
+                           <label class="sr-only" for="email">Email</label>
+                           Email:<input type="text" name="email" placeholder="Email" class="form-email form-control" id="email">
+                         </div>
+                         <div class="form-group col-lg-6">
+                           <input type ="button" class="btn btn-primary" id = "emailCheckButton" name="emailCheckButton" value ="Email Check">
+                         </div>
+                       </div>
+
+                       <div class="form-group col-lg-12">
+                         <label class="sr-only" for="emailcheck">EmailCheck</label>
+                         <input type="text" name="emailcheck" placeholder="Email Check" class="form-email form-control" id="emailcheck" readonly>
+                      </div>
+              </div>
+
 
         <div class="col-sm-5 form-box">
           <div class="form-top">
-            <div class="form-top-left"><h3>Sign up now</h3><p>Fill in the form below to get instant access:</p></div>
+            <div class="form-top-left"><h3>Sign up!</h3><p>Fill in the form below to get instant access:</p></div>
             <div class="form-top-right"><i class="fa fa-pencil"></i></div>
           </div>
-
           <div class="form-bottom">
-            <form role="form" action="/User/Register" method="post" class="registration-form">
-              <div class="form-group">
-                <label class="sr-only" for="memberID">memberID</label>
-                ID:<input type="text" name="memberID" placeholder="ID" class="form-first-name form-control" id="memberID">
 
-                <input type ="button" class="btn btn-primary" id ="idCheckButton" name="idCheckButton" value ="ID Check">
-                <% if(locals.err){ %>
-                  <span class="invalid-feedback"><%= locals.err %></span>
-                  <% } %>
-                </div>
-
-                  <div class="form-group col-md-6">
-                    <label class="sr-only" for="type">type</label>
-                    Type:<select name = "type" class="form-email form-control" id="type">
-                        <option value = "provider">provider</option>
-                        <option value = "provider">buyer</option>
-                    </select>
-                  </div>
-
-                 <div class="form-group">
-                   <label class="sr-only" for="name">Name</label>
-                   Name:<input type="text" name="name" placeholder="Name" class="form-first-name form-control" id="name">
-                 </div>
-
-                 <div class="form-group">
-                   <label class="sr-only" for="password">password</label>
-                   Password:<input type="password" name="password" placeholder="Password" class="form-last-name form-control" id="password">
-                 </div>
-                 <div class="form-group">
-                   <label class="sr-only" for="passwordConfirmation">password Confirm</label>
-                   Password Confirmation:<input type="password" name="passwordConfirmation" placeholder="Password Confirm" class="form-last-name form-control" id="passwordConfirmation">
-                  </div>
-                <input type ="button" class="btn btn-primary" id ="passwordCheckButton" name="passwordCheckButton" value ="Paassword Check">
-
-                 <div class="form-group">
-                   <div class="form-group col-md-6">
-                     <label class="sr-only" for="RN">Resident Number</label>
-                     Resident Number:<input type="text" name="RN1" class="form-email form-control" id="RN1">-<input type="password" name="RN2" class="form-email form-control" id="RN2">
-                   </div>
-                 </div>
-              </div>
-
-                 <div class="form-row">
-                   <div class="form-group col-md-6">
-                     <label class="sr-only" for="email">Email</label>
-                     Email:<input type="text" name="email" placeholder="Email" class="form-email form-control" id="email">
-                   </div>
-
-                   <div class="form-group col-md-6">
-                     <input type ="button" class="btn btn-primary" id = "emailCheckButton" name="emailCheckButton" value ="Email Check">
-                   </div>
-                 </div>
-
-                 <div class="form-group">
-                   <label class="sr-only" for="emailcheck">EmailCheck</label>
-                   <input type="text" name="emailcheck" placeholder="Email Check" class="form-email form-control" id="emailcheck" readonly>
-                </div>
-                <div class="form-group">
+              <div class="form-group col-lg-12">
                   <label class="sr-only" for="emailcheck">national</label>
                   National:<input type="text" name="national" placeholder="national" class="form-email form-control" id="national">
                </div>
+
+              <div class="form-group col-lg-12">
                 <div class="form-row">
-                  <div class="col-md-4 my-1">
+                  <div class="col-lg-3">
                     <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
                     Phone:<select class="custom-select mr-sm-2" name="contactNumber1">
                       <option selected>Number</option>
@@ -98,33 +119,40 @@
                       <option value="011">011</option>
                       <option value="016">016</option>
                     </select>
-                  </div>-
-                  <div class="col-md-4">
+                  </div>
+                  <div class="col-lg-1">
+                    -
+                  </div>
+                  <div class="col-lg-3">
                     <label class="sr-only" for="contactNumber ">Contact Number</label>
                     <input type="text" name="contactNumber2" class="form-email form-control" id="contactNumber2 ">
-                  </div>-
-                  <div class="col-md-4">
+                  </div>
+                  <div class="col-lg-1">
+                    -
+                  </div>
+                  <div class="col-lg-3">
                     <label class="sr-only" for="contactNumber ">Contact Number</label>
                     <input type="text" name="contactNumber3" class="form-email form-control" id="contactNumber3 ">
                   </div>
                 </div>
+              </div>
 
-                <div class="form-group">
+                <div class="form-group col-lg-12">
                   <label class="sr-only" for="address">Address</label>
                   Address:<input type="text" name="address" placeholder="Address" class="form-email form-control" id="address">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group col-lg-12">
                   <label class="sr-only" for="CN">Company Name</label>
                   Company Name:<input type="text" name="CN" placeholder="Company Name" class="form-email form-control" id="CN">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group col-lg-12">
                   <label class="sr-only" for="CA">Company Address</label>
                   Company Address:<input type="text" name="CA" placeholder="Company Address" class="form-email form-control" id="CA">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group col-lg-12">
                   <label class="sr-only" for="CCN">Company Contact Number</label>
                   Company Contact:<input type="text" name="CCN" placeholder="Company Contact Number" class="form-email form-control" id="CCN">
                 </div>
@@ -171,7 +199,6 @@
             });
             $('#emailCheckButton').click(function(){
               var email =  $('#email').val();
-              console.log(email);
               if(email!=''){
                   $.ajax({
                   url: '/User/Register/EmailIDF',
