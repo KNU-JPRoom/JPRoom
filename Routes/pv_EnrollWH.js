@@ -31,7 +31,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
       var logno = 1;
       if(reqResult.length>0)
       reqno = reqResult[0].reqID+1;
-       connection.query('INSERT INTO warehouse SET ?' , item, function (error, results, fields) {
+       connection.query('INSERT INTO Warehouse SET ?' , item, function (error, results, fields) {
           if (error) {
               console.log("error ocurred", error);
               res.send(false);
