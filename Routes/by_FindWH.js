@@ -68,7 +68,7 @@ exports.inquireWH =function (req, res,app,db) {
             connection.end();
         }
         else{
-            res.redirect('/Provider/MyWarehouse');
+            res.send(true);
             connection.end();
         }
     })

@@ -78,6 +78,16 @@
                 reqType: document.getElementById('reqType'+i).innerText,
                 warehouseID: parseInt(document.getElementById('whID'+i).innerText),
                 reqID: parseInt(document.getElementById("reqID"+i).innerText)
+              },
+              success:function(data){
+                if(data==true){
+                  alert("승인하였습니다.");
+                  window.location.href = "/Admin/RequestEnroll";
+                }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Admin/RequestEnroll";
+                }
               }
           });
       }else { // flag == 0 -> Reject
@@ -85,7 +95,17 @@
               url: '/Admin/RequestEnroll',
               dataType: 'json',
               type: 'POST',
-              data: {answer: "Reject", reqID: document.getElementById('whID'+i).innerText}
+              data: {answer: "Reject", reqID: document.getElementById('whID'+i).innerText},
+              success:function(data){
+                if(data==true){
+                  alert("거절하였습니다.");
+                  window.location.href = "/Admin/RequestEnroll";
+                }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Admin/RequestEnroll";
+                }
+              }
           });
       }
     }

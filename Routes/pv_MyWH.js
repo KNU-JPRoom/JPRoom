@@ -87,10 +87,11 @@ exports.ReqEnrollAns = function(req,res,app,db){
     connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
       if(error){
         console.log(error);
+        res.send(false);
         connection.end();
       }
       else{
-        res.redirect('/Provider/MyWarehouse');
+        res.send(true);
         connection.end();
       }
     });    
@@ -99,17 +100,28 @@ exports.ReqEnrollAns = function(req,res,app,db){
       connection.query(`DELETE FROM RequestForEnroll WHERE reqID =${reqID}`,function (error, results, fields) {
         if(error){
           console.log(error);
+          res.send(false);
           connection.end();
         }
         else{
           connection.query(`DELETE FROM Warehouse WHERE warehouseID =${warehouseID}`,function (error, results, fields) {
             if(error){
               console.log(error);
+              res.send(false);
               connection.end();
             }
             else{
-              res.redirect('/Provider/MyWarehouse');
-              connection.end();
+              connection.query(`DELETE FROM FileInfo WHERE warehouseID =${warehouseID}`,function (error, results, fields) {
+                if(error){
+                  console.log(error);
+                  res.send(false);
+                  connection.end();
+                }
+                else{
+                  res.send(true);
+                  connection.end();
+                }
+              });
             }
           });
         }
@@ -128,23 +140,31 @@ exports.ReqBuyAns = function(req,res,app,db){
   if(answer=="Approve"){
       if(reqType=="ReqByAdmin"){
         connection.query(`UPDATE RequestForBuy SET reqType='ReqPayByBuyer' WHERE reqID =${reqID}`,function (error, results, fields){
-          res.redirect('/Provider/MyWarehouse');
-          connection.end();
+          if(error){res.send(false);connection.end();}
+          else{
+            res.send(true);
+            connection.end();
+          }
         });
       }
     }
   else if(answer=="Cancel"){
     connection.query(`UPDATE RequestForBuy SET reqType='RejByPv' WHERE reqID =${reqID}`,function (error, results, fields){
-      res.redirect('/Provider/MyWarehouse');
-      connection.end();
+      if(error){res.send(false);connection.end();}
+          else{
+            res.send(true);
+            connection.end();
+          }
     });
   }
   else if(answer=="Confirm"){
-    console.log('!!!!#$$$');
     if(reqType=="ReqPayAcpt"||reqType=="RejByBuyer"){
         connection.query(`DELETE FROM RequestForBuy WHERE reqID =${reqID}`,function (error, results, fields) {
-        res.redirect('/Provider/MyWarehouse');
-        connection.end();
+          if(error){res.send(false);connection.end();}
+          else{
+            res.send(true);
+            connection.end();
+          }
         });
     }
   }

@@ -122,13 +122,17 @@
                     warehouseID: document.getElementById("whID").innerText,
                     area: $('#area').val()
                   },
-                  success: function(data) {
-                    if(data==true)
-                      alert('good');
-                    else
-                      alert('false');
-                 }
-              });
+                  success:function(data){
+                if(data==true){
+                  alert("창고공유를 신청하였습니다.");
+                  window.location.href = "/Buyer/MyWarehouse";
+                }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Buyer/FindWH";
+                }
+              } 
+            });
         });
       </script>
     </div>

@@ -80,7 +80,17 @@
                 warehouseID: parseInt(document.getElementById('whID'+i).innerText),
                 reqID: parseInt(document.getElementById("reqID"+i).innerText),
                 area: parseInt(document.getElementById("area"+i).innerText)
+              },
+              success:function(data){
+              if(data==true){
+                alert("승인하였습니다.");
+                window.location.href = "/Admin/RequestBuy";
               }
+              else{
+                alert("에러가 발생했습니다.");
+                window.location.href = "/Admin/RequestBuy";
+              }
+            }
           });
       }else { // flag == 0 -> Reject
         $.ajax({
@@ -93,7 +103,17 @@
                 warehouseID: parseInt(document.getElementById('whID'+i).innerText),
                 reqID: parseInt(document.getElementById("reqID"+i).innerText),
                 area: parseInt(document.getElementById("area"+i).innerText)
-            }
+              },
+              success:function(data){
+                if(data==true){
+                  alert("거절하였습니다.");
+                  window.location.href = "/Admin/RequestBuy";
+                }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Admin/RequestBuy";
+                }
+              }
           });
       }
     }

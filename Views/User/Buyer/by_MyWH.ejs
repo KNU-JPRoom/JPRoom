@@ -96,7 +96,17 @@
                   buyerID: document.getElementById('buyerID'+i).innerText,
                   area: document.getElementById('area'+i).innerText
                   //other things will be here
-                }
+                },
+            success:function(data){
+              if(data==true){
+                alert("주문이 정상적으로 취소되었습니다.");
+                window.location.href = "/Buyer/MyWarehouse";
+              }
+              else{
+                alert("에러가 발생했습니다.");
+                window.location.href = "/Buyer/MyWarehouse";
+              }
+            }
           });
           break;
         case 1: // Pay
@@ -111,7 +121,17 @@
                   buyerID: document.getElementById('buyerID'+i).innerText,
                   area: document.getElementById('area'+i).innerText
                   //other things will be here
-                }
+                },
+              success:function(data){
+              if(data==true){
+                alert("주문이 정상적으로 처리되었습니다.");
+                window.location.href = "/Buyer/MyWarehouse";
+              }
+              else{
+                alert("에러가 발생했습니다.");
+                window.location.href = "/Buyer/MyWarehouse";
+              }
+            }
           });
           break;
         case 2: // Confrim
@@ -126,7 +146,17 @@
                   buyerID: document.getElementById('buyerID'+i).innerText,
                   area: document.getElementById('area'+i).innerText
                   //other things will be here
-                }
+                },
+            success:function(data){
+              if(data==true){
+                alert("확인하였습니다.");
+                window.location.href = "/Buyer/MyWarehouse";
+              }
+              else{
+                alert("에러가 발생했습니다.");
+                window.location.href = "/Buyer/MyWarehouse";
+              }
+            }
           });
           break;
       }

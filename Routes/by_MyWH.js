@@ -60,15 +60,21 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
   connection.connect();
   if(answer=="Cancel"){
       connection.query(`UPDATE RequestForBuy SET reqType='RejByBuyer' WHERE reqID =${reqID}`,function (error, results, fields){
-          res.redirect('/Buyer/MyWarehouse');
+        if(error){res.send(false);connection.end()}
+        else{
+          res.send(true);
           connection.end();
+        }
       });
   }
   else if(answer=="Confirm"){
     if(reqType=="RejByAd"||reqType=="RejByPv"){
       connection.query(`DELETE FROM RequestForBuy WHERE reqID =${reqID}`,function (error, results, fields) {
-        res.redirect('/Buyer/MyWarehouse');
-        connection.end();
+        if(error){res.send(false);connection.end()}
+        else{
+          res.send(true);
+          connection.end();
+        }
     });
     }
   }
@@ -82,7 +88,7 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
           else{
             var info = {
               memberID: req.session['memberID'],
-              warehouseID: req.body.warehouseID,
+              warehouseID: req.body.whID,
               area: req.body.area
             };
             connection.query(`INSERT INTO Buyer SET ?`,info,function (error, results, fields) {
@@ -91,12 +97,17 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                   connection.end()
                 }
                 else{
+                  var sDate = new Date();
+                  var eDate = new Date();
+                  eDate.setDate(sDate.getDate()+30)
                   let result = db.query('select * from Contract');
                   var conno = result.length+1;
                   var contract = {
                       contractID : conno,
                       buyerID : info['memberID'],
                       warehouseID : info['warehouseID'],
+                      startDate : sDate,
+                      endDate : eDate,
                       area : info['area'],
                       logID : 1
                   };

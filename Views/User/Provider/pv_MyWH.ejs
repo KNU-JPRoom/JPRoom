@@ -129,7 +129,6 @@
         URL = '/Provider/MyWarehouse/Buy/Ans';
         Area = document.getElementById('area'+where+i).innerText
       }
-      alert(flag);
       switch (flag) {
         case 0: // Cancel
           $.ajax({
@@ -143,7 +142,17 @@
                   memberID: document.getElementById('memberID'+where+i).innerText,
                   area: Area
                   //other things will be here
-                }
+                },
+                success:function(data){
+                  if(data==true){
+                    alert("취소하였습니다.");
+                    window.location.href = "/Provider/MyWarehouse";
+                  }
+                  else{
+                    alert("에러가 발생했습니다.");
+                    window.location.href = "/Provider/MyWarehouse";
+                  }
+              }    
           });
           break;
         case 1: // Approve
@@ -158,7 +167,17 @@
                   memberID: document.getElementById('memberID'+where+i).innerText,
                   area: Area
                   //other things will be here
+                },
+                success:function(data){
+                if(data==true){
+                  alert("승인하였습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
                 }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
+                }
+              } 
           });
           break;
         case 2: // Confirm
@@ -173,7 +192,17 @@
                   memberID: document.getElementById('memberID'+where+i).innerText,
                   area: Area
                   //other things will be here
+                },
+                success:function(data){
+                if(data==true){
+                  alert("확인하였습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
                 }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
+                }
+              } 
           });
           break;
       }

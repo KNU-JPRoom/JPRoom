@@ -33,15 +33,21 @@ exports.withAnswer = function(req,res,app,db){
   if(answer=="Approve"){
     if(reqType=="ReqByBuyer"){
       connection.query(`UPDATE RequestForBuy SET reqType='ReqByAdmin' WHERE reqID=?`,[reqID],function (error, results, fields) {
-        res.redirect('/Admin/RequestBuy');
-        connection.end();
+        if(error){res.send(false);connection.end()}
+        else{
+          res.send(true);
+          connection.end();
+        }
       });
     }
   }
   else if(answer=="Reject"){
     connection.query(`UPDATE RequestForBuy SET reqType='RejByAdmin' WHERE reqID =?`,[reqID],function (error, results, fields) {
-        res.redirect('/Admin/RequestBuy');
-    connection.end();
+      if(error){res.send(false);connection.end()}
+      else{
+        res.send(true);
+        connection.end();
+      }
     });
   }
 }

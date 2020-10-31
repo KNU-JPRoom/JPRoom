@@ -44,6 +44,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
                 "warehouseID":req.body.warehouseID,
                 "logID":logno
               };
+
               connection.query('INSERT INTO RequestForEnroll SET ?' , reqItem, function (error, results, fields) {
                 if (error) {
                   console.log("error ocurred", error);
