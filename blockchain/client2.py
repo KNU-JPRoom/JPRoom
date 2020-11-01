@@ -42,6 +42,8 @@ def runChat():
         d = json.loads(m.decode())
         if d == 'ID':
             print(d)
+            msg = input()
+            sock.send(msg.encode())
             pass
 #        print(d)
         else:
