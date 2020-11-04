@@ -25,14 +25,17 @@ def rcvMsg(sock):
     while True:
         try:
             data = sock.recv(1024)
-            MSG = json.loads(data.decode())
+            MSG = pickle.loads(data)
             print(MSG)
-            if MSG['ID'] == True:
-                idLock.acquire()
-                print(MSG['context'])
-                id = input()
-                sock.send(id.encode())
-                idLock.release()
+            if MSG['Block'] == False:
+                if MSG['ID'] == True:            #가입인지 아닌지 구분.
+                    idLock.acquire()
+                    print(MSG['context'])
+                    id = input()
+                    sock.send(id.encode())
+                    idLock.release()
+                else:
+                    print(MSG['context'])
             else:
                 if MSG['completable'] == True:
                     bqLock.acquire()
@@ -52,20 +55,25 @@ def runChat():
         #pre_chain = q.get(chain)
         #chain = pre_chain
         t.daemon = True   #Thread 클래스에서 daemon 속성은 서브쓰레드가 데몬 쓰레드인지 아닌지를 지정하는 것인데, 데몬 쓰레드란 백그라운드에서 실행되는 쓰레드로 메인 쓰레드가 종료되면 즉시 종료되는 쓰레드이다. 반면 데몬 쓰레드가 아니면 해당 서브쓰레드는 메인 쓰레드가 종료할 지라도 자신의 작업이 끝날 때까지 계속 실행된다.
-        t.start()
+        t.start()   #처음접속한 노드에게 블록의 최신데이터를 전송시키는데, 블록을 받는 부분.
+        m = sock.recv(1024)
+        m = pickle.loads(m)
+        print(m)
+        if m['ID'] == False and m['Block'] == False:
+            print(m['context'])
 
-        m = sock.recv(100000)       #처음접속한 노드에게 블록의 최신데이터를 전송시키는데, 블록을 받는 부분.
-        d = json.loads(m.decode())  #아마 dic형태로 변환한 블록체인이 들어오는 부분임.
+        bc = sock.recv(100000)
+        jbc = pickle.loads(bc)  #아마 dic형태로 변환한 블록체인이 들어오는 부분임.
+#        print(jbc)
+        for i in jbc:
+            blockChain.append(jbc[i])
 #        if d['ID'] == True:
 #            print(d['context'])
 #            msg = input()
 #            sock.send(msg.encode())
 #            pass
 #        elif d['ID'] == False:
-        print(d)
-        sorted(d.items)
-        for i in d:
-            blockChain.append(d[i])
+
         print(blockChain)
         while True:
             bqLock.acquire()

@@ -36,7 +36,8 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
       lock.acquire() # 스레드 동기화를 막기위한 락
       self.users[username] = (conn, addr)
       lock.release() # 업데이트 후 락 해제
-      self.sendMessageToAll('[%s]님이 입장했습니다.' %username)
+      MSG = {'ID': False, 'Block': False, 'context': username + ' was in network'}
+      self.sendMessageToAll(MSG)
       print('+++ 노드 참여자 수 [%d]' %len(self.users))
       return username
 
@@ -54,7 +55,8 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
        lock.acquire()
        del self.users[username]
        lock.release()
-       self.sendMessageToAll('[%s]님이 퇴장했습니다.' %username)
+       MSG = {'ID': False, 'Block': False, 'context': username + 'was out network'}
+       self.sendMessageToAll(MSG)
        print('--- 노드 참여자 수 [%d]' %len(self.users))
 
 
@@ -62,24 +64,18 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
        if msg == '/quit':                        # 보낸 메세지가 'quit'이면
           self.removeUser(username)
           return -1
-       elif msg == 'ready':                          #client측에서 준비완료된 상태라면.
-          self.setUserState(username, 1)
-          if self.isReady() == 0:
-              self.sendMessageToAll('send')
-              self.sendConDataToAll(contractData['1'])
        else:
           self.sendMessageToAll('[%s] %s' %(username, msg))    #input이 'quit'가 아니라면 broadcast
           return
-       return
 
 
    def sendMessageToAll(self, msg): #BroadCast 부분. 추후 변경필요할듯.
        for conn, addr in self.users.values():
-          conn.send(msg.encode())
+          conn.send(pickle.dumps(msg))
 
    def sendConDataToAll(self, msg):
        for conn, addr in self.users.values():
-          conn.send(json.dumps(msg).encode())       #json 형태의 string을 encode해서 각 client에게 전송.
+          conn.send(pickle.dumps(msg))       #json 형태의 string을 encode해서 각 client에게 전송.
 
    def sendDataToClient(self, msg):
        self.sendMessageToAll(self, 'John -> Jenny : 15')
@@ -108,12 +104,41 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              }
         }
     ]
-    print(blockChain)
-    blockChain[0]['hash']= hashlib.sha256(str(blockChain[0]['data']).hexdigest())
+#    print(blockChain)
+    blockDstring = json.dumps(blockChain[0]['data'], sort_keys=True).encode()
+    blockChain[0]['hash'] = hashlib.sha256(blockDstring).hexdigest()
     previous_hash = blockChain[0]['hash']
-    print(blockChain)
-    MSG = {'ID': False, 'completable': False,
+#    print(blockChain)
+    MSG = {'ID': False, 'Block': False, 'completable': False,
            'data':{'index': blockindex, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
+    block1 = {
+                'hash': hashlib.sha256(json.dumps(conBuff[0]).encode()).hexdigest(),
+                'updatable':True,
+                'data':
+                {
+                    'index':blockindex + 1,
+                    'timestamp': time(),
+                    'transaction': conBuff[0],
+                    'proof': 0,
+                    'difficulty': difficulty,
+                    'previous_hash': blockChain[0]['hash']
+                }
+             }
+    blockChain.append(block1)
+    block2 = {
+                'hash': hashlib.sha256(json.dumps(conBuff[1]).encode()).hexdigest(),
+                'updatable':True,
+                'data':
+                {
+                    'index':blockindex + 2,
+                    'timestamp': time(),
+                    'transaction': conBuff[1],
+                    'proof': 0,
+                    'difficulty': difficulty,
+                    'previous_hash': blockChain[1]['hash']
+                }
+             }
+    blockChain.append(block2)
 
     def handle(self):                                    #클라이언트에서 요청이 들어오면 handle이 호출됨.
       print('[%s] 연결됨' %self.client_address[0])       # 클라이언트가 접속시 클라이언트 주소 출력
@@ -121,8 +146,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
           username = self.registerUsername()
           print(username)
 #          self.userman.setUserState(username, 0)
-          dic = {i:obj for i, obj in enumerate(self.blockChain[:-1])}        #가장 최근(가장 끝의) 블록에 번호를 매겨 역순으로 딕셔너라에 저장 후 노드에게 전송.
+          dic = {i:obj for i, obj in enumerate(self.blockChain[::-1])}        #가장 최근(가장 끝의) 블록에 번호를 매겨 역순으로 딕셔너라에 저장 후 노드에게 전송.
           print(dic)
+#          self.userman.users[username][0].send(pickle.dumps(self.MSG))
           self.userman.users[username][0].send(pickle.dumps(dic))
 
           while True:
@@ -163,7 +189,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      cpDic['data']['previous_hash']=self.blockChain[blockData['index']-1]
                      MSG = {'completable': True,'data':cpDic['data'] }
 
-                     sendConDataToAll(MSG.encode())
+                     sendConDataToAll(MSG)
                  else:
                      MSG = {'completable': False,'data':self.blockChain[blockData['index']]['data'] }
                      self.userman.users[username][0].send(MSG.encode())
@@ -197,9 +223,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
       self.userman.removeUser(username)
 
     def registerUsername(self):
-      MSG = {'ID': True, 'context': 'ID: '}
+      MSG = {'ID': True, 'Block': False, 'context': 'ID: '}
       while True:
-         self.request.send(json.dumps(MSG).encode())
+         self.request.send(pickle.dumps(MSG))
          username = self.request.recv(1024) #유저가 ID입력시 receive
 #         print(username)
          username = username.decode().strip()   #decoding input data
