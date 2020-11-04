@@ -5,7 +5,6 @@ import sys
 import json
 from time import time
 import datetime
-import blockchain
 import hashlib
 
 from json import loads
@@ -13,9 +12,9 @@ from json import loads
 HOST = '127.0.0.1'
 PORT = 7777
 #q = queue.Queue()                #연속적으로 들어올 condata를 저정하기위한 큐
-contractData = {}
+#contractData = {}
 
-contractData['1'] = '{"transaction": "sena->russian", "amount": 30}'
+#contractData['1'] = '{"transaction": "sena->russian", "amount": 30}'
 
 lock = threading.Lock() # syncronized 동기화 진행하는 스레드 생성
 
@@ -37,18 +36,16 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
       lock.acquire() # 스레드 동기화를 막기위한 락
       self.users[username] = (conn, addr)
       lock.release() # 업데이트 후 락 해제
-
       self.sendMessageToAll('[%s]님이 입장했습니다.' %username)
       print('+++ 노드 참여자 수 [%d]' %len(self.users))
       return username
 
-   def setUserState(self, username, state):
-       lock.acquire()
-       self.readyState[username] = (state)
-       lock.release()
+#   def setUserState(self, username, state):
+#       lock.acquire()
+##       lock.release()
 
-       print('set state about [%s]' %username)
-       return
+#       print('set state about [%s]' %username)
+#       return
 
    def removeUser(self, username):
        if username not in self.users:
@@ -93,7 +90,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
     LIMIT_QUNTITY = 2
     difficulty = 2
     userman = UserManager()
-    conBuff = []
+    conBuff = ["jax send 50$ to piora", "yasuo send 30$ to shen", "ramus send 10$ to anivia"]
     blockindex = 0
     previous_hash = 0
     blockChain = [
@@ -112,61 +109,64 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
         }
     ]
     print(blockChain)
-    blockChain[0]['hash']= hashlib.sha256(str(blockChain[0]['data']).encode())
+    blockChain[0]['hash']= hashlib.sha256(str(blockChain[0]['data']).hexdigest())
     previous_hash = blockChain[0]['hash']
-    MSG = {'completable': False, 'data':{'index': blockindex, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
+    print(blockChain)
+    MSG = {'ID': False, 'completable': False,
+           'data':{'index': blockindex, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
 
     def handle(self):                                    #클라이언트에서 요청이 들어오면 handle이 호출됨.
       print('[%s] 연결됨' %self.client_address[0])       # 클라이언트가 접속시 클라이언트 주소 출력
       try:
           username = self.registerUsername()
           print(username)
-          self.userman.setUserState(username, 0)
-          dic = {i:obj for i, obj in enumerate(blockChain[:-1])}
-          userman.users[username][0].send(json.dumps(dic.encode()))
+#          self.userman.setUserState(username, 0)
+          dic = {i:obj for i, obj in enumerate(self.blockChain[:-1])}        #가장 최근(가장 끝의) 블록에 번호를 매겨 역순으로 딕셔너라에 저장 후 노드에게 전송.
+          print(dic)
+          self.userman.users[username][0].send(pickle.dumps(dic))
 
           while True:
              pre_msg = self.request.recv(16394)     #client에서 전송한 정보를 받음.
              msg = pre_msg.decode()
              if msg[:9] == "WEBSERVER":
                  conBuff.append(msg[9:])
-                 if len(conBuff) >= LIMIT_QUNTITY and blockChain[blockindex-1][updatable]== True:
-                     MSG['data']['transaction']=conBuff[:LIMIT_QUNTITY]
-                     conBuff = conBuff[LIMIT_QUNTITY:]
+                 if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1][updatable]== True:
+                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
+                     self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
                      timestamp = datetime.datetime.now().strftime("%I:%M:%S %p")
-                     MSG['data']['timestamp'] = timestamp
-                     blockChain.append({
-                              'updatable':false,
+                     self.MSG['data']['timestamp'] = timestamp
+                     self.blockChain.append({
+                              'updatable':False,
                               'data':
                               {
-                                'index':blockindex,
+                                'index':self.blockindex,
                                 'timestamp': timestamp,
-                                'transaction': MSG['transaction'],
+                                'transaction': self.MSG['transaction'],
                                 'proof': 0,
-                                'difficulty': difficulty,
-                                'previous_hash': previous_hash
+                                'difficulty': self.difficulty,
+                                'previous_hash': self.previous_hash
                                }
                             })
-                     sendConDataToAll(MSG)
-                     blockindex = blockindex + 1
+                     sendConDataToAll(self.MSG)
+                     self.blockindex = (self.blockindex) + 1
              else:
-                 blockData = json.loads(pre_msg.decode())
+                 blockData = json.loads(pre_msg.decode())          #client에서 전송한 block의 data
                  cpDic = blockChain.copy()
                  cpDic[blockData['index']]['proof'] = blockData['proof']
                  guess = (cpDic.encode())
-                 guess_hash = hashlib.sha256(guess).hexdigest()
+                 guess_hash = hashlib.sha256(guess).hexdigest()     #node에서 전송한 블록이 유효한지 검사.
 
-                 if guess_hash[:difficulty]== "0"*difficulty:
-                     blockChain[blockData['index']]['hash']=guess_hash
-                     blockChain[blockData['index']]['updatable']=True
-                     previous_hash = guess_hash
-                     cpDic['data']['previous_hash']=blockChain[blockData['index']-1]
-                     MSG = {'completable': true,'data':cpDic['data'] }
+                 if guess_hash[:difficulty]== "0"*difficulty:       #유효하다면
+                     self.blockChain[blockData['index']]['hash']=guess_hash
+                     self.blockChain[blockData['index']]['updatable']=True
+                     self.previous_hash = guess_hash
+                     cpDic['data']['previous_hash']=self.blockChain[blockData['index']-1]
+                     MSG = {'completable': True,'data':cpDic['data'] }
 
                      sendConDataToAll(MSG.encode())
                  else:
-                     MSG = {'completable': false,'data':blockChain[blockData['index']]['data'] }
-                     userman.users[username][0].send(MSG.encode())
+                     MSG = {'completable': False,'data':self.blockChain[blockData['index']]['data'] }
+                     self.userman.users[username][0].send(MSG.encode())
 
              #if type(pre_msg) == bytes:
              msg = pickle.loads(pre_msg)            #json형태의 msg를 역직렬화함.
@@ -197,9 +197,11 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
       self.userman.removeUser(username)
 
     def registerUsername(self):
+      MSG = {'ID': True, 'context': 'ID: '}
       while True:
-         self.request.send(json.dumps('ID').encode())
+         self.request.send(json.dumps(MSG).encode())
          username = self.request.recv(1024) #유저가 ID입력시 receive
+#         print(username)
          username = username.decode().strip()   #decoding input data
          if self.userman.addUser(username, self.request, self.client_address):  #self.request -> conn
             return username

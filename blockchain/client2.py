@@ -8,6 +8,7 @@ import json
 
 bqLock = threading.Lock();
 rqLock = threading.Lock();
+idLock = threading.Lock();
 
 HOST = 'localhost'
 PORT = 7777
@@ -20,44 +21,55 @@ blockQueue = []
 
 
 def rcvMsg(sock):
+    id = None
     while True:
         try:
             data = sock.recv(1024)
-            MSG = data.decode()
-            if MSG['completable'] == true:
-                bqLock.acquire()
-                blockQueue.append(MSG['data'])
-                bqLock.release()
+            MSG = json.loads(data.decode())
+            print(MSG)
+            if MSG['ID'] == True:
+                idLock.acquire()
+                print(MSG['context'])
+                id = input()
+                sock.send(id.encode())
+                idLock.release()
             else:
-                rqLock.acquire()
-                recordQueue.append(MSG['data'])
-                rqLock.release()
+                if MSG['completable'] == True:
+                    bqLock.acquire()
+                    blockQueue.append(MSG['data'])
+                    bqLock.release()
+                else:
+                    rqLock.acquire()
+                    recordQueue.append(MSG['data'])
+                    rqLock.release()
         except:
             pass
 
 def runChat():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:     #socket 생성
         sock.connect((HOST,PORT))
-        m = sock.recv(100000)
-        d = json.loads(m.decode())
-        if d == 'ID':
-            print(d)
-            msg = input()
-            sock.send(msg.encode())
-            pass
-#        print(d)
-        else:
-            sorted(d.items)
-            for i in d:
-                blockChain.append(d[i])
-
         t = Thread(target=rcvMsg, args=(sock,))
         #pre_chain = q.get(chain)
         #chain = pre_chain
         t.daemon = True   #Thread 클래스에서 daemon 속성은 서브쓰레드가 데몬 쓰레드인지 아닌지를 지정하는 것인데, 데몬 쓰레드란 백그라운드에서 실행되는 쓰레드로 메인 쓰레드가 종료되면 즉시 종료되는 쓰레드이다. 반면 데몬 쓰레드가 아니면 해당 서브쓰레드는 메인 쓰레드가 종료할 지라도 자신의 작업이 끝날 때까지 계속 실행된다.
         t.start()
+
+        m = sock.recv(100000)       #처음접속한 노드에게 블록의 최신데이터를 전송시키는데, 블록을 받는 부분.
+        d = json.loads(m.decode())  #아마 dic형태로 변환한 블록체인이 들어오는 부분임.
+#        if d['ID'] == True:
+#            print(d['context'])
+#            msg = input()
+#            sock.send(msg.encode())
+#            pass
+#        elif d['ID'] == False:
+        print(d)
+        sorted(d.items)
+        for i in d:
+            blockChain.append(d[i])
+        print(blockChain)
         while True:
             bqLock.acquire()
+#            print('bqLock acquire')
             block = None
             if len(blockQueue)!=0:
                 block = blockQueue.get()
@@ -85,7 +97,8 @@ def runChat():
                             break
                         else:
                             proof = proof + 1
-                    #sock.send({'index' : record['data']['index'], 'proof': proof})
+                    sock.send({'index' : record['data']['index'], 'proof': proof})
+                    print('send success')
 
 
 
