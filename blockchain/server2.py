@@ -18,7 +18,7 @@ PORT = 7777
 
 lock = threading.Lock() # syncronized 동기화 진행하는 스레드 생성
 
-class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는 클래스
+class UserManager(threading.Thread): # 사용자관리 및 채팅 메세지 전송을 담당하는 클래스
                    #  채팅 서버로 입장한 사용자의 등록
                    #  채팅을 종료하는 사용자의 퇴장 관리
                    #  사용자가 입장하고 퇴장하는 관리
@@ -36,7 +36,7 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
       lock.acquire() # 스레드 동기화를 막기위한 락
       self.users[username] = (conn, addr)
       lock.release() # 업데이트 후 락 해제
-      MSG = {'ID': False, 'Block': False, 'context': username + ' was in network'}
+      MSG = {'ID': False, 'Block': False, 'initial': False, 'context': username + ' was in network'}
       self.sendMessageToAll(MSG)
       print('+++ 노드 참여자 수 [%d]' %len(self.users))
       return username
@@ -55,7 +55,7 @@ class UserManager: # 사용자관리 및 채팅 메세지 전송을 담당하는
        lock.acquire()
        del self.users[username]
        lock.release()
-       MSG = {'ID': False, 'Block': False, 'context': username + 'was out network'}
+       MSG = {'ID': False, 'Block': False, 'initial': False, 'context': username + 'was out network'}
        self.sendMessageToAll(MSG)
        print('--- 노드 참여자 수 [%d]' %len(self.users))
 
@@ -109,14 +109,16 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
     blockChain[0]['hash'] = hashlib.sha256(blockDstring).hexdigest()
     previous_hash = blockChain[0]['hash']
 #    print(blockChain)
-    MSG = {'ID': False, 'Block': False, 'completable': False,
+    MSG = {'ID': False, 'Block': False, 'completable': False, 'initial' : False,
            'data':{'index': blockindex, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
+    blockindex = blockindex + 1;
+
     block1 = {
                 'hash': hashlib.sha256(json.dumps(conBuff[0]).encode()).hexdigest(),
                 'updatable':True,
                 'data':
                 {
-                    'index':blockindex + 1,
+                    'index':blockindex,
                     'timestamp': time(),
                     'transaction': conBuff[0],
                     'proof': 0,
@@ -125,12 +127,13 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                 }
              }
     blockChain.append(block1)
+    blockindex = blockindex + 1
     block2 = {
                 'hash': hashlib.sha256(json.dumps(conBuff[1]).encode()).hexdigest(),
                 'updatable':True,
                 'data':
                 {
-                    'index':blockindex + 2,
+                    'index':blockindex,
                     'timestamp': time(),
                     'transaction': conBuff[1],
                     'proof': 0,
@@ -148,18 +151,33 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 #          self.userman.setUserState(username, 0)
           dic = {i:obj for i, obj in enumerate(self.blockChain[::-1])}        #가장 최근(가장 끝의) 블록에 번호를 매겨 역순으로 딕셔너라에 저장 후 노드에게 전송.
           print(dic)
-#          self.userman.users[username][0].send(pickle.dumps(self.MSG))
-          self.userman.users[username][0].send(pickle.dumps(dic))
+          iMsg = self.MSG
+          iMsg['initial'] = True
+          iMsg['Block'] = True
+          self.userman.users[username][0].send(pickle.dumps(iMsg))
+          print('send iMsg')
+
+          okMsg = self.request.recv(100)
+          if okMsg.decode() == "OK":
+              self.userman.users[username][0].send(pickle.dumps(dic))
+              print('send initial blockchain')
+          else:
+              print("fail send blockchain")
+
 
           while True:
-             pre_msg = self.request.recv(16394)     #client에서 전송한 정보를 받음.
+             pre_msg = self.request.recv(16394)     #client에서 전송한 정보를 받음.(블록)
              msg = pre_msg.decode()
+             print(msg)
              if msg[:9] == "WEBSERVER":
-                 conBuff.append(msg[9:])
-                 if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1][updatable]== True:
+                 self.conBuff.append(msg[9:])
+                 print(self.conBuff)
+                 if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
                      self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
+                     print(self.MSG)
                      self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
-                     timestamp = datetime.datetime.now().strftime("%I:%M:%S %p")
+                     print(self.conBuff)
+                     timestamp = time()
                      self.MSG['data']['timestamp'] = timestamp
                      self.blockChain.append({
                               'updatable':False,
@@ -173,7 +191,8 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                                 'previous_hash': self.previous_hash
                                }
                             })
-                     sendConDataToAll(self.MSG)
+                     self.MSG['Block'] = True
+                     userman.self.sendConDataToAll(self.MSG)
                      self.blockindex = (self.blockindex) + 1
              else:
                  blockData = json.loads(pre_msg.decode())          #client에서 전송한 block의 data
@@ -189,7 +208,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      cpDic['data']['previous_hash']=self.blockChain[blockData['index']-1]
                      MSG = {'completable': True,'data':cpDic['data'] }
 
-                     sendConDataToAll(MSG)
+                     userman.self.sendConDataToAll(MSG)
                  else:
                      MSG = {'completable': False,'data':self.blockChain[blockData['index']]['data'] }
                      self.userman.users[username][0].send(MSG.encode())
@@ -223,7 +242,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
       self.userman.removeUser(username)
 
     def registerUsername(self):
-      MSG = {'ID': True, 'Block': False, 'context': 'ID: '}
+      MSG = {'ID': True, 'Block': False, 'initial': False, 'context': 'ID: '}
       while True:
          self.request.send(pickle.dumps(MSG))
          username = self.request.recv(1024) #유저가 ID입력시 receive
@@ -255,7 +274,7 @@ def runServer():
 
    try:
       server = ChatingServer((HOST, PORT), MyTcpHandler)
-      server.serve_forever()        #접속요청이 오면 수락한 뒤 BaseRequestHandler 객체의 handle()메소드 호출.
+      server.serve_forever()
    except KeyboardInterrupt:
       print('--- blockchain network를 종료합니다.')
       server.shutdown()

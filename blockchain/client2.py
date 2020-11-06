@@ -5,42 +5,65 @@ import sys
 import pickle  # socket.send에서 list 보내기 위한 module
 from blockchain import *
 import json
+import hashlib
+import time
 
 bqLock = threading.Lock();
 rqLock = threading.Lock();
 idLock = threading.Lock();
+rcvLock = threading.Lock();
 
 HOST = 'localhost'
 PORT = 7777
-state = '0'
 #q = queue.Queue()
 
 blockChain = []
 recordQueue = []
 blockQueue = []
-
-
+userList = ['katarina', 'garen', 'lux', 'shen', 'xin xiao', 'anni', 'fiz', 'rammus'
+'anivia', 'rize', 'samira', 'yasuo']
 def rcvMsg(sock):
     id = None
     while True:
         try:
             data = sock.recv(1024)
+            print(pickle.loads(data))
+            if not data:
+                break
+
             MSG = pickle.loads(data)
-            print(MSG)
+
+#            print(MSG)
             if MSG['Block'] == False:
                 if MSG['ID'] == True:            #가입인지 아닌지 구분.
                     idLock.acquire()
-                    print(MSG['context'])
+                    print('in block[false]-id[true] ' + MSG['context'])
                     id = input()
                     sock.send(id.encode())
                     idLock.release()
                 else:
-                    print(MSG['context'])
+                    idLock.acquire()
+                    print('in block[false]-id[false]' + MSG['context'])
+                    idLock.release()
             else:
                 if MSG['completable'] == True:
                     bqLock.acquire()
                     blockQueue.append(MSG['data'])
                     bqLock.release()
+                elif MSG['initial'] == True:
+                    print('initial true')
+                    rcvLock.acquire()
+                    bc = None
+                    sock.send("OK".encode())
+                    bc = sock.recv(100000)
+                    jbc = pickle.loads(bc)
+#                    print(jbc)
+#                    print('in cMsg: ' + jbc)
+                    for i in jbc:
+                        blockChain.append(jbc[i])
+                    rcvLock.release()
+                    blockChain.reverse()
+                    print(blockChain)
                 else:
                     rqLock.acquire()
                     recordQueue.append(MSG['data'])
@@ -48,39 +71,65 @@ def rcvMsg(sock):
         except:
             pass
 
+def sendMsg(sock):
+
+    sMsg = sock.recv(1024)
+    sMsg = pickle.loads(sMsg)
+#    print(sMsg)
+    if sMsg == 'OK':
+        MSG = "WEBSERVER"+ userList[0] +" send 10$ to " + userList[1]
+        print(MSG)
+        sock.send(MSG.encode())
+    else:
+        pass
+
 def runChat():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:     #socket 생성
         sock.connect((HOST,PORT))
-        t = Thread(target=rcvMsg, args=(sock,))
+
+        t1 = Thread(target=rcvMsg, args=(sock,))
         #pre_chain = q.get(chain)
         #chain = pre_chain
-        t.daemon = True   #Thread 클래스에서 daemon 속성은 서브쓰레드가 데몬 쓰레드인지 아닌지를 지정하는 것인데, 데몬 쓰레드란 백그라운드에서 실행되는 쓰레드로 메인 쓰레드가 종료되면 즉시 종료되는 쓰레드이다. 반면 데몬 쓰레드가 아니면 해당 서브쓰레드는 메인 쓰레드가 종료할 지라도 자신의 작업이 끝날 때까지 계속 실행된다.
-        t.start()   #처음접속한 노드에게 블록의 최신데이터를 전송시키는데, 블록을 받는 부분.
-        m = sock.recv(1024)
-        m = pickle.loads(m)
-        print(m)
-        if m['ID'] == False and m['Block'] == False:
-            print(m['context'])
+        t1.daemon = True   #Thread 클래스에서 daemon 속성은 서브쓰레드가 데몬 쓰레드인지 아닌지를 지정하는 것인데, 데몬 쓰레드란 백그라운드에서 실행되는 쓰레드로 메인 쓰레드가 종료되면 즉시 종료되는 쓰레드이다. 반면 데몬 쓰레드가 아니면 해당 서브쓰레드는 메인 쓰레드가 종료할 지라도 자신의 작업이 끝날 때까지 계속 실행된다.
+        t1.start()
 
-        bc = sock.recv(100000)
-        jbc = pickle.loads(bc)  #아마 dic형태로 변환한 블록체인이 들어오는 부분임.
-#        print(jbc)
-        for i in jbc:
-            blockChain.append(jbc[i])
+#        m = sock.recv(1024)
+#        m = pickle.loads(m)
+#        print(m)
+#        if m['ID'] == False and m['Block'] == False:
+#            print(m['context'])
+#        rcvLock.acquire()
+
+#        cMsg = sock.recv(1024)
+#        cMsg = pickle.loads(cMsg)
+
+#        if cMsg['initial'] == True:  #아마 dic형태로 변환한 블록체인이 들어오는 부분임.
+#            bc = sock.recv(100000)
+#            jbc = pickle.loads(bc)
+#            print('in cMsg: ' + jbc)
+#            for i in jbc:
+#                blockChain.append(jbc[i])
+#            blockChain.reverse()
+#        else:
+#            pass
+
+#        rcvLock.release()
 #        if d['ID'] == True:
 #            print(d['context'])
 #            msg = input()
 #            sock.send(msg.encode())
 #            pass
 #        elif d['ID'] == False:
+#        t2 = Thread(target=sendMsg, args=(sock,))
+#        t2.daemon = True
+#        t2.start()
 
-        print(blockChain)
         while True:
             bqLock.acquire()
 #            print('bqLock acquire')
             block = None
             if len(blockQueue)!=0:
-                block = blockQueue.get()
+                block = blockQueue.get()        #queue에서 아무것도 없으면 무엇을 반환하나?
             bqLock.release()
 
             if block != None:
@@ -94,17 +143,18 @@ def runChat():
                 if record == None:
                     continue
 
-                if len(blockChain)!=0 and blockChain[-1]['data']['index'] >= record['data']['index']:
+                if len(blockChain)!=0 and blockChain[-1]['data']['index'] >= record['data']['index']:   #record에 있는 블록보다 체인에 존재하는 블록이 최신이면 버림.
                     continue
-                else:
+                else:           #더 최신정보이면 mining
                     proof = 0
                     while True:
-                        record['data']['proof'] = proof
-                        guess = sha256(record['data'])
+                        guess = hashlib.sha256(record['data']).hexdigest()
                         if guess[:record['data']['difficulty']] == "0"*record['data']['difficulty']:
                             break
                         else:
                             proof = proof + 1
+                    record['data']['proof'] = proof
+
                     sock.send({'index' : record['data']['index'], 'proof': proof})
                     print('send success')
 
