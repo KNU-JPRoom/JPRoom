@@ -146,16 +146,15 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 
           self.userman.users[username][0].send(pickle.dumps({'MSGTYPE': 'INIT_BLOCK', 'data': dic}))
           while True:
-#             tmpMsg = self.MSG
-#             tmpMsg['okSign'] = True
-#             self.userman.users[username][0].send(pickle.dumps(tmpMsg))
+
              buf = self.userman.users[username][0].recv(1000)     #client에서 전송한 정보를 받음.(블록)
-             print(buf)
              revMsg = pickle.loads(buf)
              print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
                  self.conBuff.append(revMsg['data'])
+                 print('1111111111111')
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
+                     print('222222222222222')
                      self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
                      self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
                      timestamp = time()
@@ -174,8 +173,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                             })
                      self.MSG['MSGTYPE'] = 'RECORD'
                      self.MSG['ID']='Master'
-                     userman.self.sendConDataToAll(self.MSG)
+                     self.userman.sendConDataToAll(self.MSG)
                      self.blockindex = (self.blockindex) + 1
+                     print('3333333333333333')
              else:
                  if revMsg['MSGTYPE'] == 'REQ_MAKEBLOCK':
                      index = revMsg['index']
@@ -195,12 +195,12 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      else:
                          MSG = {'MSGTYPE': 'RECORD','ID':'Master','data':self.blockChain[index]['data'] }
                          self.userman.users[username][0].send(pickle.dumps(MSG))
-                 elif revMsg['MSGTYPE'] == 'REQ_OK':
-                     MSG = {'MSGTYPE':'RECORD','ID':'Master',
-                                   'data':{'index': self.blockindex, 'timestamp' : 0, 'transaction': 'dkslqwkle;qwek', 'proof': 0, 'difficulty' : self.difficulty,  'previous_hash': self.previous_hash}}
-                     self.userman.users[username][0].send(pickle.dumps(MSG))
-                     self.blockChain.append({'hash': 0, 'updatable': False, 'data': MSG['data']})
-                     self.blockindex = self.blockindex + 1
+                #  elif revMsg['MSGTYPE'] == 'REQ_OK':
+                #      MSG = {'MSGTYPE':'RECORD','ID':'Master',
+                #                    'data':{'index': self.blockindex, 'timestamp' : 0, 'transaction': 'dkslqwkle;qwek', 'proof': 0, 'difficulty' : self.difficulty,  'previous_hash': self.previous_hash}}
+                #      self.userman.users[username][0].send(pickle.dumps(MSG))
+                #      self.blockChain.append({'hash': 0, 'updatable': False, 'data': MSG['data']})
+                #      self.blockindex = self.blockindex + 1
 
       except Exception as e:
          print(e)
