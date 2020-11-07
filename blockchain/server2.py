@@ -79,7 +79,7 @@ class UserManager(): # 사용자관리 및 채팅 메세지 전송을 담당하�
 
 
 class MyTcpHandler(socketserver.BaseRequestHandler):
-    LIMIT_QUNTITY = 1
+    LIMIT_QUNTITY = 2
     difficulty = 2
     userman = UserManager()
     conBuff = ["jax send 50$ to piora", "yasuo send 30$ to shen", "ramus send 10$ to anivia"]
@@ -100,12 +100,10 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              }
         }
     ]
-#    print(blockChain)
     blockDstring = json.dumps(blockChain[0]['data'], sort_keys=True).encode()
     blockChain[0]['hash'] = hashlib.sha256(blockDstring).hexdigest()
     previous_hash = blockChain[0]['hash']
-#    print(blockChain)
-    MSG = {'MSGTYPE':'init','ID':'Master','completable': False,
+    MSG = {'MSGTYPE':'init','ID':'Master',
            'data':{'index': blockindex, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
     blockindex = blockindex + 1;
 
@@ -141,7 +139,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
       print('[%s] 연결됨' %self.client_address[0])       # 클라이언트가 접속시 클라이언트 주소 출력
       try:
           username = self.registerUsername()
-#          self.userman.setUserState(username, 0)
           dic = {i:obj for i, obj in enumerate(self.blockChain[::-1])}        #가장 최근(가장 끝의) 블록에 번호를 매겨 역순으로 딕셔너라에 저장 후 노드에게 전송.
 
           self.userman.users[username][0].send(pickle.dumps({'MSGTYPE': 'INIT_BLOCK', 'data': dic}))
@@ -151,21 +148,18 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              revMsg = pickle.loads(buf)
              print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
-                 self.conBuff.append(revMsg['data'])
-                 print('1111111111111')
+                 self.conBuff.append(revMsg['data']['transaction'])
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
-                     print('222222222222222')
                      self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
                      self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
                      timestamp = time()
-                     self.MSG['data']['timestamp'] = timestamp
                      self.blockChain.append({
                               'updatable':False,
                               'data':
                               {
                                 'index':self.blockindex,
                                 'timestamp': timestamp,
-                                'transaction': self.MSG['transaction'],
+                                'transaction': self.conBuff,
                                 'proof': 0,
                                 'difficulty': self.difficulty,
                                 'previous_hash': self.previous_hash
@@ -175,7 +169,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      self.MSG['ID']='Master'
                      self.userman.sendConDataToAll(self.MSG)
                      self.blockindex = (self.blockindex) + 1
-                     print('3333333333333333')
+                     print(self.conBuff)
              else:
                  if revMsg['MSGTYPE'] == 'REQ_MAKEBLOCK':
                      index = revMsg['index']
