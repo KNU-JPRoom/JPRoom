@@ -11,6 +11,9 @@ const ejs = require('ejs');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 
+// const {StringDecoder} = require('string_decoder');
+// const utf8 = require('utf8');
+const nodePickle= require('pickle');
 
 // 1. 설정
 // 1) View 경로 설정
@@ -70,44 +73,54 @@ app.listen(5000,function(req,res){
 });
 
 app.get('/RFID',function(req,res){
-	console.log("in");
-  var rfid = req.query.param;
-  var sql = "select * from JPdatabase.Order where idRFID='"+rfid+"'";
-  let orders = dbConnection.query(sql);
-  var items= [];
+  var rfid = req.params['param'];
+  var url = "select * from Order where idRFID='"+rfid+"'";
+  let orders = dbConnection.query(url);
+  var items=[];
   var data = {"info":items};
   if(orders.length>0){
     for(var i =0;i<orders.length;++i){
       var obj = {};
-      obj['oid']=""+orders[i].oid;
+      obj['oid']=orders[i].oid;
       obj['orderer']=orders[i].orderer;
       obj['destination']=orders[i].destination;
       obj['status']=orders[i].status;
       obj['orderinfo']=[];
-      sql = "select * from OrderInfo where oid="+obj['oid'];
-      let orderInfos = dbConnection.query(sql); 
+      url = "select * from OrderInfo where oid="+oid;
+      let orderInfos = dbConnection(url); 
       for(var t=0;t<orderInfos.length;++t){
         var packet = {};
         packet['partname'] = orderInfos[t].partname;
-        packet['cnt'] = ""+orderInfos[t].cnt;
+        packet['cnt'] = orderInfos[t].cnt;
         obj['orderinfo'].push(packet);
       }
       data["info"].push(obj);
     }
   }
-	console.log(data);
-	res.send(data);
+  res.json(data);
 });
 
-// var net = require('net');
-// function getConnection(connName){
-//   var client = net.connect({port:7777,host:'localhost'},function(){
-//     console.log(connName+"Connected: ");
-//     this.setTimeout(500);
-//     this.setEncoding('utf8');
-//   })
-//   return client;
-// }
+var net = require('net');
+function getConnection(connName){
+  var client = net.connect({port:7777,host:'localhost'},function(){
+    console.log(connName+"Connected: ");
+    this.setTimeout(500);
+    this.setEncoding('utf8');
+  })
+  client.write("WEBSERVER");
+  var dic = {
+    'MSGTYPE':'RECORD',
+    'ID':'WEBSERVER',
+    'data':{
+      'timestamp':new Date(),
+      'transaction':'event created!!'
+    }
+  }
+  nodePickle.dumps(dic,function(pickled){
+      client.write(pickled)
+  })
+  return client;
+}
 
 // function writeData(socket,data){
 //   var success = !socket.write(data);
@@ -120,7 +133,6 @@ app.get('/RFID',function(req,res){
 //   }
 // }
 
-// var BLOCK_CHAIN = getConnection("WEB_SERVER");
-// writeData(BLOCK_CHAIN,"HHHH");
+var BLOCK_CHAIN = getConnection("WEB_SERVER");
 
 

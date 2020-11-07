@@ -150,6 +150,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 #             tmpMsg['okSign'] = True
 #             self.userman.users[username][0].send(pickle.dumps(tmpMsg))
              buf = self.userman.users[username][0].recv(1000)     #client에서 전송한 정보를 받음.(블록)
+             print(buf)
              revMsg = pickle.loads(buf)
              print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
