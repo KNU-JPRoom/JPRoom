@@ -9,7 +9,7 @@ import hashlib
 
 from json import loads
 
-HOST = '127.0.0.1'
+HOST = '0.0.0.0'
 PORT = 7777
 #q = queue.Queue()                #연속적으로 들어올 condata를 저정하기위한 큐
 #contractData = {}
