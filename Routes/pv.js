@@ -38,9 +38,12 @@ module.exports = function(app,db){
     router.get('/MyWarehouse',function(req,res,next){
         var enrollItems = pv_myWH.RequestForEnroll(req,res,app,db);
         var requestItems = pv_myWH.RequestForBuy(req,res,app,db);
+        var wList = pv_myWH.Mywarehouse(req,res,app,db);
         enrollItems = JSON.parse(enrollItems);
         requestItems = JSON.parse(requestItems);
-        res.render('User/Provider/pv_MyWH',{'app':app,'session':req.session,'db':db,'enrollItems':enrollItems,'requestItems':requestItems});
+        wList = JSON.parse(wList);
+        console.log(wList);
+        res.render('User/Provider/pv_MyWH',{'app':app,'session':req.session,'db':db,'enrollItems':enrollItems,'requestItems':requestItems,'wList':wList});
     });
 
     return router;

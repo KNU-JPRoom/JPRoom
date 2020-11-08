@@ -16,14 +16,53 @@
         </div>
       </div>
       <div class="container">
+
+        <div class="container">
+          <h2>My Warehouse</h2>
+          <div id="accordion">
+            <% for(var i=0; i < Object.keys(wList).length; i++) { %>
+              <div class="card">
+                <div class="card-header">
+                  <a class="collapsed card-link" data-toggle="collapse" href="#collapse<%=i%>">
+                    <%= wList['item'+i].warehouseName %>
+                  </a>
+                </div>
+                <div id="collapse<%=i%>" class="collapse" data-parent="#accordion">
+                  <div class="card-body">
+                    <table class="board-table table ">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>주소</th>
+                          <th>총 면적</th>
+                          <th>사용중 면적</th>
+                          <th>계약자</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><%= wList['item'+i].address %></td>
+                          <td><%= wList['item'+i].floorArea %></td>
+                          <td><%= wList['item'+i].area %></td>
+                          <td><% for(var j=0; j < wList['item'+i].memberList.length; i++) { %>
+                            <%= wList['item'+i].memberList[j] %>
+                          <% } %></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
         <div class="container mb-3">
-          <h2 class="mb-3">Submit lists</h2>
-          <% for(var i=0; i < Object.keys(items).length; i++) { %>
-            <p id = "whID<%=i%>" style="display: none"><%= items['item'+i].warehouseID %></p>
-            <p id = "reqID<%=i%>" style="display: none"><%= items['item'+i].reqID%></p>
-            <p id = "reqType<%=i%>" style="display: none"><%= items['item'+i].reqType%></p>
-            <p id = "buyerID<%=i%>" style="display: none"><%= items['item'+i].buyerID%></p>
-            <p id = "area<%=i%>" style="display: none"><%= items['item'+i].area%></p>
+          <h2 class="mb-3">Warehouse Enroll lists</h2>
+          <% for(var i=0; i < Object.keys(enrollItems).length; i++) { %>
+            <p id = "whID0<%=i%>" style="display: none"><%= enrollItems['item'+i].warehouseID %></p>
+            <p id = "reqID0<%=i%>" style="display: none"><%= enrollItems['item'+i].reqID%></p>
+            <p id = "reqType0<%=i%>" style="display: none"><%= enrollItems['item'+i].reqType%></p>
+            <p id = "memberID0<%=i%>" style="display: none"><%= enrollItems['item'+i].providerID%></p>
           <%}%>
           <table class="board-table table ">
             <thead class="thead-dark">
@@ -34,47 +73,88 @@
               </tr>
             </thead>
             <tbody>
-              <% for(var i=0; i < Object.keys(items).length; i++) { %>
-                 <% if(items['item'+i].reqType == "ReqByBuyer" || items['item'+i].reqType == "ReqByAdmin"){ %>
+              <% for(var i=0; i < Object.keys(enrollItems).length; i++) { %>
+                 <% if(enrollItems['item'+i].reqType == "ReqEnrollPV"){ %>
                    <tr class="table-warning">
-                     <td><%= items['item'+i].warehouseID %></td>
+                     <td><%= enrollItems['item'+i].warehouseID %></td>
                      <td>Pending approval</td>
                      <td style="float:right; padding:0px 10px 0px 0px;">
-                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 0)">Cancel</button>
+                       <button type="button" class="btn btn-sm" onclick="pvClick(0, <%=i%>, 0)">Cancel</button>
                      </td>
                    </tr>
                  <% } %>
-                 <% if(items['item'+i].reqType == "ReqPayByBuyer"){ %>
-                   <tr class="table-primary">
-                     <td><%= items['item'+i].warehouseID %></td>
-                     <td>Waiting for payment</td>
-                     <td style="float:right; padding:0px 10px 0px 0px;">
-                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 1)">Pay</button>
-                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 0)">Cancel</button>
-                     </td>
-                   </tr>
-                 <% } %>
-                 <% if(items['item'+i].reqType == "ReqPayAcpt"){ %>
-                   <tr class="table-success">
-                     <td><%= items['item'+i].warehouseID %></td>
-                     <td>Approved</td>
-                     <td></td>
-                   </tr>
-                 <% } %>
-                 <% if(items['item'+i].reqType == "Rejected"){ %>
+                 <% if(enrollItems['item'+i].reqType == "ReqEnrollRejected"){ %>
                    <tr class="table-danger">
-                     <td><%= items['item'+i].warehouseID %></td>
+                     <td><%= enrollItems['item'+i].warehouseID %></td>
                      <td>Rejected</td>
                      <td style="float:right; padding:0px 10px 0px 0px;">
-                       <button type="button" class="btn btn-sm" onclick="byClick(<%=i%>, 2)">Confirm</button>
+                       <button type="button" class="btn btn-sm" onclick="pvClick(0, <%=i%>, 2)">Confirm</button>
                      </td>
                    </tr>
                  <% } %>
               <% } %>
             </tbody>
-
           </table>
-
+        </div>
+        <div class="container mb-3">
+          <h2 class="mb-3">Buy Request lists</h2>
+          <% for(var i=0; i < Object.keys(requestItems).length; i++) { %>
+            <p id = "whID1<%=i%>" style="display: none"><%= requestItems['item'+i].warehouseID %></p>
+            <p id = "reqID1<%=i%>" style="display: none"><%= requestItems['item'+i].reqID%></p>
+            <p id = "reqType1<%=i%>" style="display: none"><%= requestItems['item'+i].reqType%></p>
+            <p id = "memberID1<%=i%>" style="display: none"><%= requestItems['item'+i].buyerID%></p>
+            <p id = "area1<%=i%>" style="display: none"><%= requestItems['item'+i].area%></p>
+          <%}%>
+          <table class="board-table table ">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>State</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i < Object.keys(requestItems).length; i++) { %>
+                 <% if(requestItems['item'+i].reqType == "ReqByAdmin"){ %>
+                   <tr class="table-warning">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Pending approval</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 1)">Approve</button>
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(requestItems['item'+i].reqType == "ReqPayByBuyer"){ %>
+                   <tr class="table-primary">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Waiting for payment</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 0)">Cancel</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(requestItems['item'+i].reqType == "ReqPayAcpt"){ %>
+                   <tr class="table-success">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Approved</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+                 <% if(requestItems['item'+i].reqType == "Rejected"){ %>
+                   <tr class="table-danger">
+                     <td><%= requestItems['item'+i].warehouseID %></td>
+                     <td>Rejected</td>
+                     <td style="float:right; padding:0px 10px 0px 0px;">
+                       <button type="button" class="btn btn-sm" onclick="pvClick(1, <%=i%>, 2)">Confirm</button>
+                     </td>
+                   </tr>
+                 <% } %>
+              <% } %>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -82,81 +162,87 @@
   </body>
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
   <script>
-    function byClick(i, flag) {
+    function pvClick(where, i, flag) {
+      var URL = '/Provider/MyWarehouse/Enroll/Ans';
+      var Area = null;
+      if(where){
+        URL = '/Provider/MyWarehouse/Buy/Ans';
+        Area = document.getElementById('area'+where+i).innerText
+      }
       switch (flag) {
         case 0: // Cancel
           $.ajax({
-            url: '/MyWarehouse/Buy/Ans',
+            url: URL,
             dataType: 'json',
             type: 'POST',
             data: {answer: "Cancel",
-                  reqID: document.getElementById('reqID'+i).innerText,
-                  whID: document.getElementById('whID'+i).innerText,
-                  reqType: document.getElementById('reqType'+i).innerText,
-                  buyerID: document.getElementById('buyerID'+i).innerText,
-                  area: document.getElementById('area'+i).innerText
+                  reqID: document.getElementById('reqID'+where+i).innerText,
+                  whID: document.getElementById('whID'+where+i).innerText,
+                  reqType: document.getElementById('reqType'+where+i).innerText,
+                  memberID: document.getElementById('memberID'+where+i).innerText,
+                  area: Area
                   //other things will be here
                 },
-            success:function(data){
-              if(data==true){
-                alert("주문이 정상적으로 취소되었습니다.");
-                window.location.href = "/Buyer/MyWarehouse";
+                success:function(data){
+                  if(data==true){
+                    alert("취소하였습니다.");
+                    window.location.href = "/Provider/MyWarehouse";
+                  }
+                  else{
+                    alert("에러가 발생했습니다.");
+                    window.location.href = "/Provider/MyWarehouse";
+                  }
               }
-              else{
-                alert("에러가 발생했습니다.");
-                window.location.href = "/Buyer/MyWarehouse";
-              }
-            }
           });
           break;
-        case 1: // Pay
+        case 1: // Approve
           $.ajax({
-            url: '/Buyer/MyWarehouse/Buy/Ans',
+            url: URL,
             dataType: 'json',
             type: 'POST',
-            data: {answer: "Accept",
-                  reqID: document.getElementById('reqID'+i).innerText,
-                  whID: document.getElementById('whID'+i).innerText,
-                  reqType: document.getElementById('reqType'+i).innerText,
-                  buyerID: document.getElementById('buyerID'+i).innerText,
-                  area: document.getElementById('area'+i).innerText
+            data: {answer: "Approve",
+                  reqID: document.getElementById('reqID'+where+i).innerText,
+                  whID: document.getElementById('whID'+where+i).innerText,
+                  reqType: document.getElementById('reqType'+where+i).innerText,
+                  memberID: document.getElementById('memberID'+where+i).innerText,
+                  area: Area
                   //other things will be here
                 },
-              success:function(data){
-              if(data==true){
-                alert("주문이 정상적으로 처리되었습니다.");
-                window.location.href = "/Buyer/MyWarehouse";
+                success:function(data){
+                if(data==true){
+                  alert("승인하였습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
+                }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
+                }
               }
-              else{
-                alert("에러가 발생했습니다.");
-                window.location.href = "/Buyer/MyWarehouse";
-              }
-            }
           });
           break;
-        case 2: // Confrim
+        case 2: // Confirm
           $.ajax({
-            url: '/Buyer/MyWarehouse/Buy/Ans',
+            url: URL,
             dataType: 'json',
             type: 'POST',
             data: {answer: "Confirm",
-                  reqID: document.getElementById('reqID'+i).innerText,
-                  whID: document.getElementById('whID'+i).innerText,
-                  reqType: document.getElementById('reqType'+i).innerText,
-                  buyerID: document.getElementById('buyerID'+i).innerText,
-                  area: document.getElementById('area'+i).innerText
+                  reqID: document.getElementById('reqID'+where+i).innerText,
+                  whID: document.getElementById('whID'+where+i).innerText,
+                  reqType: document.getElementById('reqType'+where+i).innerText,
+                  memberID: document.getElementById('memberID'+where+i).innerText,
+                  area: Area
                   //other things will be here
                 },
-            success:function(data){
-              if(data==true){
-                alert("확인하였습니다.");
-                window.location.href = "/Buyer/MyWarehouse";
+                success:function(data){
+                if(data==true){
+                  alert("확인하였습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
+                }
+                else{
+                  alert("에러가 발생했습니다.");
+                  window.location.href = "/Provider/MyWarehouse";
+                }
               }
-              else{
-                alert("에러가 발생했습니다.");
-                window.location.href = "/Buyer/MyWarehouse";
-              }
-            }
           });
           break;
       }

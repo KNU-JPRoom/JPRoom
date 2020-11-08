@@ -49,11 +49,13 @@ exports.RequestForBuy = function (req, res,app,db) {
 
 exports.Mywarehouse = function(req,res,app,db){
   var items="{";
-  var sql = "select * from Warehouse where warehouseID in (SELECT warehouseID from Provider where memberID = '"+req.session['memberID']+"'";
+  let sql = `SELECT * from Warehouse,Provider where Warehouse.warehouseID=Provider.warehouseID and Provider.memberID=\'${req.session['memberID']}\'`;
   let results = db.query(sql);
   if(results.length > 0) {
       var step;
       for(step =0;step<results.length;step++){
+          sql = `select  distinct memberID from Buyer where warehouseID=${results[step].warehouseID}`;
+          let idList = db.query(sql);
           items+= ("\"item"+step+"\":");
           var obj="{"+
               "\"warehouseID\" :"+ results[step].warehouseID+","+
@@ -66,13 +68,20 @@ exports.Mywarehouse = function(req,res,app,db){
               "\"floorArea\" :"+ results[step].floorArea +","+
               "\"useableArea\" :"+ results[step].useableArea +","+
               "\"infoComment\" :\""+ results[step].infoComment+"\","+
-              "\"etcComment\" :\""+ results[step].etcComment+"\""+
-          "}";
+              "\"etcComment\" :\""+ results[step].etcComment+"\","+
+              "\"memberList\": ["; 
+              for(i =0;i<idList.length;i++){
+               obj+="\""+idList[i].memberID+"\"";
+                if(i+1<idList.length)obj+=",";
+              }
+              obj+="]";
+          obj+="}";
           items+=obj;
-          if(step+1<results.length)items+=","
+          if(step+1<results.length)items+=",";
       }
   }
   items +="}";
+  console.log(items)
   return items;
 }
 

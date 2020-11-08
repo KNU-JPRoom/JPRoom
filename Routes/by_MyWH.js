@@ -25,14 +25,18 @@ exports.RequestForBuy = function (req, res,app,db) {
 
 exports.Mywarehouse = function(req,res,app,db){
   var items="{";
-  let results = db.query('SELECT * from Warehouse where warehouseID IN (SELECT warehouseID from Buyer where memberID = ?)',[req.session['memberID']]);
+  let sql = `SELECT * from Warehouse,Buyer where Warehouse.warehouseID=Buyer.warehouseID and Buyer.memberID=\'${req.session['memberID']}\'`;
+  let results = db.query(sql);
   if(results.length > 0) {
       var step;
       for(step =0;step<results.length;step++){
           items+= ("\"item"+step+"\":");
+          sql = `SELECT DISTINCT memberID from Provider where warehouseID=${results[step].warehouseID}`;
+          let idList = db.query(sql);
           var obj="{"+
               "\"warehouseID\" :"+ results[step].warehouseID+","+
               "\"warehouseName\" :\""+ results[step].warehouseName+"\","+
+              "\"providerID\":\""+idList[0].memberID+"\","+
               "\"enrolledDate\" :\"" + results[step].enrolledDate+"\","+
               "\"address\" :\""+ results[step].address+"\","+
               "\"latitude\" :"+ results[step].latitude+","+
@@ -40,14 +44,16 @@ exports.Mywarehouse = function(req,res,app,db){
               "\"landArea\" :"+ results[step].landArea +","+
               "\"floorArea\" :"+ results[step].floorArea +","+
               "\"useableArea\" :"+ results[step].useableArea +","+
+              "\"area\":" +results[step].area+","+
               "\"infoComment\" :\""+ results[step].infoComment+"\","+
               "\"etcComment\" :\""+ results[step].etcComment+"\""+
           "}";
           items+=obj;
-          if(step+1!=results.length)items+=","
+          if(step+1<results.length)items+=","
       }
   }
   items +="}";
+  console.log(items)
   return items;
 }
 
@@ -91,6 +97,7 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
               warehouseID: req.body.whID,
               area: req.body.area
             };
+            connection.query(`UPDATE Warehouse SET useableArea=useableArea-${info.area} WHERE warehouseID=${info.warehouseID}`);
             connection.query(`INSERT INTO Buyer SET ?`,info,function (error, results, fields) {
                 if(error){
                   res.send(false);

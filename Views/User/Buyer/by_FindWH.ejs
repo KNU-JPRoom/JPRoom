@@ -114,6 +114,12 @@
 
         $('#bu').click(function() {
             console.log(document.getElementById("whID").innerText);
+            let useableArea = $('#whUseableArea').val()
+            let wantArea = $('#area').val()
+            if(useableArea<wantArea){
+              alert("사용공유면적보다 큰 면적을 신청하였습니다. 다시 신청해 주세요!");
+              return;
+            }
             $.ajax({
                   url: '/Buyer/FindWH/Inquire',
                   dataType: 'json',
