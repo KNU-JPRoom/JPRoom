@@ -34,7 +34,6 @@ def rcvMsg(sock):
                     blockChain.append(MSG['data'][i])
                 blockChain.reverse()
                 bcLock.release()
-                sock.send(pickle.dumps({'MSGTYPE':'REQ_OK','ID':'fad'}));
             elif MSG['MSGTYPE'] == 'BLOCK':
                     bqLock.acquire()
                     blockQueue.append(MSG['data'])

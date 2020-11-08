@@ -100,13 +100,13 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              }
         }
     ]
-#    print(blockChain)
     blockDstring = json.dumps(blockChain[0]['data'], sort_keys=True).encode()
     blockChain[0]['hash'] = hashlib.sha256(blockDstring).hexdigest()
     previous_hash = blockChain[0]['hash']
 #    print(blockChain)
     MSG = {'MSGTYPE':'init','ID':'Master','completable': False,
            'data':{'index': 0, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
+
 
     # block1 = {
     #             'hash': hashlib.sha256(json.dumps(conBuff[0]).encode()).hexdigest(),
@@ -140,7 +140,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
       print('[%s] 연결됨' %self.client_address[0])       # 클라이언트가 접속시 클라이언트 주소 출력
       try:
           username = self.registerUsername()
-#          self.userman.setUserState(username, 0)
           dic = {i:obj for i, obj in enumerate(self.blockChain[::-1])}        #가장 최근(가장 끝의) 블록에 번호를 매겨 역순으로 딕셔너라에 저장 후 노드에게 전송.
 
           self.userman.users[username][0].send(pickle.dumps({'MSGTYPE': 'INIT_BLOCK', 'data': dic}))
@@ -150,10 +149,8 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              revMsg = pickle.loads(buf)
              print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
-                 self.conBuff.append(revMsg['data'])
-                 print('1111111111111')
+                 self.conBuff.append(revMsg['data']['transaction'])
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
-                     print('222222222222222')
                      self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
                      self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
                      timestamp = time()
@@ -175,7 +172,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      self.MSG['ID']='Master'
                      self.userman.sendConDataToAll(self.MSG)
                      self.blockindex = self.blockindex + 1
-                     print(self.MSG)
              else:
                  if revMsg['MSGTYPE'] == 'REQ_MAKEBLOCK':
                      index = revMsg['index']
