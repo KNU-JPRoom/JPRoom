@@ -172,6 +172,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      self.MSG['ID']='Master'
                      self.userman.sendConDataToAll(self.MSG)
                      self.blockindex = self.blockindex + 1
+
              else:
                  if revMsg['MSGTYPE'] == 'REQ_MAKEBLOCK':
                      index = revMsg['index']
