@@ -73,8 +73,7 @@ app.listen(5000,function(req,res){
 });
 
 app.post('/RFID',function(req,res){
-	console.log(req.body);
-  var rfid = req.body.param;
+	var rfid = req.body.param;
   var url = "select * from JPdatabase.Order where idRFID='"+rfid+"'";
   let orders = dbConnection.query(url);
   var items=[];
@@ -99,6 +98,26 @@ app.post('/RFID',function(req,res){
     }
   }
   res.json(data);
+});
+
+
+app.post('/RFID/Update',function(req,res){
+  var mysql = require('mysql');
+  var connection = mysql.createConnection(require('../Module/db').info);
+  connection.connect();
+  var url = `update JPdatabase.Order set status='complete' where oid=${oid}`;
+  connection.query(url,function(err,results,fields){
+    if(error)
+      res.send({
+        "success":false,
+        "reason":"unknown error!"
+      });
+
+    else
+      res.send({
+        "success":false
+      });
+  });
 });
 
 // var net = require('net');
@@ -135,5 +154,3 @@ app.post('/RFID',function(req,res){
 // }
 
 // var BLOCK_CHAIN = getConnection("WEB_SERVER");
-
-
