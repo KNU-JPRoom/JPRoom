@@ -72,9 +72,10 @@ app.listen(5000,function(req,res){
     console.log('connected!!');
 });
 
-app.get('/RFID',function(req,res){
-  var rfid = req.params['param'];
-  var url = "select * from Order where idRFID='"+rfid+"'";
+app.post('/RFID',function(req,res){
+	console.log(req.body);
+  var rfid = req.body.param;
+  var url = "select * from JPdatabase.Order where idRFID='"+rfid+"'";
   let orders = dbConnection.query(url);
   var items=[];
   var data = {"info":items};
@@ -86,8 +87,8 @@ app.get('/RFID',function(req,res){
       obj['destination']=orders[i].destination;
       obj['status']=orders[i].status;
       obj['orderinfo']=[];
-      url = "select * from OrderInfo where oid="+oid;
-      let orderInfos = dbConnection(url); 
+      url = "select * from OrderInfo where oid="+orders[i].oid;
+      let orderInfos = dbConnection.query(url); 
       for(var t=0;t<orderInfos.length;++t){
         var packet = {};
         packet['partname'] = orderInfos[t].partname;
