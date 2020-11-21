@@ -21,14 +21,9 @@ module.exports = function(app,db){
 
     router.get('/MyWarehouse',function(req,res,next){
         var items = MyWH.RequestForBuy(req,res,app,db);
-        var wList = MyWH.Mywarehouse(req,res,app,db);
         items = JSON.parse(items);
-        wList = JSON.parse(wList);
-        console.log(wList);
-        
-        res.render('User/Buyer/by_MyWH',{'app':app,'session':req.session,'db':db,'items':items,'wList':wList});
+        res.render('User/Buyer/by_MyWH',{'app':app,'session':req.session,'db':db,'items':items});
     });
-
     router.post('/MyWarehouse/Buy/Ans',function(req,res,next){
         MyWH.ReqBuyWithAnswer(req,res,app,db);
     });

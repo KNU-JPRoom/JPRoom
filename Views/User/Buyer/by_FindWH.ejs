@@ -45,7 +45,7 @@
                 </tr>
                 <tr>
                   <th>Price per area</th>
-                  <td id = "whUseableArea"></td>
+                  <td id = "whPrice"></td>
                 </tr>
                 <tr>
                   <th>Comment</th>
@@ -110,7 +110,7 @@
               $("#whAddress").html(items[k]['address']);
               $("#whFloorArea").html(items[k]['floorArea']);
               $("#whUseableArea").html(items[k]['useableArea']);
-              $("#whUseableArea").html(items[k]['price']);
+              $("#whPrice").html(items[k]['price']);
               $("#whInfoComment").html(items[k]['infoComment']);
             });
             i++;
@@ -121,7 +121,7 @@
             console.log(document.getElementById("whID").innerText);
             let useableArea = $('#whUseableArea').val()
             let wantArea = $('#area').val()
-            if(useableArea<wantArea){
+            if(useableArea>wantArea){
               alert("사용공유면적보다 큰 면적을 신청하였습니다. 다시 신청해 주세요!");
               return;
             }

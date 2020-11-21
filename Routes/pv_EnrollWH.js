@@ -17,11 +17,12 @@ exports.EnrollWH = function(req,res,app,db,fileName){
           "warehouseName": req.body.warehouseName,
           "enrolledDate": new Date(),
           "address": req.body.address,
-          "latitude": req.body.latitude,
-          "longitude": req.body.longitude,
+          "latitude": req.body.lat,
+          "longitude": req.body.lng,
           "landArea": req.body.landArea,
           "floorArea": req.body.floorArea,
-          "useableArea": 0,
+          "useableArea":  req.body.floorArea,
+          "price": req.body.price,
           "infoComment": req.body.infoComment,
           "etcComment" :req.body.etcComment
       }
