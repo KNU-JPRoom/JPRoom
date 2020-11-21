@@ -52,23 +52,16 @@
                      <td style="float:right; padding:0px 10px 0px 0px;">
                       <paypal><script src="https://www.paypal.com/sdk/js?client-id=ARyCQ-BAKmGRPxir7JRdNl9iLDrHNVsm4N_1T5IkJuEA_7DNtVJjBWCLkP7QnzaLqVIqXcY0lukAek5N"></script>
                         <script>
+                          
                           paypal.Buttons({
+
                               createOrder:function(data,actions){
                                 return actions.order.create({
                                   purchase_units:[{
-                                    transactions:[
-                                      {
-                                        item_list:{
-                                          items:[
-                                            {
-                                            }
-                                          ]
-                                        },
-                                        amount:{
-                                          value: '8'
-                                        }
+                                    amount:{
+                                          currency : "USD",
+                                          value: 8
                                       }
-                                    ]
                                   }]
                                 });
                               },

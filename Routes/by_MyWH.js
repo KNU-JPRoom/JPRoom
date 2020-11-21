@@ -64,6 +64,7 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
   var answer = req.body.answer;
   var mysql = require('mysql');
   var connection = mysql.createConnection(require('../Module/db').info);
+  const nodePickle= require('pickle');
   connection.connect();
   if(answer=="Cancel"){
       connection.query(`UPDATE RequestForBuy SET reqType='RejByBuyer' WHERE reqID =${reqID}`,function (error, results, fields){
@@ -129,8 +130,30 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                       connection.end()
                     }
                     else{
-                      res.send(true);
-                      connection.end();
+                          var net = require('net');
+                          function getConnection(connName){
+                          var client = net.connect({port:7777,host:'localhost'},function(){
+                              console.log(connName+"Connected: ");
+                              this.setTimeout(500);
+                              this.setEncoding('utf8');
+                            })
+                            client.write("WEBSERVER");
+                            var dic = {
+                                'MSGTYPE':'RECORD',
+                                'ID':'WEBSERVER',
+                                'data':{
+                                    'timestamp':new Date(),
+                                    'transaction':`${contract.buyerID} pay ${contract.price} for warehouseID(${contract.warehouseID})`
+                                  }
+                            }
+                            nodePickle.dumps(dic,function(pickled){
+                                  client.write(pickled)
+                              })
+                              return client;
+                            }
+                             var BLOCK_CHAIN = getConnection("WEB_SERVER");
+                            res.send(true);
+                            connection.end();
                     }
                   });
                 }
