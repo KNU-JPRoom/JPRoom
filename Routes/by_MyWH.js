@@ -111,8 +111,10 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                   var sDate = new Date();
                   var eDate = new Date();
                   eDate.setDate(sDate.getDate()+30)
-                  let result = db.query('select * from Contract');
-                  var conno = result.length+1;
+                  let result = db.query('select * from Contract ORDER BY contractID DESC');
+                  var conno = 1;
+                  if(result.length>0)
+                   conno = result[0].contractID+1;
                   var contract = {
                       contractID : conno,
                       buyerID : info['memberID'],
@@ -147,9 +149,9 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                                       }
                                 }
                                 nodePickle.dumps(dic,function(pickled){
-                                      client.write(pickled)
+                                      client.write(pickled,)
+                                      client.end();
                                 })
-                                client.end();
                             }
                             getConnection("WEB_SERVER");
                             res.send(true);
