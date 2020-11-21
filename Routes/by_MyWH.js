@@ -89,6 +89,7 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
     if(reqType=="ReqPayByBuyer"){
       connection.query(`UPDATE RequestForBuy SET reqType='ReqPayAcpt' WHERE reqID =${reqID}`,function (error, results, fields) {
           if(error){
+            console.log(error);
             res.send(false);
             connection.end();
           }
@@ -101,6 +102,7 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
             connection.query(`UPDATE Warehouse SET useableArea=useableArea-${info.area} WHERE warehouseID=${info.warehouseID}`);
             connection.query(`INSERT INTO Buyer SET ?`,info,function (error, results, fields) {
                 if(error){
+                  console.log(error);
                   res.send(false);
                   connection.end()
                 }
@@ -117,10 +119,12 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                       startDate : sDate,
                       endDate : eDate,
                       area : info['area'],
+                      price : 8,
                       logID : 1
                   };
                   connection.query(`INSERT INTO Contract SET ?`,contract,function (error, results, fields) {
                     if(error){
+                      console.log(error);
                       res.send(false);
                       connection.end()
                     }

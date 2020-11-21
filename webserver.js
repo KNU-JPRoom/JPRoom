@@ -10,9 +10,7 @@ const mySQL  = require('./Module/db');
 const ejs = require('ejs');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
-
-// const {StringDecoder} = require('string_decoder');
-// const utf8 = require('utf8');
+const paypal = require("paypal-rest-sdk");
 const nodePickle= require('pickle');
 
 // 1. 설정
@@ -31,11 +29,10 @@ app.use(bodyParser.json());
 app.use(express.static('Public'));
 // 7) CORS 허용
 app.use(function(req,res,next){
-	res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+ 	res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 	next();
 });
-
 app.use(fileUpload({
   limits:{fileSize:50*1024*1024}
 }));
@@ -67,13 +64,9 @@ app.get('/Public/Upload/:filename',function(req,res){
   })
 });
 
-// 11) 서버를 열 때 설정 함수
-app.listen(5000,function(req,res){
-    console.log('connected!!');
-});
 
 app.post('/RFID',function(req,res){
-	var rfid = req.body.param;
+  var rfid = req.body.param;
   var url = "select * from jpdatabase.Order where idRFID='"+rfid+"'";
   let orders = dbConnection.query(url);
   var items=[];
@@ -107,52 +100,59 @@ app.post('/RFID/Update',function(req,res){
 	console.log(req.body);
   var connection = mysql.createConnection(require('./Module/db').info);
   connection.connect();
-  var url = `update JPdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid}`;
+  var url = `update jpdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid}`;
   connection.query(url,function(error,results,fields){
     if(error)
-      res.send({
-        "success":false,
-        "reason":"unknown error!"
-      });
-
+    res.send({
+      "success":false,
+      "reason":"unknown error!"
+    });
     else
-      res.send({
-        "success":true
-      });
+    res.send({
+      "success":true
+    });
   });
 });
 
- var net = require('net');
- function getConnection(connName){
-   var client = net.connect({port:7777,host:'localhost'},function(){
-     console.log(connName+"Connected: ");
-     this.setTimeout(500);
-     this.setEncoding('utf8');
-   })
-   client.write("WEBSERVER");
-   var dic = {
-     'MSGTYPE':'RECORD',
-     'ID':'WEBSERVER',
-     'data':{
-       'timestamp':new Date(),
-       'transaction':'event created!!'
-     }
-   }
-   nodePickle.dumps(dic,function(pickled){
-       client.write(pickled)
-   })
-   return client;
- }
 
- function writeData(socket,data){
-   var success = !socket.write(data);
-   if(!success){
-     (function(socket,data){
-       socket.once('drain',function(){
-         writeData(socket,data);
-       })
-     })(socket,data);
-   }
- }
 
- var BLOCK_CHAIN = getConnection("WEB_SERVER");
+// 11) 서버를 열 때 설정 함수
+app.listen(5000,function(req,res){
+    console.log('connected!!');
+});
+
+          //  var net = require('net');
+          //  function getConnection(connName){
+            //    var client = net.connect({port:7777,host:'localhost'},function(){
+              //      console.log(connName+"Connected: ");
+              //      this.setTimeout(500);
+              //      this.setEncoding('utf8');
+              //    })
+              //    client.write("WEBSERVER");
+              //    var dic = {
+                //      'MSGTYPE':'RECORD',
+                //      'ID':'WEBSERVER',
+                //      'data':{
+                  //        'timestamp':new Date(),
+                  //        'transaction':'event created!!'
+                  //      }
+                  //    }
+                  //    nodePickle.dumps(dic,function(pickled){
+                    //        client.write(pickled)
+                    //    })
+                    //    return client;
+                    //  }
+                    
+                    //  function writeData(socket,data){
+                      //    var success = !socket.write(data);
+                      //    if(!success){
+                        //      (function(socket,data){
+                          //        socket.once('drain',function(){
+                            //          writeData(socket,data);
+                            //        })
+                            //      })(socket,data);
+                            //    }
+                            //  }
+                            
+                            //  var BLOCK_CHAIN = getConnection("WEB_SERVER");
+                            
