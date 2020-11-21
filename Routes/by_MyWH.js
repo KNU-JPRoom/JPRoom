@@ -132,28 +132,20 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                       connection.end()
                     }
                     else{
-                          var net = require('net');
-                          function getConnection(connName){
-                                var client = net.connect({port:7777,host:'localhost'},function(){
-                                  console.log(connName+"Connected: ");
-                                  this.setTimeout(500);
-                                  this.setEncoding('utf8');
-                                })
-                                client.write("WEBSERVER");
-                                var dic = {
-                                    'MSGTYPE':'RECORD',
-                                    'ID':'WEBSERVER',
-                                    'data':{
-                                        'timestamp':new Date(),
-                                        'transaction':`${contract.buyerID} pay ${contract.price} for warehouseID(${contract.warehouseID})`
-                                      }
-                                }
-                                nodePickle.dumps(dic,function(pickled){
-                                      client.write(pickled,)
-                                      client.end();
-                                })
+                            const socket = require('../Module/bcsocket');
+                            var sock = socket.socket;
+                            sock.write("WEBSERVER");
+                            var dic = {
+                                'MSGTYPE':'RECORD',
+                                'ID':'WEBSERVER',
+                                'data':{
+                                    'timestamp':new Date(),
+                                    'transaction':`${contract.buyerID} pay ${contract.price} for warehouseID(${contract.warehouseID})`
+                                  }
                             }
-                            getConnection("WEB_SERVER");
+                            nodePickle.dumps(dic,function(pickled){
+                                  sock.write(pickled)
+                            })
                             res.send(true);
                             connection.end();
                     }

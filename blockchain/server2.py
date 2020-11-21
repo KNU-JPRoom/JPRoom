@@ -11,6 +11,9 @@ from json import loads
 
 HOST = '0.0.0.0'
 PORT = 7777
+
+
+
 #q = queue.Queue()                #연속적으로 들어올 condata를 저정하기위한 큐
 #contractData = {}
 
@@ -125,9 +128,8 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                  print(self.conBuff)
                  print(self.blockindex)
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
-                    tmpBuff = self.conBuff[self.LIMIT_QUNTITY:]
                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
-                    self.conBuff = tmpBuff
+                    del self.conBuff[:self.LIMIT_QUNTITY]
                     timestamp = time()
                     self.MSG['data']['index'] = self.blockindex
                     self.MSG['data']['timestamp'] = timestamp
