@@ -104,37 +104,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
     blockChain[0]['hash'] = hashlib.sha256(blockDstring).hexdigest()
     previous_hash = blockChain[0]['hash']
 #    print(blockChain)
-    MSG = {'MSGTYPE':'init','ID':'Master','completable': False,
+    MSG = {'MSGTYPE':'init','ID':'Master',
            'data':{'index': 0, 'timestamp' : 0, 'transaction': conBuff, 'proof': 0, 'difficulty' : difficulty,  'previous_hash': previous_hash}}
 
-
-    # block1 = {
-    #             'hash': hashlib.sha256(json.dumps(conBuff[0]).encode()).hexdigest(),
-    #             'updatable':True,
-    #             'data':
-    #             {
-    #                 'index':blockindex,
-    #                 'timestamp': time(),
-    #                 'transaction': conBuff[0],
-    #                 'proof': 0,
-    #                 'difficulty': difficulty,
-    #                 'previous_hash': blockChain[0]['hash']
-    #             }
-    #          }
-    # blockindex = blockindex + 1
-    # block2 = {
-    #             'hash': hashlib.sha256(json.dumps(conBuff[1]).encode()).hexdigest(),
-    #             'updatable':True,
-    #             'data':
-    #             {
-    #                 'index':blockindex,
-    #                 'timestamp': time(),
-    #                 'transaction': conBuff[1],
-    #                 'proof': 0,
-    #                 'difficulty': difficulty,
-    #                 'previous_hash': blockChain[1]['hash']
-    #             }
-    #          }
 
     def handle(self):                                    #클라이언트에서 요청이 들어오면 handle이 호출됨.
       print('[%s] 연결됨' %self.client_address[0])       # 클라이언트가 접속시 클라이언트 주소 출력
@@ -150,6 +122,8 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
                  self.conBuff.append(revMsg['data']['transaction'])
+                 print(self.conBuff)
+                 print(self.blockindex)
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
                     tmpBuff = self.conBuff[self.LIMIT_QUNTITY:]
                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
@@ -157,6 +131,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                     timestamp = time()
                     self.MSG['data']['index'] = self.blockindex
                     self.MSG['data']['timestamp'] = timestamp
+                    self.MSG['MSGTYPE'] = 'RECORD'
+                    self.MSG['ID']='Master'
+                    print(self.MSG)
                     self.blockChain.append({
                              'updatable':False,
                              'data':
@@ -169,8 +146,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                                'previous_hash': self.previous_hash
                               }
                            })
-                    self.MSG['MSGTYPE'] = 'RECORD'
-                    self.MSG['ID']='Master'
                     print(self.MSG)
                     self.userman.sendConDataToAll(self.MSG)
                     self.blockindex = self.blockindex + 1
