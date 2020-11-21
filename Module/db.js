@@ -3,7 +3,7 @@ var db_info = {
     host : 'localhost',
     user : 'root',
     password : 'password',
-    database : 'JPdatabase',
+    database : 'jpdatabase',
 };
 
 module.exports = {
