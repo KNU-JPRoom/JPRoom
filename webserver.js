@@ -74,7 +74,7 @@ app.listen(5000,function(req,res){
 
 app.post('/RFID',function(req,res){
 	var rfid = req.body.param;
-  var url = "select * from JPdatabase.Order where idRFID='"+rfid+"'";
+  var url = "select * from jpdatabase.Order where idRFID='"+rfid+"'";
   let orders = dbConnection.query(url);
   var items=[];
   var data = {"info":items};
@@ -103,10 +103,12 @@ app.post('/RFID',function(req,res){
 
 app.post('/RFID/Update',function(req,res){
   var mysql = require('mysql');
-  var connection = mysql.createConnection(require('../Module/db').info);
+  var oid = req.body.oid;
+	console.log(req.body);
+  var connection = mysql.createConnection(require('./Module/db').info);
   connection.connect();
-  var url = `update JPdatabase.Order set status='complete' where oid=${oid}`;
-  connection.query(url,function(err,results,fields){
+  var url = `update JPdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid}`;
+  connection.query(url,function(error,results,fields){
     if(error)
       res.send({
         "success":false,
@@ -115,42 +117,42 @@ app.post('/RFID/Update',function(req,res){
 
     else
       res.send({
-        "success":false
+        "success":true
       });
   });
 });
 
-// var net = require('net');
-// function getConnection(connName){
-//   var client = net.connect({port:7777,host:'localhost'},function(){
-//     console.log(connName+"Connected: ");
-//     this.setTimeout(500);
-//     this.setEncoding('utf8');
-//   })
-//   client.write("WEBSERVER");
-//   var dic = {
-//     'MSGTYPE':'RECORD',
-//     'ID':'WEBSERVER',
-//     'data':{
-//       'timestamp':new Date(),
-//       'transaction':'event created!!'
-//     }
-//   }
-//   nodePickle.dumps(dic,function(pickled){
-//       client.write(pickled)
-//   })
-//   return client;
-// }
+ var net = require('net');
+ function getConnection(connName){
+   var client = net.connect({port:7777,host:'localhost'},function(){
+     console.log(connName+"Connected: ");
+     this.setTimeout(500);
+     this.setEncoding('utf8');
+   })
+   client.write("WEBSERVER");
+   var dic = {
+     'MSGTYPE':'RECORD',
+     'ID':'WEBSERVER',
+     'data':{
+       'timestamp':new Date(),
+       'transaction':'event created!!'
+     }
+   }
+   nodePickle.dumps(dic,function(pickled){
+       client.write(pickled)
+   })
+   return client;
+ }
 
-// function writeData(socket,data){
-//   var success = !socket.write(data);
-//   if(!success){
-//     (function(socket,data){
-//       socket.once('drain',function(){
-//         writeData(socket,data);
-//       })
-//     })(socket,data);
-//   }
-// }
+ function writeData(socket,data){
+   var success = !socket.write(data);
+   if(!success){
+     (function(socket,data){
+       socket.once('drain',function(){
+         writeData(socket,data);
+       })
+     })(socket,data);
+   }
+ }
 
-// var BLOCK_CHAIN = getConnection("WEB_SERVER");
+ var BLOCK_CHAIN = getConnection("WEB_SERVER");
