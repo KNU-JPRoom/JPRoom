@@ -100,7 +100,7 @@ app.post('/RFID/Update',function(req,res){
 	console.log(req.body);
   var connection = mysql.createConnection(require('./Module/db').info);
   connection.connect();
-  var url = `update jpdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid}`;
+  var url = `update jpdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid}and jpdatabase.Order.status='ready'`;
   connection.query(url,function(error,results,fields){
     if(error)
     res.send({
@@ -121,38 +121,5 @@ app.listen(5000,function(req,res){
     console.log('connected!!');
 });
 
-          //  var net = require('net');
-          //  function getConnection(connName){
-            //    var client = net.connect({port:7777,host:'localhost'},function(){
-              //      console.log(connName+"Connected: ");
-              //      this.setTimeout(500);
-              //      this.setEncoding('utf8');
-              //    })
-              //    client.write("WEBSERVER");
-              //    var dic = {
-                //      'MSGTYPE':'RECORD',
-                //      'ID':'WEBSERVER',
-                //      'data':{
-                  //        'timestamp':new Date(),
-                  //        'transaction':'event created!!'
-                  //      }
-                  //    }
-                  //    nodePickle.dumps(dic,function(pickled){
-                    //        client.write(pickled)
-                    //    })
-                    //    return client;
-                    //  }
-                    
-                    //  function writeData(socket,data){
-                      //    var success = !socket.write(data);
-                      //    if(!success){
-                        //      (function(socket,data){
-                          //        socket.once('drain',function(){
-                            //          writeData(socket,data);
-                            //        })
-                            //      })(socket,data);
-                            //    }
-                            //  }
-                            
-                            //  var BLOCK_CHAIN = getConnection("WEB_SERVER");
+
                             

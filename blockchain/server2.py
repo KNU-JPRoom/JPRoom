@@ -79,7 +79,7 @@ class UserManager(): # 사용자관리 및 채팅 메세지 전송을 담당하�
 
 
 class MyTcpHandler(socketserver.BaseRequestHandler):
-    LIMIT_QUNTITY = 2
+    LIMIT_QUNTITY = 1
     difficulty = 2
     userman = UserManager()
     conBuff = ["jax send 50$ to piora", "yasuo send 30$ to shen", "ramus send 10$ to anivia"]
@@ -148,31 +148,31 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              buf = self.userman.users[username][0].recv(1000)     #client에서 전송한 정보를 받음.(블록)
              revMsg = pickle.loads(buf)
              print(revMsg)
+             if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
+                    self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
+                    self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
+                    timestamp = time()
+                    self.MSG['data']['index'] = self.blockindex
+                    self.MSG['data']['timestamp'] = timestamp
+                    self.blockChain.append({
+                             'updatable':False,
+                             'data':
+                             {
+                               'index':self.blockindex,
+                               'timestamp': timestamp,
+                               'transaction': self.MSG['data']['transaction'],
+                               'proof': 0,
+                               'difficulty': self.difficulty,
+                               'previous_hash': self.previous_hash
+                              }
+                           })
+                    self.MSG['MSGTYPE'] = 'RECORD'
+                    self.MSG['ID']='Master'
+                    self.userman.sendConDataToAll(self.MSG)
+                    self.blockindex = self.blockindex + 1
+
              if revMsg['ID'] == "WEBSERVER":
                  self.conBuff.append(revMsg['data']['transaction'])
-                 if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
-                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
-                     self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
-                     timestamp = time()
-                     self.MSG['data']['index'] = self.blockindex
-                     self.MSG['data']['timestamp'] = timestamp
-                     self.blockChain.append({
-                              'updatable':False,
-                              'data':
-                              {
-                                'index':self.blockindex,
-                                'timestamp': timestamp,
-                                'transaction': self.MSG['data']['transaction'],
-                                'proof': 0,
-                                'difficulty': self.difficulty,
-                                'previous_hash': self.previous_hash
-                               }
-                            })
-                     self.MSG['MSGTYPE'] = 'RECORD'
-                     self.MSG['ID']='Master'
-                     self.userman.sendConDataToAll(self.MSG)
-                     self.blockindex = self.blockindex + 1
-
              else:
                  if revMsg['MSGTYPE'] == 'REQ_MAKEBLOCK':
                      index = revMsg['index']
