@@ -41,11 +41,11 @@
 
         <% if(session.memberID) { %>
           <% if(session.type== 'admin') { %>
-            <li class="nav-item"><a href="/Admin" class="nav-link">Management</a></li>
+            <li class="nav-item"><a href="/Admin/RequestEnroll" class="nav-link">Management</a></li>
           <% } else if(session.type=='buyer') { %>
-            <li class="nav-item"><a href="/Buyer" class="nav-link">Search Warehouse</a></li>
+            <li class="nav-item"><a href="/Buyer/FindWH" class="nav-link">Search Warehouse</a></li>
           <% } else if(session.type=='provider') { %>
-            <li class="nav-item"><a href="/Provider" class="nav-link">Enroll Warehouse</a></li>
+            <li class="nav-item"><a href="/Provider/EnrollWH" class="nav-link">Enroll Warehouse</a></li>
           <% } %>
         <% } %>
 

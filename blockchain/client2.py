@@ -12,7 +12,7 @@ bcLock = threading.Lock();
 bqLock = threading.Lock();
 rqLock = threading.Lock();
 
-HOST = '127.0.0.1'
+HOST = '13.125.153.38'
 PORT = 7777
 #q = queue.Queue()
 
