@@ -20,31 +20,30 @@
         <form action="/Provider/EnrollWH" method="post" enctype="multipart/form-data" >
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Warehouse ID</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="warehouseID" name="warehouseID"value="warehouseID"></div>
+            <div class="col-sm-10"><input type="text" class="form-control" id="warehouseID" name="warehouseID"value="창고등록번호입력"></div>
           </div>
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Warehouse Name</label>
             <div class="col-sm-10"><input type="text" class="form-control" id="warehouseName"  name="warehouseName"value="warehouseName"></div>
           </div>
           <div class="form-group row">
+            <input type="button" onclick="sample4_execDaumPostcode()" value="Find address"><br>
+          </div>
+          <div class="form-group row">
             <label class="col-sm-2 col-form-label">Warehouse Address</label>
             <div class="col-sm-10"><input type="text" class="form-control" id="address" name="address" value="Address"></div>
           </div>
           <div class="form-group row">
-            <label class="col-sm-2 col-form-label">latitude</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="latitude" name="latitude" value="latitude"></div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-2 col-form-label">longitude</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="longitude" name="longitude"value="longitude"></div>
-          </div>
-          <div class="form-group row">
             <label class="col-sm-2 col-form-label">landArea</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="landArea" name="landArea" value="landArea"></div>
+            <div class="col-sm-10"><input type="text" class="form-control" id="landArea" name="landArea" value="숫자만 입력"></div>
           </div>
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">floorArea</label>
-            <div class="col-sm-10"><input type="text" class="form-control" id="floorArea" name="floorArea" value="floorArea"></div>
+            <div class="col-sm-10"><input type="text" class="form-control" id="floorArea" name="floorArea" value="숫자만 입력"></div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Price per area</label>
+            <div class="col-sm-10"><input type="text" class="form-control" id="price" name="price" value="ex)100000(원 단위 입력)"></div>
           </div>
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">infoComment</label>
@@ -55,25 +54,14 @@
             <div class="col-sm-10"><input type="text" class="form-control" id="etcComment" name="etcComment" value="etcComment"></div>
           </div>
 
-          <!-- <div class="form-row">
-            <label class="col-sm-2 col-form-label">Fax Number</label>
-            <div class="col-md-2 my-1">
-              <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
-              <select class="custom-select mr-sm-2" name="contactNumber1">
-                <option selected>Fax Number</option>
-                <option value="010">010</option>
-                <option value="011">011</option>
-                <option value="016">016</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <input type="text" name="contactNumber2" class="form-email form-control" id="contactNumber2 ">
-            </div>
-            <div class="col-md-2">
-              <input type="text" name="contactNumber3" class="form-email form-control" id="contactNumber3 ">
-            </div>
-          </div> -->
-
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10"><input type="text" class="form-control" id="lat" name="lat"></div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10"><input type="text" class="form-control" id="lng" name="lng"></div>
+          </div>
           <div class="form-group row">
             <input type='file' id='profile_img' name='profile_img' accept='image/jpg, image/png, image/jpeg' />
           </div>
@@ -81,9 +69,35 @@
           <div class="button">
             <input type="submit" value = "Submit">
           </div>
+
         </form>
       </div>
+
     </div>
     <div class="overlay"></div>
   </body>
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+    function sample4_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var roadAddr = data.roadAddress;
+
+                // document.getElementById("address").value = roadAddr;
+                document.getElementById("address").value = data.roadAddressEnglish;
+                var baseAPIUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+                baseAPIUrl = baseAPIUrl + roadAddr + "&key=" + "AIzaSyDCZcDJ6hvLaTFGso4BqnNoKl_m_ot7-4g"
+                $.ajax({
+                  url: baseAPIUrl,
+                  type: "GET",
+                  success: function(data) {
+                            document.getElementById("lat").value = data.results[0].geometry.location.lat;
+                            document.getElementById("lng").value = data.results[0].geometry.location.lng;
+                  }
+                });
+            }
+        }).open();
+    }
+  </script>
 </html>

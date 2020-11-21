@@ -138,6 +138,9 @@
               </div>
 
                 <div class="form-group col-lg-12">
+                  <input type="button" onclick="sample4_execDaumPostcode(0)" value="Find address"><br>
+                </div>
+                <div class="form-group col-lg-12">
                   <label class="sr-only" for="address">Address</label>
                   Address:<input type="text" name="address" placeholder="Address" class="form-email form-control" id="address">
                 </div>
@@ -147,6 +150,9 @@
                   Company Name:<input type="text" name="CN" placeholder="Company Name" class="form-email form-control" id="CN">
                 </div>
 
+                <div class="form-group col-lg-12">
+                  <input type="button" onclick="sample4_execDaumPostcode(1)" value="Find address"><br>
+                </div>
                 <div class="form-group col-lg-12">
                   <label class="sr-only" for="CA">Company Address</label>
                   Company Address:<input type="text" name="CA" placeholder="Company Address" class="form-email form-control" id="CA">
@@ -216,6 +222,23 @@
               }
             });
           })
+        </script>
+        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script>
+          function sample4_execDaumPostcode(flag) {
+              new daum.Postcode({
+                  oncomplete: function(data) {
+                      var roadAddr = data.roadAddress;
+
+                      if(flag == 0){
+                        document.getElementById("address").value = data.roadAddressEnglish;
+                      }
+                      else{
+                        document.getElementById("CA").value = data.roadAddressEnglish;
+                      }
+                  }
+              }).open();
+          }
         </script>
     </body>
 </html>

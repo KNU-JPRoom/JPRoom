@@ -44,6 +44,10 @@
                   <td id = "whUseableArea"> m<sup>2</sup></td>
                 </tr>
                 <tr>
+                  <th>Price per area</th>
+                  <td id = "whUseableArea"></td>
+                </tr>
+                <tr>
                   <th>Comment</th>
                   <td id = whInfoComment></td>
                   <td id = "whID" style="display: none"></td>
@@ -88,7 +92,7 @@
               markers[i] = new google.maps.Marker({
               position: {lat : items[key].latitude, lng: items[key].longitude},
               map: map,
-            }); 
+            });
             markers[i].addListener('click', function(){
               var k = 'item'+markers.indexOf(this);
               $.ajax({
@@ -106,6 +110,7 @@
               $("#whAddress").html(items[k]['address']);
               $("#whFloorArea").html(items[k]['floorArea']);
               $("#whUseableArea").html(items[k]['useableArea']);
+              $("#whUseableArea").html(items[k]['price']);
               $("#whInfoComment").html(items[k]['infoComment']);
             });
             i++;
@@ -137,7 +142,7 @@
                   alert("에러가 발생했습니다.");
                   window.location.href = "/Buyer/FindWH";
                 }
-              } 
+              }
             });
         });
       </script>
