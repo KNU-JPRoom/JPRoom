@@ -134,7 +134,6 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                     else{
                             const socket = require('../Module/bcsocket');
                             var sock = socket.socket;
-                            sock.write("WEBSERVER");
                             var dic = {
                                 'MSGTYPE':'RECORD',
                                 'ID':'WEBSERVER',

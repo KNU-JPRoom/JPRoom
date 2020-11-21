@@ -5,6 +5,7 @@ function getConnection(connName){
         this.setTimeout(500);
         this.setEncoding('utf8');
       })
+      client.write("WEBSERVER");
       return client;
 }
 var client = getConnection("WEB_SERVER");
