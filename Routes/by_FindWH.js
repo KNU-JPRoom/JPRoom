@@ -51,8 +51,10 @@ exports.inquireWH =function (req, res,app,db) {
     var mysql = require('mysql');
     var connection = mysql.createConnection(require('../Module/db').info);
     connection.connect();
-    let result = db.query('select * from RequestForBuy');
-    var reqno = result.length+1;
+    let reqResult = db.query('SELECT * from RequestForBuy ORDER BY reqID DESC');
+    var reqno = 1;
+    if(reqResult.length>0)
+    reqno = reqResult[0].reqID+1;
     var reqItem ={
         "reqID":reqno,
         "reqDate":new Date(),

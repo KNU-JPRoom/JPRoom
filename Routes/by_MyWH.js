@@ -132,26 +132,26 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                     else{
                           var net = require('net');
                           function getConnection(connName){
-                          var client = net.connect({port:7777,host:'localhost'},function(){
-                              console.log(connName+"Connected: ");
-                              this.setTimeout(500);
-                              this.setEncoding('utf8');
-                            })
-                            client.write("WEBSERVER");
-                            var dic = {
-                                'MSGTYPE':'RECORD',
-                                'ID':'WEBSERVER',
-                                'data':{
-                                    'timestamp':new Date(),
-                                    'transaction':`${contract.buyerID} pay ${contract.price} for warehouseID(${contract.warehouseID})`
-                                  }
+                                var client = net.connect({port:7777,host:'localhost'},function(){
+                                  console.log(connName+"Connected: ");
+                                  this.setTimeout(500);
+                                  this.setEncoding('utf8');
+                                })
+                                client.write("WEBSERVER");
+                                var dic = {
+                                    'MSGTYPE':'RECORD',
+                                    'ID':'WEBSERVER',
+                                    'data':{
+                                        'timestamp':new Date(),
+                                        'transaction':`${contract.buyerID} pay ${contract.price} for warehouseID(${contract.warehouseID})`
+                                      }
+                                }
+                                nodePickle.dumps(dic,function(pickled){
+                                      client.write(pickled)
+                                })
+                                client.end();
                             }
-                            nodePickle.dumps(dic,function(pickled){
-                                  client.write(pickled)
-                              })
-                              return client;
-                            }
-                             var BLOCK_CHAIN = getConnection("WEB_SERVER");
+                            getConnection("WEB_SERVER");
                             res.send(true);
                             connection.end();
                     }
