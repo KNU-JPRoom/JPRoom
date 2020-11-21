@@ -82,7 +82,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
     LIMIT_QUNTITY = 1
     difficulty = 2
     userman = UserManager()
-    conBuff = ["jax send 50$ to piora", "yasuo send 30$ to shen", "ramus send 10$ to anivia"]
+    conBuff = []
     blockindex = 1
     previous_hash = 0
     blockChain = [
@@ -148,7 +148,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              buf = self.userman.users[username][0].recv(1000)     #client에서 전송한 정보를 받음.(블록)
              revMsg = pickle.loads(buf)
              print(revMsg)
-             if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
+             if revMsg['ID'] == "WEBSERVER":
+                 self.conBuff.append(revMsg['data']['transaction'])
+                 if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
                     self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
                     timestamp = time()
@@ -170,9 +172,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                     self.MSG['ID']='Master'
                     self.userman.sendConDataToAll(self.MSG)
                     self.blockindex = self.blockindex + 1
-
-             if revMsg['ID'] == "WEBSERVER":
-                 self.conBuff.append(revMsg['data']['transaction'])
              else:
                  if revMsg['MSGTYPE'] == 'REQ_MAKEBLOCK':
                      index = revMsg['index']
