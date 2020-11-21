@@ -151,8 +151,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
              if revMsg['ID'] == "WEBSERVER":
                  self.conBuff.append(revMsg['data']['transaction'])
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
+                    tmpBuff = self.conBuff[self.LIMIT_QUNTITY:]
                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
-                    self.conBuff = self.conBuff[self.LIMIT_QUNTITY:]
+                    self.conBuff = tmpBuff
                     timestamp = time()
                     self.MSG['data']['index'] = self.blockindex
                     self.MSG['data']['timestamp'] = timestamp
@@ -170,6 +171,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                            })
                     self.MSG['MSGTYPE'] = 'RECORD'
                     self.MSG['ID']='Master'
+                    print(self.MSG)
                     self.userman.sendConDataToAll(self.MSG)
                     self.blockindex = self.blockindex + 1
              else:
@@ -188,6 +190,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                          print(self.blockChain[index])
                          MSG = {'MSGTYPE':'BLOCK','ID':'Master','data':self.blockChain[index]}
                          self.userman.sendConDataToAll(MSG)
+                         print(self.blockChain)
                      else:
                          MSG = {'MSGTYPE': 'RECORD','ID':'Master','data':self.blockChain[index]['data'] }
                          self.userman.users[username][0].send(pickle.dumps(MSG))
