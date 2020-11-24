@@ -8,11 +8,8 @@ function getConnection(connName){
       client.write("WEBSERVER");
       return client;
 }
-var client;
+var client = getConnection("WEB_SERVER");
 
 module.exports = {
-    socket : client,
-    init : function(){
-      client = getConnection("WEB_SERVER");
-    }
+    socket : client
 }

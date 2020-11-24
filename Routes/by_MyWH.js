@@ -132,8 +132,7 @@ exports.ReqBuyWithAnswer = function(req,res,app,db){
                       connection.end()
                     }
                     else{
-                            const socket = require('../Module/bcsocket');
-                            var sock = socket.socket;
+                            var sock = require('../Module/bcsocket').socket;
                             var dic = {
                                 'MSGTYPE':'RECORD',
                                 'ID':'WEBSERVER',

@@ -12,7 +12,7 @@ const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const paypal = require("paypal-rest-sdk");
 const nodePickle= require('pickle');
-const bcsock = require('./Module/bcsocket');
+
 // 1. 설정
 // 1) View 경로 설정
 app.set('views',__dirname+'/Views');
@@ -48,7 +48,7 @@ app.use(session({
 }));
 // 9) mySQL Connection 변수를 저장
 var dbConnection = mySQL.init();
-bcsock.init();
+
 // 10) 각 라우터에 인자값을 넘겨주는 것
 app.use('/',require('./Routes/main')(app,dbConnection));
 app.use('/User',require('./Routes/user')(app,dbConnection));
