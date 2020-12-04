@@ -75,7 +75,6 @@
          for( image in objImageInfo){
             strDOM+=`<div class  = "image_panel">`;
             strDOM+=`<img src="${objImageInfo[image]["url"]}">`;
-            strDOM+=`<p class="title">${objImageInfo[image]["title"]}</p>`;
             strDOM+=`</div>`
           }
           document.getElementById("image_container").innerHTML = strDOM;
