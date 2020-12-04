@@ -119,9 +119,9 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 
           self.userman.users[username][0].send(pickle.dumps({'MSGTYPE': 'INIT_BLOCK', 'data': dic}))
           while True:
-
              buf = self.userman.users[username][0].recv(1000)     #client에서 전송한 정보를 받음.(블록)
              revMsg = pickle.loads(buf)
+             print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
                  self.conBuff.append(revMsg['data']['transaction'])
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
@@ -155,7 +155,7 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      guess = json.dumps(cpDic).encode()
                      guess_hash = hashlib.sha256(guess).hexdigest()     #node에서 전송한 블록이 유효한지 검사.
                      if guess_hash[:self.difficulty]== "0"*self.difficulty:       #유효하다면
-                         self.blockChain[index]['proof']=proof
+                         self.blockChain[index]['data']['proof']=proof
                          self.blockChain[index]['hash']=guess_hash
                          self.blockChain[index]['updatable']=True
                          self.previous_hash = guess_hash
