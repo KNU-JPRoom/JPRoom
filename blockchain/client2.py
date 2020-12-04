@@ -123,7 +123,7 @@ def runChat():
                         else:
                             proof = proof + 1
                     print(record['proof'])
-                    sock.send(pickle.dumps({'MSGTYPE':'REQ_MAKEBLOCK','ID': 'piora', 'index' : record['index'], 'proof': proof}))
+                    sock.send(pickle.dumps({'MSGTYPE':'REQ_MAKEBLOCK','ID': id, 'index' : record['index'], 'proof': proof}))
                 bcLock.release()
 
 runChat()
