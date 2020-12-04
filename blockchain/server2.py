@@ -122,11 +122,8 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 
              buf = self.userman.users[username][0].recv(1000)     #client에서 전송한 정보를 받음.(블록)
              revMsg = pickle.loads(buf)
-             print(revMsg)
              if revMsg['ID'] == "WEBSERVER":
                  self.conBuff.append(revMsg['data']['transaction'])
-                 print(self.conBuff)
-                 print(self.blockindex)
                  if len(self.conBuff) >= self.LIMIT_QUNTITY and self.blockChain[(self.blockindex)-1]['updatable']== True:
                     self.MSG['data']['transaction']=self.conBuff[:self.LIMIT_QUNTITY]
                     del self.conBuff[:self.LIMIT_QUNTITY]
@@ -135,7 +132,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                     self.MSG['data']['timestamp'] = timestamp
                     self.MSG['MSGTYPE'] = 'RECORD'
                     self.MSG['ID']='Master'
-                    print(self.MSG)
                     self.blockChain.append({
                              'updatable':False,
                              'data':
@@ -148,7 +144,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                                'previous_hash': self.previous_hash
                               }
                            })
-                    print(self.MSG)
                     self.userman.sendConDataToAll(self.MSG)
                     self.blockindex = self.blockindex + 1
              else:
@@ -159,12 +154,11 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                      cpDic['proof'] = proof
                      guess = json.dumps(cpDic).encode()
                      guess_hash = hashlib.sha256(guess).hexdigest()     #node에서 전송한 블록이 유효한지 검사.
-                     print(guess_hash)
                      if guess_hash[:self.difficulty]== "0"*self.difficulty:       #유효하다면
+                         self.blockChain[index]['proof']=proof
                          self.blockChain[index]['hash']=guess_hash
                          self.blockChain[index]['updatable']=True
                          self.previous_hash = guess_hash
-                         print(self.blockChain[index])
                          MSG = {'MSGTYPE':'BLOCK','ID':'Master','data':self.blockChain[index]}
                          self.userman.sendConDataToAll(MSG)
                          print(self.blockChain)
