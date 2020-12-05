@@ -101,7 +101,7 @@ app.post('/RFID/Update',function(req,res){
 	console.log(req.body);
   var connection = mysql.createConnection(require('./Module/db').info);
   connection.connect();
-  var url = `update jpdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid}and jpdatabase.Order.status='ready'`;
+  var url = `update jpdatabase.Order set jpdatabase.Order.status='complete' where oid=${oid} and jpdatabase.Order.status='ready'`;
   connection.query(url,function(error,results,fields){
     if(error)
     res.send({
