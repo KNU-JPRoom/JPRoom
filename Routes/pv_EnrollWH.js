@@ -52,15 +52,7 @@ exports.EnrollWH = function(req,res,app,db,fileName){
                   res.redirect('/Provider/EnrollWH');
                 }
                 else{
-                  connection.query('INSERT INTO Provider SET ?' , {'memberID':reqItem.providerID,'warehouseID':reqItem.warehouseID}, function (error, results, fields) {
-                    if (error) {
-                      console.log("error ocurred", error);
-                      res.redirect('/Provider/EnrollWH');
-                    }
-                    else{
-                      res.redirect('/Provider/MyWarehouse');
-                    }
-                  });
+                  res.redirect('/Provider/MyWarehouse');
                 }
               });
             }

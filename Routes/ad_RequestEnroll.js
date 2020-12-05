@@ -47,7 +47,7 @@ exports.withAnswer = function(req,res,app,db){
             connection.query("DELETE FROM RequestForEnroll WHERE reqID ="+reqID,function (error, results, fields) {
               if(error){res.send(false);connection.end();}
               else{
-                connection.query('INSERT INTO EnrolledWarehouse SET ?',{'warehouseID':info["warehouseID"],'logID':11111111},function (error, results, fields) {
+                connection.query('INSERT INTO EnrolledWarehouse SET ?',{'warehouseID':info.warehouseID,'logID':11111111},function (error, results, fields) {
                   if(error){res.send(false);connection.end();}
                   else{
                     res.send(true);
